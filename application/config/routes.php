@@ -1,16 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-$route['default_controller'] = 'admin/Sign_in';
+$route['default_controller'] = 'Sign_in';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
 /* ================= AUTH ================= */
-// $route['sign_in']       = 'EMP/Sign_in/index';
-$route['emp/sign_in'] = 'EMP/Sign_in/index';
 
-$route['sign_in/login'] = 'EMP/Sign_in/login';
-$route['emp/logout'] = 'EMP/Sign_in/logout';
+$route['sign_in'] = 'Sign_in/index';
+
+$route['sign_in/login'] = 'Sign_in/login';
+$route['emp/logout'] = 'Sign_in/logout';
 
 
 /* ================= ADMIN ================= */

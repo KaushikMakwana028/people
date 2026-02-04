@@ -17,7 +17,7 @@ class Dashboardd extends CI_Controller {
 
         // 🔒 LOGIN CHECK
         if (!$this->session->userdata('logged_in')) {
-            redirect('emp/sign_in');
+            redirect('sign_in');
         }
 
         // 🔒 ROLE CHECK (MAIN FIX)
@@ -257,7 +257,7 @@ public function resume_work()
                             public function update_profile()
                             {
                                 $id = $this->session->userdata('user_id');
-                               if (!$id) redirect('emp/sign_in');
+                               if (!$id) redirect('sign_in');
 
                             
                                 $data = [

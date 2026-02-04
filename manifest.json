@@ -1,7 +1,7 @@
 {
   "name": "Suju Application",
   "short_name": "Suju",
-  "start_url": "/suju/emp/sign_in",
+  "start_url": "/suju/sign_in",
   "scope": "/suju/",
   "display": "standalone",
   "background_color": "#667eea",

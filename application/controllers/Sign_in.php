@@ -72,7 +72,7 @@ class Sign_in extends CI_Controller {
 
     /* ================= INVALID LOGIN ================= */
     $this->session->set_flashdata('login_error', 'Invalid email or password');
-    redirect('emp/sign_in');
+    redirect('sign_in');
 }
 
 
@@ -92,7 +92,7 @@ public function logout()
     $this->session->sess_destroy();
 
     // login page pe redirect
-    redirect('emp/sign_in');
+    redirect('sign_in');
 }
 
 }
