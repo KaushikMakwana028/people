@@ -38,6 +38,14 @@ $route['admin/profile/update'] = 'admin/Dashboard/update_profile';
 $route['admin/holidays/add'] = 'admin/Holidays/add';
 $route['admin/save-fcm-token'] = 'admin/Dashboard/save_fcm_token';
 
+/* ================= SALES ================= */
+$route['sales'] = 'sales/Dashboard/index';
+$route['sales/dashboard'] = 'sales/Dashboard/index';
+$route['sales/profile'] = 'sales/Dashboard/profile';
+$route['sales/profile/update'] = 'sales/Dashboard/update_profile';
+$route['sales/save-fcm-token'] = 'sales/Dashboard/save_fcm_token';
+$route['sales/logout'] = 'Sign_in/logout';
+
 /* ================= EMP ================= */
 $route['emp'] = 'emp/Dashboard/index';
 $route['emp/dashboard'] = 'emp/Dashboard/index';

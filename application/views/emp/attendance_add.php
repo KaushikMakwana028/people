@@ -282,7 +282,11 @@
         .animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
     </style>
 
-                    </div>
+<div class="page-wrapper">
+    <div class="page-content">
+        <!-- Breadcrumb -->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">Attendance</div>
                     <div class="ps-3">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0 p-0">

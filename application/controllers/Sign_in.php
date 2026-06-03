@@ -17,6 +17,8 @@ class Sign_in extends CI_Controller
 
             if ($this->session->userdata('user_role') == 1) {
                 redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
             } else {
                 redirect('emp/dashboard');
             }
@@ -59,6 +61,8 @@ class Sign_in extends CI_Controller
 
             if ($role == 1) {
                 redirect('admin/dashboard');
+            } else if ($role == 2) {
+                redirect('sales/dashboard');
             } else {
                 redirect('emp/dashboard');
             }

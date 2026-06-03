@@ -34,7 +34,7 @@ class Employee extends CI_Controller
 
 
         $data['employees'] = $this->db
-            ->where('role', 0)
+            ->where_in('role', [0, 2])
             ->get('users')
             ->result();
         $this->load->view('admin/header');
@@ -55,6 +55,7 @@ class Employee extends CI_Controller
             $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]');
             $this->form_validation->set_rules('confirm_password', 'Confirm Password', 'required|matches[password]');
             $this->form_validation->set_rules('address', 'Address', 'required');
+            $this->form_validation->set_rules('role', 'Role', 'required|in_list[0,2]');
 
             if ($this->form_validation->run() == TRUE) {
 
@@ -69,7 +70,7 @@ class Employee extends CI_Controller
                     'account_number' => trim($this->input->post('account_number')),
                     'ifsc_code' => strtoupper(trim($this->input->post('ifsc_code'))),
                     'bank_branch' => trim($this->input->post('bank_branch')),
-                    'role' => 0,
+                    'role' => (int)$this->input->post('role'),
                     'is_active' => 1,
                     'created_at' => date('Y-m-d H:i:s')
                 ];
@@ -145,6 +146,12 @@ public function view_profile($id)
             'ifsc_code' => $this->input->post('ifsc_code'),
             'bank_branch' => $this->input->post('bank_branch'),
         ];
+
+        // 🔹 ROLE UPDATE LOGIC
+        $role = $this->input->post('role');
+        if ($role !== null && in_array((int)$role, [0, 2], true)) {
+            $data['role'] = (int)$role;
+        }
 
         // 📸 PHOTO UPDATE LOGIC
         if (!empty($_FILES['photo']['name'])) {

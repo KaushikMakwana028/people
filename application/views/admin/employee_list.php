@@ -1092,6 +1092,7 @@
                             <tr>
                                 <th style="width:50px;">#</th>
                                 <th>Employee</th>
+                                <th>Role</th>
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <th style="width:60px;">Status</th>
@@ -1135,6 +1136,15 @@
                                             </div>
                                         </div>
                                     </div>
+                                </td>
+
+                                <!-- Role -->
+                                <td>
+                                    <?php if ($emp->role == 2): ?>
+                                        <span class="badge text-white" style="font-size: 11px; padding: 5px 10px; border-radius: 12px; background-color: #8b5cf6 !important;">Sales</span>
+                                    <?php else: ?>
+                                        <span class="badge text-white" style="font-size: 11px; padding: 5px 10px; border-radius: 12px; background-color: #6366f1 !important;">Developer</span>
+                                    <?php endif; ?>
                                 </td>
 
                                 <!-- Phone -->

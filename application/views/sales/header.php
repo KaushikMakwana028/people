@@ -111,195 +111,36 @@
 			<ul class="metismenu" id="menu">
 
 				<li>
-					<a href="<?= base_url('admin/dashboard') ?>">
+					<a href="<?= base_url('sales/dashboard') ?>">
 						<div class="parent-icon"><i class="bx bx-home"></i></div>
 						<div class="menu-title">Dashboard</div>
 					</a>
 				</li>
 
-				<!-- USERS MENU -->
 				<li>
 					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-user"></i></div>
-						<div class="menu-title">USERS</div>
+						<div class="parent-icon"><i class="bx bx-magnet"></i></div>
+						<div class="menu-title">Leads</div>
 					</a>
 					<ul>
-						<li><a href="<?= base_url('admin/employee/add') ?>">Add Employee</a></li>
-						<li><a href="<?= base_url('admin/employee') ?>">List Employee</a></li>
-					</ul>
-				</li>
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon">
-							<i class="bx bx-group"></i>
-						</div>
-						<div class="menu-title">Lead Management</div>
-					</a>
-					<ul>
-						<li>
-							<a href="<?= base_url('admin/leads'); ?>">
-								<i class="bx bx-radio-circle"></i>
-								All Leads
-							</a>
-						</li>
-					</ul>
-				</li>
-
-				<!-- <li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon">
-							<i class="bx bx-file"></i>
-						</div>
-						<div class="menu-title">Quotations</div>
-					</a>
-
-					<ul>
-						<li>
-							<a href="<?= base_url('admin/quotations'); ?>">
-								<i class="bx bx-radio-circle"></i>
-								All Quotations
-							</a>
-						</li>
-
-						<li>
-							<a href="<?= base_url('admin/quotations/create'); ?>">
-								<i class="bx bx-radio-circle"></i>
-								Create Quotation
-							</a>
-						</li>
-					</ul>
-				</li> -->
-
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon">
-							<i class="bx bx-calendar"></i>
-						</div>
-						<div class="menu-title">Attendance</div>
-					</a>
-					<ul>
-						<li>
-							<a href="<?= base_url('admin/attendance/attendance_list') ?>">
-								<i class="bx bx-radio-circle"></i>Attendance List
-							</a>
-						</li>
-					</ul>
-				</li>
-
-				<li>
-					<a href="<?= base_url('admin/manual-logs') ?>">
-						<div class="parent-icon"><i class="bx bx-time-five"></i></div>
-						<div class="menu-title">Manual Logs</div>
-					</a>
-				</li>
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-log-out"></i></div>
-						<div class="menu-title">Leave</div>
-					</a>
-					<ul>
-						<!-- <li><a href="leave/add_leave">Add Leave</a></li> -->
-						<li>
-							<a href="<?= base_url('admin/leave') ?>">Leave List</a>
-
-						</li>
-					</ul>
-				</li>
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-credit-card"></i></div>
-						<div class="menu-title">Payment Management</div>
-					</a>
-					<ul>
-						<li><a href="<?= base_url('admin/payments') ?>"><i class="bx bx-radio-circle"></i>Payments</a></li>
-						<li><a href="<?= base_url('admin/transactions') ?>"><i class="bx bx-radio-circle"></i>Transactions</a></li>
-					</ul>
-				</li>
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-envelope"></i></div>
-						<div class="menu-title">Project</div>
-					</a>
-					<ul>
-						<li><a href="<?= site_url('project/all_projects'); ?>"><i class="bx bx-radio-circle"></i>Projects</a></li>
-						<li><a href="<?= site_url('project/clients'); ?>"><i class="bx bx-radio-circle"></i>Clients</a></li>
-						<li><a href="<?= base_url('index.php/task/add'); ?>"><i class="bx bx-radio-circle"></i>Task Add</a></li>
-					</ul>
-				</li>
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-package"></i></div>
-						<div class="menu-title">Products</div>
-					</a>
-					<ul>
-						<li><a href="<?= base_url('admin/products'); ?>"><i class="bx bx-radio-circle"></i>Products</a></li>
-						<li><a href="<?= base_url('admin/product_leads'); ?>"><i class="bx bx-radio-circle"></i>Product Leads</a></li>
-					</ul>
-				</li>
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-wallet"></i></div>
-						<div class="menu-title">Expense Management</div>
-					</a>
-					<ul>
-						<li><a href="<?= base_url('admin/expenses') ?>"><i class="bx bx-radio-circle"></i>Expenses</a></li>
-					</ul>
-				</li>
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-money"></i></div>
-						<div class="menu-title">Salary Management</div>
-					</a>
-					<ul>
-						<li><a href="<?= base_url('admin/salaries') ?>"><i class="bx bx-radio-circle"></i>Salaries</a></li>
+						<li><a href="<?= base_url('sales/leads') ?>"><i class="bx bx-radio-circle"></i>All Leads</a></li>
+						<?php 
+						$CI =& get_instance();
+						$CI->load->database();
+						$sidebar_products = $CI->db->get('products')->result();
+						foreach ($sidebar_products as $sp):
+						?>
+							<li>
+								<a href="<?= base_url('sales/leads?product_id=' . $sp->id) ?>">
+									<i class="bx bx-radio-circle"></i>
+									<?= htmlspecialchars($sp->name) ?>
+								</a>
+							</li>
+						<?php endforeach; ?>
 					</ul>
 				</li>
 
 
-
-				<li>
-					<a href="<?= site_url('admin/history') ?>">
-						<div class="parent-icon"><i class="bx bx-history"></i></div>
-						<div class="menu-title">History</div>
-					</a>
-				</li>
-
-				<li class="menu-item">
-					<a href="<?= base_url('admin/holidays') ?>">
-						<div class="parent-icon"><i class="bx bx-calendar-event"></i></div>
-						<div class="menu-title"> Holidays</div>
-					</a>
-				</li>
-
-
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-bell"></i></div>
-						<div class="menu-title">Announcements</div>
-					</a>
-					<ul>
-						<li>
-							<a href="<?= base_url('admin/announcements') ?>">
-								Announcement List
-							</a>
-						</li>
-
-						<li>
-							<a href="<?= base_url('admin/announcements/add') ?>">
-								Add Announcement
-							</a>
-						</li>
-
-					</ul>
-				</li>
 
 
 
@@ -328,23 +169,9 @@
 
 					<div class="top-menu ms-auto">
 						<ul class="navbar-nav align-items-center gap-1">
-							<!-- <li class="nav-item">
-								<a class="premium-quick-add" href="<?= base_url('admin/manual-logs') ?>">
-									<i class='bx bx-plus'></i><span>Quick Add</span>
-								</a>
-							</li> -->
 							<li class="nav-item dark-mode d-none d-sm-flex">
 								<a class="premium-icon-btn dark-mode-icon" href="javascript:;"><i class='bx bx-moon'></i></a>
 							</li>
-							<!-- <li class="nav-item mobile-search-icon d-flex d-lg-none" data-bs-toggle="modal"
-								data-bs-target="#SearchModal">
-								<a class="nav-link" href="avascript:;"><i class='bx bx-search'></i>
-								</a>
-							</li> -->
-							<!-- <li class="nav-item dark-mode d-none d-sm-flex">
-								<a class="nav-link dark-mode-icon" href="javascript:;"><i class='bx bx-moon'></i>
-								</a>
-							</li> -->
 
 							<li class="nav-item dropdown dropdown-app">
 								<div class="dropdown-menu dropdown-menu-end p-0">
@@ -355,9 +182,6 @@
 							</li>
 
 							<li class="nav-item dropdown dropdown-large">
-								<!-- <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown"><span class="alert-count">7</span>
-									<i class='bx bx-bell'></i>
-								</a> -->
 								<div class="dropdown-menu dropdown-menu-end">
 									<a href="javascript:;">
 										<div class="msg-header">
@@ -498,18 +322,7 @@
 
 
 
-
-
-
-
-
-
-
-
 							<li class="nav-item dropdown dropdown-large">
-								<!-- <a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <span class="alert-count">8</span>
-									<i class='bx bx-shopping-bag'></i>
-								</a> -->
 								<div class="dropdown-menu dropdown-menu-end">
 									<a href="javascript:;">
 										<div class="msg-header">
@@ -705,67 +518,6 @@
 
 					</div>
 
-
-
-
-
-
-					<!-- <li class="nav-item dropdown">
-	<a class="nav-link dropdown-toggle position-relative" href="#" data-bs-toggle="dropdown">
-		<i class="bx bx-bell"></i>
-
-		<?php if ($notification_count > 0): ?>
-			<span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
-				<?= $notification_count ?>
-			</span>
-		<?php endif; ?>
-	</a>
-
-	<ul class="dropdown-menu dropdown-menu-end">
-		<?php foreach ($notifications as $n): ?>
-			<li>
-				<a class="dropdown-item"
-				   href="<?= base_url('admin/history/view/' . $n->ref_id) ?>">
-					<?= $n->message ?><br>
-					<small class="text-muted">
-						<?= date('d M Y h:i A', strtotime($n->created_at)) ?>
-					</small>
-				</a>
-			</li>
-		<?php endforeach; ?>
-
-		<?php if (empty($notifications)): ?>
-			<li class="dropdown-item text-muted">No new notifications</li>
-		<?php endif; ?>
-	</ul>
-</li> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-					<!-- <?= $this->session->userdata('user_photo'); ?> -->
-
-
 					<div class="user-box dropdown px-3">
 						<a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
 							href="javascript:;" role="button" data-bs-toggle="dropdown"
@@ -803,19 +555,19 @@
 
 								</p>
 								<p class="designattion mb-0 text-muted small">
-									Admin
+									Sales
 								</p>
 							</div>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end">
-							<li><a class="dropdown-item d-flex align-items-center" href="<?= site_url('admin/profile'); ?>"><i
+							<li><a class="dropdown-item d-flex align-items-center" href="<?= site_url('sales/profile'); ?>"><i
 										class="bx bx-user fs-5"></i><span>Profile</span></a>
 							</li>
 
 							<li>
 								<div class="dropdown-divider mb-0"></div>
 							</li>
-							<li><a href="<?= base_url('admin/logout') ?>"
+							<li><a href="<?= base_url('sales/logout') ?>"
 									onclick="return confirm('Are you sure you want to logout?')" class="dropdown-item">
 									<i class="bx bx-log-out-circle"></i> Logout
 								</a>

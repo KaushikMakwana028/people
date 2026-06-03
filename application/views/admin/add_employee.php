@@ -600,6 +600,29 @@
                                         <?php endif; ?>
                                     </div>
                                 </div>
+
+                                <!-- User Role -->
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">
+                                        Role <span class="required">*</span>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="input-icon-group">
+                                            <i class="bx bx-user-pin input-icon"></i>
+                                            <select name="role"
+                                                id="role"
+                                                class="form-select <?= form_error('role') ? 'is-invalid' : '' ?>"
+                                                required>
+                                                <option value="0" <?= set_select('role', '0', TRUE) ?>>Developer</option>
+                                                <option value="2" <?= set_select('role', '2') ?>>Sales</option>
+                                            </select>
+                                        </div>
+                                        <div class="invalid-feedback" id="roleError">Role is required.</div>
+                                        <?php if (form_error('role')): ?>
+                                            <div class="invalid-feedback d-block"><?= form_error('role') ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Section 3: Bank Details -->
@@ -751,6 +774,7 @@
     const email = document.getElementById('email');
     const password = document.getElementById('password');
     const confirmPw = document.getElementById('confirmPw');
+    const role = document.getElementById('role');
     const address = document.getElementById('address');
 
     const step1Ind = document.getElementById('step1Indicator');
@@ -809,7 +833,7 @@
     }
 
     function addLiveValidation() {
-        const fields = [fullName, phone, username, email, password, confirmPw, address];
+        const fields = [fullName, phone, username, email, password, confirmPw, role, address];
         fields.forEach(field => {
             if (field) {
                 field.addEventListener('input', function() {
@@ -834,6 +858,9 @@
                     } else if (field.id === 'phone') {
                         if (phone.value.trim().length < 7) phone.classList.add('is-invalid');
                         else phone.classList.remove('is-invalid');
+                    } else if (field.id === 'role') {
+                        if (role.value !== '0' && role.value !== '2') role.classList.add('is-invalid');
+                        else role.classList.remove('is-invalid');
                     } else if (field.id === 'address') {
                         if (address.value.trim() === "") address.classList.add('is-invalid');
                         else address.classList.remove('is-invalid');
@@ -871,6 +898,10 @@
             confirmPw.classList.add('is-invalid');
             isValid = false;
         } else confirmPw.classList.remove('is-invalid');
+        if (role.value !== '0' && role.value !== '2') {
+            role.classList.add('is-invalid');
+            isValid = false;
+        } else role.classList.remove('is-invalid');
         if (address.value.trim() === "") {
             address.classList.add('is-invalid');
             isValid = false;

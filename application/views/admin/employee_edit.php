@@ -1177,6 +1177,17 @@
 
                             <div class="ee-grid">
                                 <div class="ee-field">
+                                    <label><i class='bx bx-user-pin'></i> Role <span class="star">*</span></label>
+                                    <div class="ee-input-wrap">
+                                        <select name="role" class="ee-input" required style="padding-left: 40px; appearance: auto; background-color: var(--gray-50);">
+                                            <option value="0" <?= $emp->role == 0 ? 'selected' : '' ?>>Developer</option>
+                                            <option value="2" <?= $emp->role == 2 ? 'selected' : '' ?>>Sales</option>
+                                        </select>
+                                        <i class='bx bx-user-pin ico'></i>
+                                    </div>
+                                </div>
+
+                                <div class="ee-field">
                                     <label><i class='bx bx-briefcase'></i> Designation</label>
                                     <div class="ee-input-wrap">
                                         <input type="text" name="designation" class="ee-input"
