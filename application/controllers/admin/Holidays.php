@@ -38,26 +38,32 @@ class Holidays extends CI_Controller {
             'holiday_name' => $name
         ]);
 
+        // Clean up conflicting absent attendance records for this date
+        $this->db->where('attendance_date', $date)->where('status', 'Absent')->delete('attendance');
+
         redirect('admin/holidays?year=' . date('Y', strtotime($date)));
     }
 
     // ✏️ EDIT HOLIDAY
-public function update($id)
-{
-    $date = $this->input->post('holiday_date');
-    $name = $this->input->post('holiday_name');
+    public function update($id)
+    {
+        $date = $this->input->post('holiday_date');
+        $name = $this->input->post('holiday_name');
 
-    $day = date('l', strtotime($date));
+        $day = date('l', strtotime($date));
 
-    $this->db->where('id', $id);
-    $this->db->update('holidays', [
-        'holiday_date' => $date,
-        'day'          => $day,
-        'holiday_name' => $name
-    ]);
+        $this->db->where('id', $id);
+        $this->db->update('holidays', [
+            'holiday_date' => $date,
+            'day'          => $day,
+            'holiday_name' => $name
+        ]);
 
-    redirect('admin/holidays?year=' . date('Y', strtotime($date)));
-}
+        // Clean up conflicting absent attendance records for this date
+        $this->db->where('attendance_date', $date)->where('status', 'Absent')->delete('attendance');
+
+        redirect('admin/holidays?year=' . date('Y', strtotime($date)));
+    }
 
     // 🗑️ DELETE HOLIDAY
    public function delete($id)

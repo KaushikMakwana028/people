@@ -213,9 +213,14 @@
 			var logoIcon = document.getElementById('logoIcon');
 			if (!wrapper || !logoFull || !logoIcon) return;
 
-			if (wrapper.classList.contains('toggled')) {
-				logoFull.style.display = 'none';
-				logoIcon.style.display = 'block';
+			if (window.innerWidth >= 992) {
+				if (wrapper.classList.contains('toggled')) {
+					logoFull.style.display = 'none';
+					logoIcon.style.display = 'block';
+				} else {
+					logoIcon.style.display = 'none';
+					logoFull.style.display = 'block';
+				}
 			} else {
 				logoIcon.style.display = 'none';
 				logoFull.style.display = 'block';

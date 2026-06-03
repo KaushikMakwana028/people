@@ -566,7 +566,7 @@
                                     </label>
                                     <div class="col-sm-10">
                                         <div class="input-icon-group">
-                                            <i class="bx bx-lock input-icon"></i>
+                                            <!-- <i class="bx bx-lock input-icon"></i> -->
                                             <input type="password"
                                                 name="password"
                                                 id="password"

@@ -118,11 +118,6 @@ $route['emp/view-profile/(:num)'] = 'emp/dashboard/view_profile/$1';
 
 
 
-// yug route 
-
-
-
-
 
 /* ================= AUTH ================= */
 // $route['login'] = 'login';
@@ -171,6 +166,13 @@ $route['admin/leads/edit/(:num)']   = 'admin/Leads/edit/$1';
 $route['admin/leads/update/(:num)'] = 'admin/Leads/update/$1';
 $route['admin/leads/delete/(:num)'] = 'admin/Leads/delete/$1';
 $route['admin/leads/update_status'] = 'admin/Leads/update_status';
+
+// Salary Management
+$route['admin/salaries']               = 'admin/Salaries/index';
+$route['admin/salaries/store']          = 'admin/Salaries/store';
+$route['admin/salaries/delete/(:num)']  = 'admin/Salaries/delete/$1';
+$route['admin/salaries/get_developer_stats'] = 'admin/Salaries/get_developer_stats';
+$route['admin/salaries/update_base_salary']  = 'admin/Salaries/update_base_salary';
 
 // Expense Management
 $route['admin/expenses'] = 'admin/Expenses/index';

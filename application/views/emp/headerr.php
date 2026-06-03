@@ -20,28 +20,18 @@
 	<link href="<?= base_url('assets/css/bootstrap-extended.css') ?>" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-	<link href="<?= base_url('assets/sass/app.css') ?>" rel="stylesheet">
+	<link href="<?= base_url('assets/sass/app.css?v=1.0.2') ?>" rel="stylesheet">
 	<link href="<?= base_url('assets/css/icons.css') ?>" rel="stylesheet">
 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 	<!-- Theme Style CSS -->
 	<link rel="stylesheet" href="<?= base_url('assets/sass/dark-theme.css') ?>">
 	<link rel="stylesheet" href="<?= base_url('assets/sass/semi-dark.css') ?>">
 	<link rel="stylesheet" href="<?= base_url('assets/sass/bordered-theme.css') ?>">
-
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="<?= base_url('assets/css/premium-shell.css?v=1.0.1') ?>">
-
-
-	<title>VISION TECHNOLABS</title>
-
-
-
-
-
+	<link rel="stylesheet" href="<?= base_url('assets/css/premium-shell.css?v=1.0.3') ?>">
 	<link rel="manifest" href="<?= base_url('manifest.json') ?>">
 	<meta name="theme-color" content="#667eea">
-
-
+	<title>Vision Technolabs - Employee</title>
 </head>
 
 <body>

@@ -42,11 +42,6 @@
 			--sidebar-collapsed-width: 80px;
 		}
 
-		.sidebar-wrapper {
-			width: var(--sidebar-width) !important;
-			overflow: hidden !important;
-		}
-
 		.sidebar-wrapper .metismenu ul:not(.mm-show) {
 			display: none !important;
 		}
@@ -56,24 +51,31 @@
 			z-index: 2;
 		}
 
-		.topbar {
-			left: var(--sidebar-width) !important;
-		}
+		@media (min-width: 992px) {
+			.sidebar-wrapper {
+				width: var(--sidebar-width) !important;
+				overflow: hidden !important;
+			}
 
-		.page-wrapper {
-			margin-left: var(--sidebar-width) !important;
-		}
+			.topbar {
+				left: var(--sidebar-width) !important;
+			}
 
-		.wrapper.toggled .sidebar-wrapper {
-			width: var(--sidebar-collapsed-width) !important;
-		}
+			.page-wrapper {
+				margin-left: var(--sidebar-width) !important;
+			}
 
-		.wrapper.toggled .topbar {
-			left: var(--sidebar-collapsed-width) !important;
-		}
+			.wrapper.toggled .sidebar-wrapper {
+				width: var(--sidebar-collapsed-width) !important;
+			}
 
-		.wrapper.toggled .page-wrapper {
-			margin-left: var(--sidebar-collapsed-width) !important;
+			.wrapper.toggled .topbar {
+				left: var(--sidebar-collapsed-width) !important;
+			}
+
+			.wrapper.toggled .page-wrapper {
+				margin-left: var(--sidebar-collapsed-width) !important;
+			}
 		}
 
 		body,
@@ -237,6 +239,16 @@
 					</a>
 					<ul>
 						<li><a href="<?= base_url('admin/expenses') ?>"><i class="bx bx-radio-circle"></i>Expenses</a></li>
+					</ul>
+				</li>
+
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="bx bx-money"></i></div>
+						<div class="menu-title">Salary Management</div>
+					</a>
+					<ul>
+						<li><a href="<?= base_url('admin/salaries') ?>"><i class="bx bx-radio-circle"></i>Salaries</a></li>
 					</ul>
 				</li>
 

@@ -542,19 +542,23 @@
         </div>
 
         <?php
+        $editStatus = $lead['status'] ? trim($lead['status']) : '';
+        if (empty($editStatus)) {
+          $editStatus = 'in-progress';
+        }
         $statusClass = 'status-not-interested';
         $statusIcon  = 'bx bx-x-circle';
-        if ($lead['status'] === 'in-progress') {
+        if ($editStatus === 'in-progress') {
           $statusClass = 'status-in-progress';
           $statusIcon  = 'bx bx-trending-up';
-        } elseif ($lead['status'] === 'converted') {
+        } elseif ($editStatus === 'converted') {
           $statusClass = 'status-converted';
           $statusIcon  = 'bx bx-check-circle';
         }
         ?>
         <div class="status-badge <?= $statusClass ?>">
           <i class='<?= $statusIcon ?>'></i>
-          <?= ucfirst(str_replace('-', ' ', $lead['status'])) ?>
+          <?= ucfirst(str_replace('-', ' ', $editStatus)) ?>
         </div>
       </div>
 
@@ -639,7 +643,7 @@
             <div class="form-field">
               <label><i class='bx bx-flag'></i> Status <span class="required">*</span></label>
               <select name="status" required>
-                <option value="in-progress" <?= $lead['status'] === 'in-progress'    ? 'selected' : '' ?>>In Progress</option>
+                <option value="in-progress" <?= ($lead['status'] === 'in-progress' || empty($lead['status'])) ? 'selected' : '' ?>>In Progress</option>
                 <option value="converted" <?= $lead['status'] === 'converted'      ? 'selected' : '' ?>>Converted</option>
                 <option value="not-interested" <?= $lead['status'] === 'not-interested' ? 'selected' : '' ?>>Not Interested</option>
               </select>

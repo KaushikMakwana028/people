@@ -202,18 +202,20 @@ if ('serviceWorker' in navigator) {
     .catch(err => console.error('❌ SW error', err));
 }
 </script>
-<!-- logo JS   -->
 <script>
 	setInterval(function() {
-
-		if (document.querySelector('.wrapper').classList.contains('toggled')) {
-			document.getElementById('logoFull').style.display = "none";
-			document.getElementById('logoIcon').style.display = "block";
+		if (window.innerWidth >= 992) {
+			if (document.querySelector('.wrapper').classList.contains('toggled')) {
+				document.getElementById('logoFull').style.display = "none";
+				document.getElementById('logoIcon').style.display = "block";
+			} else {
+				document.getElementById('logoIcon').style.display = "none";
+				document.getElementById('logoFull').style.display = "block";
+			}
 		} else {
 			document.getElementById('logoIcon').style.display = "none";
 			document.getElementById('logoFull').style.display = "block";
 		}
-
 	}, 200);
 </script>
 

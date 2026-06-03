@@ -540,11 +540,34 @@ button[data-bs-target="#staticBackdrop"],
 @media (max-width: 991.98px) {
     .sidebar-wrapper {
         left: calc(var(--sidebar-width) * -1) !important;
+        width: var(--sidebar-width) !important;
     }
 
     .wrapper.toggled .sidebar-wrapper {
         left: 0 !important;
         width: var(--sidebar-width) !important;
+    }
+
+    /* Force full logo and hide logo icon on mobile */
+    .sidebar-wrapper #logoFull,
+    .wrapper.toggled .sidebar-wrapper #logoFull {
+        display: block !important;
+    }
+    .sidebar-wrapper #logoIcon,
+    .wrapper.toggled .sidebar-wrapper #logoIcon {
+        display: none !important;
+    }
+
+    /* Force menu titles and arrow indicators to be visible on mobile */
+    .sidebar-wrapper .menu-title,
+    .sidebar-wrapper .metismenu .menu-title,
+    .wrapper.toggled .sidebar-wrapper .menu-title,
+    .wrapper.toggled .sidebar-wrapper .metismenu .menu-title {
+        display: block !important;
+    }
+    .sidebar-wrapper .has-arrow:after,
+    .wrapper.toggled .sidebar-wrapper .has-arrow:after {
+        display: block !important;
     }
 
     .topbar,

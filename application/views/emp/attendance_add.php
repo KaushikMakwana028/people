@@ -1,26 +1,4 @@
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="<?= base_url('assets/images/vlogo.png') ?>" type="image/png">
-    <link href="<?= base_url('assets/plugins/vectormap/jquery-jvectormap-2.0.2.css') ?>" rel="stylesheet">
-    <link href="<?= base_url('assets/plugins/simplebar/css/simplebar.css') ?>" rel="stylesheet">
-    <link href="<?= base_url('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') ?>" rel="stylesheet">
-    <link href="<?= base_url('assets/plugins/metismenu/css/metisMenu.min.css') ?>" rel="stylesheet">
-    <link href="<?= base_url('assets/css/pace.min.css') ?>" rel="stylesheet"/>
-    <script src="<?= base_url('assets/js/pace.min.js') ?>"></script>
-    <link href="<?= base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
-    <link href="<?= base_url('assets/css/bootstrap-extended.css') ?>" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-    <link href="<?= base_url('assets/sass/app.css') ?>" rel="stylesheet">
-    <link href="<?= base_url('assets/css/icons.css') ?>" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="<?= base_url('assets/sass/dark-theme.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/sass/semi-dark.css') ?>">
-    <link rel="stylesheet" href="<?= base_url('assets/sass/bordered-theme.css') ?>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <title>Vision TECHNOLABS</title>
-
-    <style>
+<style>
         .logo-wrapper {
             display: flex;
             align-items: center;
@@ -304,22 +282,6 @@
         .animate-delay-4 { animation-delay: 0.4s; opacity: 0; }
     </style>
 
-
-<body>
-    <div class="wrapper">
-
-
-      
-     
-
-        <!--start page wrapper -->
-        <div class="page-wrapper">
-            <div class="page-content">
-
-                <!-- Breadcrumb -->
-                <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
-                    <div class="breadcrumb-title pe-3 fw-bold">
-                        <i class="bx bx-calendar-check text-primary me-1"></i> Attendance
                     </div>
                     <div class="ps-3">
                         <nav aria-label="breadcrumb">
@@ -704,16 +666,3 @@
 
         <div class="overlay toggle-icon"></div>
         <a href="javascript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
-    </div>
-
-
-
-    <!-- Bootstrap JS -->
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/simplebar/js/simplebar.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/metismenu/js/metisMenu.min.js') ?>"></script>
-    <script src="<?= base_url('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') ?>"></script>
-    <script src="<?= base_url('assets/js/app.js?v=1.0.1') ?>"></script>
-</body>
-</html>

@@ -2,6 +2,10 @@
 // ── Helpers ──────────────────────────────────────────────────────────────────
 function status_badge($status)
 {
+  $status = trim($status);
+  if (empty($status)) {
+    $status = 'in-progress';
+  }
   $map = [
     'in-progress'    => ['label' => 'In Progress',    'color' => '#6366f1', 'bg' => 'rgba(99,102,241,.12)', 'dot' => '#6366f1'],
     'converted'      => ['label' => 'Converted',      'color' => '#22c55e', 'bg' => 'rgba(34,197,94,.12)', 'dot' => '#22c55e'],
@@ -797,19 +801,19 @@ function format_value($val)
                   <td style="font-size:12px;color:var(--text-secondary)"><?= date('M j, Y', strtotime($lead['created_at'])) ?></td>
                   <td>
                     <div class="lead-actions">
+                      <a href="javascript:;" onclick="viewLead(<?= (int) $lead['id'] ?>)" class="lead-action-btn action-view" title="View">
+                        <i class='bx bx-show'></i>
+                      </a>
+
+                      <a href="<?= base_url('admin/leads/edit/' . $lead['id']) ?>" class="lead-action-btn action-edit" title="Edit">
+                        <i class='bx bx-edit'></i>
+                      </a>
+
                       <?php
                       $has_phone = !empty($lead['phone']) && trim($lead['phone']) !== '—';
                       if ($has_phone):
                         $clean_phone = preg_replace('/[^0-9+]/', '', $lead['phone']);
                       ?>
-                        <a href="javascript:;" onclick="viewLead(<?= (int) $lead['id'] ?>)" class="lead-action-btn action-view" title="View">
-                          <i class='bx bx-show'></i>
-                        </a>
-
-                        <a href="<?= base_url('admin/leads/edit/' . $lead['id']) ?>" class="lead-action-btn action-edit" title="Edit">
-                          <i class='bx bx-edit'></i>
-                        </a>
-
                         <a href="https://wa.me/<?= $clean_phone ?>" target="_blank" class="lead-action-btn action-whatsapp" title="WhatsApp">
                           <i class='bx bxl-whatsapp'></i>
                         </a>
@@ -993,14 +997,20 @@ function format_value($val)
         document.getElementById('v_source').textContent = data.source || '—';
 
         let badgeHtml = '';
-        if (data.status === 'in-progress') {
+        let status = data.status ? data.status.trim() : '';
+        if (!status) {
+          status = 'in-progress';
+        }
+        if (status === 'in-progress') {
           badgeHtml = '<span class="sbadge" style="background:rgba(99,102,241,.12);color:#6366f1"><span class="sdot" style="background:#6366f1"></span>In Progress</span>';
-        } else if (data.status === 'converted') {
+        } else if (status === 'converted') {
           badgeHtml = '<span class="sbadge" style="background:rgba(34,197,94,.12);color:#22c55e"><span class="sdot" style="background:#22c55e"></span>Converted</span>';
-        } else if (data.status === 'not-interested') {
+        } else if (status === 'not-interested') {
           badgeHtml = '<span class="sbadge" style="background:rgba(239,68,68,.12);color:#ef4444"><span class="sdot" style="background:#ef4444"></span>Not Interested</span>';
         } else {
-          badgeHtml = `<span class="sbadge" style="background:rgba(148,163,184,.12);color:#64748b"><span class="sdot" style="background:#94a3b8"></span>${data.status || '—'}</span>`;
+          let cleanStatus = status.replace(/-/g, ' ');
+          cleanStatus = cleanStatus.charAt(0).toUpperCase() + cleanStatus.slice(1);
+          badgeHtml = `<span class="sbadge" style="background:rgba(148,163,184,.12);color:#64748b"><span class="sdot" style="background:#94a3b8"></span>${cleanStatus}</span>`;
         }
         document.getElementById('v_status').innerHTML = badgeHtml;
         document.getElementById('v_notes').textContent = data.notes || 'No notes added.';
