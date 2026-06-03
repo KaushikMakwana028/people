@@ -1,100 +1,73 @@
 <?php
-class Sign_in extends CI_Controller {
-
- public function index()
+class Sign_in extends CI_Controller
 {
-    if ($this->session->userdata('logged_in')) {
 
-        if ($this->session->userdata('user_role') === 'admin') {
-            redirect('admin/dashboard');
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->load->library('session');
+    }
+    public function index()
+    {
+        // clear old error
+        $this->session->unset_userdata('login_error');
+
+        if ($this->session->userdata('logged_in')) {
+
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
+
+            return;
         }
 
-        if ($this->session->userdata('user_role') === 'emp') {
-            redirect('emp/dashboardd');
+        $this->load->view('admin/sign_in');
+    }
+
+    public function login()
+    {
+        $email = $this->input->post('email');
+        $password = $this->input->post('password');
+
+        $user = $this->db
+            ->where('email', $email)
+            ->get('users')
+            ->row();
+
+        if ($user && password_verify($password, $user->password)) {
+
+            // ✅ regenerate session safely
+            $this->session->sess_regenerate(TRUE);
+
+            $role = (int) $user->role;
+
+            $this->session->set_userdata([
+                'user_id'    => $user->id,
+                'admin_id'   => $user->id,
+                'user_name'  => $user->name,
+                'user_role'  => $role,
+                'user_photo' => $user->photo ?? null,
+                'logged_in'  => true
+            ]);
+
+            if ($role == 1) {
+                redirect('admin/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
+            return;
         }
+
+        $this->session->set_flashdata('login_error', 'Invalid credentials');
+        redirect('sign_in');
     }
-
-    $this->load->view('admin/sign_in');
-}
-
-
-   public function login()
-{
-    $email    = $this->input->post('email');
-    $password = $this->input->post('password');
-
-    /* ================= ADMIN LOGIN FIRST ================= */
-    $admin = $this->db
-        ->where('email', $email)
-        ->where('role', 'admin')
-        ->get('users')
-        ->row();
-
-    if ($admin && password_verify($password, $admin->password)) {
-
-        $this->session->set_userdata([
-            'user_id'    => $admin->id,
-            'user_name'  => $admin->name,
-            'user_role'  => 'admin',
-            'user_photo' => $admin->photo ?? null,
-            'logged_in'  => true
-        ]);
-// echo '<pre>';
-// print_r($this->session->userdata());
-// die;
-        redirect('admin/dashboard');
-        return;
+    public function logout()
+    {
+        $this->session->sess_destroy();
+        delete_cookie('ci_session');
+        redirect('sign_in');
     }
-
-    /* ================= EMPLOYEE LOGIN ================= */
-    $emp = $this->db
-        ->where('email', $email)
-        ->get('employees')
-        ->row();
-
-//         echo '<pre>';
-// var_dump($emp);
-// die;
-
-    if ($emp && password_verify($password, $emp->password)) {
-
-        $this->session->set_userdata([
-            'user_id'    => $emp->id,
-            'user_name'  => $emp->name,
-            'user_role'  => 'emp',
-            'user_photo' => $emp->photo ?? null,
-            'logged_in'  => true
-        ]);
-
-        redirect('emp/dashboardd');
-        return;
-    }
-
-    /* ================= INVALID LOGIN ================= */
-    $this->session->set_flashdata('login_error', 'Invalid email or password');
-    redirect('sign_in');
 }
-
-
-
-public function logout()
-{
-    // 🔒 session data clear
-    $this->session->unset_userdata([
-        'user_id',
-        'user_name',
-        'user_role',
-        'user_photo',
-        'logged_in'
-    ]);
-
-    // extra safety
-    $this->session->sess_destroy();
-
-    // login page pe redirect
-    redirect('sign_in');
-}
-
-}
-
-

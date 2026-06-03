@@ -1,5 +1,5 @@
 	
-		
+	</div>
 	<!--end wrapper-->
 
 
@@ -106,6 +106,7 @@
   <!--start switcher-->
 
 	<!-- Bootstrap JS -->
+
 	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 	<script src="assets/js/bootstrap.bundle.min.js"></script>
@@ -116,105 +117,62 @@
 	<script src="<?= base_url('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') ?>"></script>
 	<script src="<?= base_url('assets/plugins/apexcharts-bundle/js/apexcharts.min.js') ?>"></script>
 	<!--app JS-->
-	<script src="<?= base_url('assets/js/app.js') ?>"></script>
+	<script src="<?= base_url('assets/js/app.js?v=1.0.1') ?>"></script>
 
 	<script src="<?= base_url('assets/js/index.js') ?>"></script>
 	<script src="<?= base_url('assets/plugins/peity/jquery.peity.min.js') ?>"></script>
     <script>
        $(".data-attributes span").peity("donut")
     </script>
-
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-function confirmLogout() {
-    Swal.fire({
-        title: 'Logout?',
-        text: 'You will be signed out from your account',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, Logout',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = "<?= site_url('emp/logout'); ?>";
-        }
-    });
-}
-</script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+document.addEventListener('DOMContentLoaded', function () {
+    const bell  = document.getElementById('notifBell');
+    const popup = document.getElementById('notifPopup');
 
+    if (bell && popup) {
+        bell.addEventListener('click', function (e) {
+            e.preventDefault();
+            popup.style.display =
+                popup.style.display === 'block' ? 'none' : 'block';
+        });
 
-
-
-
-	<!-- BH5jx5ztGArZQPhs9I-suZKcnjL8N3PlSRJTta2iNkdVbnWuElbE_NcQxWNidrOdoiFHqUkd8n_o4xCpjfaB-mc
-	importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js');
-importScripts('https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js');
-
-firebase.initializeApp({
-  apiKey: "PASTE_API_KEY",
-  authDomain: "suju-5d220.firebaseapp.com",
-  projectId: "suju-5d220",
-  messagingSenderId: "216054181280",
-  appId: "PASTE_APP_ID"
-});
-
-const messaging = firebase.messaging();
-
-messaging.onBackgroundMessage(function(payload) {
-  console.log('[SW] Background message ', payload);
-
-  self.registration.showNotification(
-    payload.notification.title,
-    {
-      body: payload.notification.body,
-      icon: "/assets/images/logo-icon.png"
+        document.addEventListener('click', function (e) {
+            if (!bell.contains(e.target) && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
     }
-  );
-}); -->
+});
+</script>
 
 
-
-
-
-
-
-
-
-<!-- FIRE BASE JS CHE MARI  -->
-
-
+<!-- fcm  -->
 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-messaging-compat.js"></script>
 
 <script>
-firebase.initializeApp({
-  apiKey: "AIzaSyDSayskhU4EAexwRFBTY0-vgexDI69Ygs",
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
   authDomain: "suju-5d220.firebaseapp.com",
   projectId: "suju-5d220",
   messagingSenderId: "216054181280",
-  appId: "1:216051418280:web:0a763e4ad3258a20966e9d"
-});
+  appId: "PASTE_APP_ID"
+};
 
+firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-// 🔔 Permission
 Notification.requestPermission().then(permission => {
-  if (permission === "granted") {
+  console.log("ADMIN permission:", permission);
 
+  if (permission === "granted") {
     messaging.getToken({
       vapidKey: "BHi5xStcGaRzQPhs9I-suzKcnL8N3PISRJtta2iNkdVbnWuElbE_NcQxWNidrOdoiFHqUdk8n_o4xCpjFaB-mc"
-    })
-    .then(token => {
-      console.log("🔥 FCM TOKEN:", token);
+    }).then(token => {
+      console.log("🔥 ADMIN TOKEN:", token);
 
-      fetch("<?= base_url('emp/dashboardd/save_fcm_token') ?>", {
-
+      fetch("<?= base_url('admin/save-fcm-token') ?>", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: token })
@@ -224,22 +182,27 @@ Notification.requestPermission().then(permission => {
 });
 </script>
 
+<script>
+messaging.onMessage((payload) => {
+  console.log("📩 ADMIN foreground message:", payload);
 
+  if (Notification.permission === "granted") {
+    new Notification(payload.notification.title, {
+      body: payload.notification.body,
+      icon: "/assets/images/logo-icon.png"
+    });
+  }
+});
+</script>
 
 <script>
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker
-    .register('<?= base_url('firebase-messaging-sw.js') ?>')
-    .then((registration) => {
-      console.log('✅ SW registered:', registration.scope);
-      // v9 compat me yahin pe kaam khatam
-    })
-    .catch(err => {
-      console.error('❌ SW failed:', err);
-    });
+  navigator.serviceWorker.register('/suju/firebase-messaging-sw.js')
+    .then(reg => console.log('✅ SW registered', reg.scope))
+    .catch(err => console.error('❌ SW error', err));
 }
 </script>
-
+<!-- logo JS   -->
 <script>
 	setInterval(function() {
 
@@ -254,6 +217,8 @@ if ('serviceWorker' in navigator) {
 	}, 200);
 </script>
 
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

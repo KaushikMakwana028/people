@@ -11,9 +11,9 @@ class Leave extends CI_Controller {
     }
 
     public function index(){
-        $this->db->select('leaves.*, employees.name');
-        $this->db->from('leaves');
-        $this->db->join('employees','employees.id = leaves.user_id');
+       $this->db->select('leaves.*, users.email');
+$this->db->from('leaves');
+$this->db->join('users','users.id = leaves.user_id');
 
         $data['leaves'] = $this->db->get()->result();
 

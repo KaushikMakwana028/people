@@ -19,9 +19,12 @@ class History extends CI_Controller {
 {
     //  echo "HISTORY CONTROLLER HIT";
     // exit;
- $data['employees'] = $this->db
-        ->select('id, name')
-        ->get('employees')
+$data['employees'] = $this->db
+        ->select('id, email')
+        ->from('users')
+        ->where('role', 0)
+        ->where('is_active', 1)
+        ->get()
         ->result();
 
     $this->load->view('admin/header');
@@ -50,9 +53,9 @@ class History extends CI_Controller {
     
 
     // 👤 employee
-    $data['emp'] = $this->db
+$data['emp'] = $this->db
         ->where('id', $emp_id)
-        ->get('employees')
+        ->get('users')
         ->row();
 
     // ⏸ break logs
@@ -97,6 +100,7 @@ class History extends CI_Controller {
     // 📄 views
     $this->load->view('admin/header', $data);
     $this->load->view('admin/view', $data);
+    $this->load->view('admin/footer', $data);
 }
 
 
@@ -129,7 +133,7 @@ public function add_manual_work()
 
         if (!$emp_id) {
             $this->session->set_flashdata('error', 'Employee not selected');
-            redirect('admin/dashboard');
+            redirect('admin/manual-logs');
         }
 
         if (strtotime($end) <= strtotime($start)) {
@@ -137,7 +141,7 @@ public function add_manual_work()
                 'error',
                 'End time must be greater than start time'
             );
-            redirect('admin/dashboard');
+            redirect('admin/manual-logs');
         }
 
         
@@ -157,7 +161,7 @@ public function add_manual_work()
                 'error',
                 'Work time overlaps with existing work log'
             );
-            redirect('admin/dashboard');
+            redirect('admin/manual-logs');
         }
 
        
@@ -174,7 +178,7 @@ public function add_manual_work()
             'Manual work log added successfully'
         );
 
-        redirect('admin/dashboard');
+        redirect('admin/manual-logs');
     }
 }
 

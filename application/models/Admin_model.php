@@ -31,25 +31,26 @@ public function get_today_emp_time_summary()
     ")->result();
 }
  
-    public function get_user($id)
-    {
-        return $this->db
-            ->where('id', $id)
-            ->get('employees')
-            ->row();
-    }
+   public function get_user($id){
+    return $this->db->where('id',$id)
+                    ->get('users')
+                    ->row();
+}
 
    
 
 
     public function get_user_photo($id)
-    {
-        return $this->db->select('photo')->where('id',$id)->get('employees')->row('photo');
-    }
+{
+    return $this->db->select('photo')
+                    ->where('id',$id)
+                    ->get('users')
+                    ->row('photo');
+}
 
-    public function update_user($id,$data)
-    {
-        return $this->db->where('id',$id)->update('employees',$data);
-    }
+public function update_user($id,$data){
+    return $this->db->where('id',$id)
+                    ->update('users',$data);
+}
 
 }

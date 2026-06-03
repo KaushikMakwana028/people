@@ -12,6 +12,11 @@ class Dashboard extends CI_Controller {
         }
 
         $this->load->model('Admin_model');
+        
+     if ($this->session->userdata('user_role') == 0) {
+    redirect('emp/dashboard');
+}
+
     }
 
 private function headerData()
@@ -19,7 +24,7 @@ private function headerData()
     return [
         'userRole'  => $this->session->userdata('user_role'),
         'userName'  => $this->session->userdata('user_name'),
-        'userPhoto' => $this->session->userdata('photo'),
+        'userPhoto' => $this->session->userdata('user_photo'),
     ];
 }
 
@@ -30,41 +35,35 @@ private function headerData()
         $userId = $this->session->userdata('user_id');
 
         $data['user']  = $this->Admin_model->get_user($userId);
+
+     $user = $this->Admin_model->get_user($this->session->userdata('user_id'));
+
+$this->session->set_userdata([
+    'user_name'  => $user->name,
+    'user_email' => $user->email,
+    'user_photo' => $user->photo
+]);   
      
  $today = date('Y-m-d'); 
 
 
+$data['total_employees'] = $this->db
+->where('role',0)
+->count_all_results('users');
 
+$this->db->where('MONTH(holiday_date)', date('m'));
+$this->db->where('YEAR(holiday_date)', date('Y'));
+$data['total_holidays_month'] = $this->db
+->count_all_results('holidays');
 
-// manual 
-
-
-
-$data['manual_break_logs'] = $this->db
-    ->select('break_logs.*, employees.name')
-    ->from('break_logs')
-    ->join('employees', 'employees.id = break_logs.user_id')
-    ->where('DATE(start_time)', $today)
-    ->where('source', 'manual')
-    ->get()
-    ->result();
-
-
-$data['employees'] = $this->db
-        ->select('id, name')
-        ->where('role', 'emp')
-        ->get('employees')
-        ->result();
+$this->db->where('MONTH(created_at)', date('m'));
+$this->db->where('YEAR(created_at)', date('Y'));
+$data['total_announcements_month'] = $this->db
+->count_all_results('announcements');
 
 
 
-$data['manual_logs'] = $this->db
-    ->where('DATE(start_time)', $today)
-    ->where('source', 'manual')
-    ->get('work_logs')
-    ->result();
 
-//  end          
     $data['present_count'] = $this->db
         ->where('attendance_date', $today)
         ->where('status', 'Present')
@@ -81,6 +80,45 @@ $data['manual_logs'] = $this->db
 
         $this->load->view('admin/header', $data);
         $this->load->view('admin/dashboard', $data);
+        $this->load->view('admin/footer');
+    }
+
+    public function manual_logs()
+    {
+        $today = date('Y-m-d');
+        $data = $this->headerData();
+
+        $data['user'] = $this->Admin_model->get_user($this->session->userdata('user_id'));
+
+        $data['employees'] = $this->db
+            ->select('id, name')
+            ->where('role', 0)
+            ->order_by('name', 'ASC')
+            ->get('users')
+            ->result();
+
+        $data['manual_logs'] = $this->db
+            ->select('work_logs.*, users.name')
+            ->from('work_logs')
+            ->join('users', 'users.id = work_logs.user_id', 'left')
+            ->where('DATE(work_logs.start_time)', $today)
+            ->where('work_logs.source', 'manual')
+            ->order_by('work_logs.start_time', 'DESC')
+            ->get()
+            ->result();
+
+        $data['manual_break_logs'] = $this->db
+            ->select('break_logs.*, users.name')
+            ->from('break_logs')
+            ->join('users', 'users.id = break_logs.user_id', 'left')
+            ->where('DATE(break_logs.start_time)', $today)
+            ->where('break_logs.source', 'manual')
+            ->order_by('break_logs.start_time', 'DESC')
+            ->get()
+            ->result();
+
+        $this->load->view('admin/header', $data);
+        $this->load->view('admin/manual_logs', $data);
         $this->load->view('admin/footer');
     }
 
@@ -143,7 +181,10 @@ $data['manual_logs'] = $this->db
                                         }
                             
                                       
-                                        $this->session->set_userdata('photo', $data['photo']);
+                                        $this->session->set_userdata([
+                                            'photo' => $data['photo'],
+                                            'user_photo' => $data['photo']
+                                        ]);
                             
                                     } else {
                                         show_error($this->upload->display_errors());
@@ -155,7 +196,8 @@ $data['manual_logs'] = $this->db
                             
                                 $this->session->set_userdata([
                                     'user_name'  => $data['name'],
-                                    'user_email' => $data['email']
+                                    'user_email' => $data['email'],
+                                    'user_photo' => isset($data['photo']) ? $data['photo'] : $this->session->userdata('user_photo')
                                 ]);
                             
                                 $this->session->set_flashdata('success', 'Profile updated successfully');
@@ -173,7 +215,7 @@ public function add_manual_break()
    
     if (strtotime($end) <= strtotime($start)) {
         $this->session->set_flashdata('error','End time must be greater');
-        redirect('admin/dashboard');
+        redirect('admin/manual-logs');
     }
 
    
@@ -193,7 +235,7 @@ public function add_manual_break()
             'error',
             'Break time overlaps with existing break'
         );
-        redirect('admin/dashboard');
+        redirect('admin/manual-logs');
     }
 
    
@@ -205,7 +247,8 @@ public function add_manual_break()
         'note'       => $this->input->post('note')
     ]);
 
-    redirect('admin/dashboard');
+    $this->session->set_flashdata('success', 'Manual break log added successfully');
+    redirect('admin/manual-logs');
 }
 
 

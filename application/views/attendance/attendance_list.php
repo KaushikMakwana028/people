@@ -1,740 +1,109 @@
-<!doctype html>
-<html lang="en" data-bs-theme="light">
-<head>
-	<!-- Required meta tags -->
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<!--favicon-->
-	<link rel="icon" href="<?= base_url('assets/images/favicon-32x32.png') ?>" type="image/png">
-	<!--plugins-->
-	<link href="<?= base_url('assets/plugins/vectormap/jquery-jvectormap-2.0.2.css') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/plugins/simplebar/css/simplebar.css') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/plugins/metismenu/css/metisMenu.min.css') ?>" rel="stylesheet">
-	<!-- loader-->
-	<link href="<?= base_url('assets/css/pace.min.css') ?>" rel="stylesheet"/>    
-	<script src="<?= base_url('assets/js/pace.min.js') ?>"></script>
-	<!-- Bootstrap CSS -->
-	<link href="<?= base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/css/bootstrap-extended.css') ?>" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-	
-	<link href="<?= base_url('assets/sass/app.css') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/css/icons.css') ?>" rel="stylesheet">
-	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-	<!-- Theme Style CSS -->
-	<link rel="stylesheet" href="<?= base_url('assets/sass/dark-theme.css') ?>">
-	<link rel="stylesheet" href="<?= base_url('assets/sass/semi-dark.css') ?>">
-	<link rel="stylesheet" href="<?= base_url('assets/sass/bordered-theme.css') ?>">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href="<?= base_url('assets/plugins/datatable/css/dataTables.bootstrap5.min.css') ?>" rel="stylesheet">
+<style>
+.att-page{--att-primary:#6366f1;--att-secondary:#8b5cf6;--att-success:#10b981;--att-danger:#ef4444;--att-warning:#f59e0b;--att-text:var(--text-primary,#0f172a);--att-muted:var(--text-secondary,#64748b);--att-faint:var(--text-tertiary,#94a3b8);--att-bg:var(--bg-secondary,#f8fafc);--att-card:var(--bg-primary,#fff);--att-soft:var(--bg-tertiary,#f1f5f9);--att-border:var(--border-color,#e2e8f0);--att-shadow:0 16px 42px rgba(15,23,42,.08);font-family:'Poppins',sans-serif;background:var(--att-bg);min-height:calc(100vh - 73px)}
+[data-bs-theme=dark] .att-page{--att-shadow:0 16px 42px rgba(0,0,0,.32)}
+.att-page .page-content{padding:26px 20px}.att-shell{max-width:1320px;margin:0 auto}.att-breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:22px;color:var(--att-muted);font-size:13px}.att-breadcrumb a{color:var(--att-primary);text-decoration:none}.att-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.att-title{display:flex;align-items:center;gap:15px}.att-icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--att-primary),var(--att-secondary));color:#fff;font-size:28px;box-shadow:0 10px 24px rgba(99,102,241,.28)}.att-title h1{font-size:28px;font-weight:850;color:var(--att-text);letter-spacing:-.04em;margin:0 0 5px}.att-title p{color:var(--att-muted);margin:0}.att-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-bottom:24px}.att-stat{background:var(--att-card);border:1px solid var(--att-border);border-radius:18px;box-shadow:var(--att-shadow);padding:20px;display:flex;align-items:center;gap:16px;border-left:4px solid var(--stat-color)}.att-stat-icon{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--stat-bg);color:var(--stat-color);font-size:24px}.att-stat-num{font-size:28px;font-weight:900;color:var(--att-text);line-height:1}.att-stat-label{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--att-faint);margin-top:7px}.att-card{background:var(--att-card);border:1px solid var(--att-border);border-radius:20px;box-shadow:var(--att-shadow);overflow:hidden}.att-card-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;border-bottom:1px solid var(--att-border)}.att-card-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:850;color:var(--att-text)}.att-count{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;border-radius:999px;background:linear-gradient(135deg,var(--att-primary),var(--att-secondary));color:#fff;font-size:13px}.att-tools{display:flex;align-items:center;gap:10px}.att-search{position:relative}.att-search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--att-faint)}.att-search input{height:44px;width:280px;border:1px solid var(--att-border);border-radius:13px;background:var(--att-soft);color:var(--att-text);padding:0 14px 0 40px;outline:0}.att-filter{height:44px;border:1px solid var(--att-border);border-radius:13px;background:var(--att-card);color:var(--att-muted);padding:0 16px;font-weight:600}.att-table-wrap{overflow-x:auto}.att-table{width:100%;min-width:760px;border-collapse:collapse}.att-table th,.att-table td{padding:16px 22px;border-bottom:1px solid var(--att-border);vertical-align:middle}.att-table th{background:var(--att-bg);color:var(--att-faint);font-size:12px;font-weight:850;text-transform:uppercase;letter-spacing:.07em}.att-table td{color:var(--att-text)}.serial-num{width:32px;height:32px;border-radius:9px;background:var(--att-soft);display:grid;place-items:center;color:var(--att-muted);font-weight:800}.emp-cell{display:flex;align-items:center;gap:12px}.emp-avatar{position:relative;width:44px;height:44px}.emp-avatar img,.avatar-initial{width:44px;height:44px;border-radius:13px;object-fit:cover}.avatar-initial{display:grid;place-items:center;background:linear-gradient(135deg,var(--att-primary),var(--att-secondary));color:#fff;font-weight:850}.online-dot{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:var(--att-success);border:2px solid var(--att-card)}.emp-name{font-weight:850;margin:0;color:var(--att-text)}.emp-role{margin:2px 0 0;color:var(--att-faint);font-size:12px}.status-pill{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:999px;font-weight:850;font-size:12px}.status-pill .dot{width:7px;height:7px;border-radius:50%;background:currentColor}.status-pill.active{background:rgba(16,185,129,.12);color:var(--att-success)}.status-pill.inactive{background:rgba(239,68,68,.12);color:var(--att-danger)}.btn-view-details{display:inline-flex;align-items:center;gap:8px;border-radius:12px;background:linear-gradient(135deg,var(--att-primary),var(--att-secondary));color:#fff;text-decoration:none;font-weight:800;padding:10px 15px}.btn-view-details:hover{color:#fff}.att-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 22px;color:var(--att-muted);font-size:13px}.empty-state{text-align:center;padding:50px;color:var(--att-faint)}.empty-state i{font-size:42px;margin-bottom:12px}
+@media(max-width:992px){.att-stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.att-page .page-content{padding:18px 12px}.att-head,.att-card-head,.att-footer{flex-direction:column;align-items:stretch}.att-stats{grid-template-columns:1fr}.att-tools{flex-direction:column}.att-search input,.att-filter{width:100%}.btn-view-details{justify-content:center}}
+</style>
 
-	<style>
-		@media (max-width: 576px) {
-			div.example_filter{
-				background: blue;
-			}
-			div.dataTables_wrapper .row{
-				padding: 0;
-				margin: 0;
-			}
-			div.dataTables_filter {
-			width: 100%;
-			padding: 0;
-			display: flex;
-			/* justify-content: space-between; */
-			/* align-items: center; */
-			}
-
-			div.dataTables_filter input {
-			width: 100% !important;
-			box-sizing: border-box;
-			margin-top: 0.5rem;
-			}
-		}
-	</style>
-	<title>Syndron - Bootstrap 5 Admin Dashboard Template</title>
-</head>
-
-<body>
-<!--wrapper-->
-	<div class="wrapper">
-		<!--sidebar wrapper -->
-		<div class="sidebar-wrapper" data-simplebar="true">
-			<div class="sidebar-header">
-				<div>
-					<img src="<?= base_url('assets/images/logo-icon.png') ?>"class="logo-icon" alt="logo icon">
-				</div>
-				<div>
-					<h4 class="logo-text">ADMIN</h4>
-				</div>
-				<div class="mobile-toggle-icon ms-auto"><i class='bx bx-x'></i>
-				</div>
-			 </div>
-			<!--navigation-->
-			<ul class="metismenu" id="menu">
-
-    <li>	
-        <a href="<?= base_url('admin/dashboard') ?>">
-            <div class="parent-icon"><i class="bx bx-home"></i></div>
-            <div class="menu-title">Dashboard</div>
-        </a>
-    </li>
-
-    <!-- USERS MENU -->
-    <li>
-        <a href="javascript:;" class="has-arrow">
-            <div class="parent-icon"><i class="fa fa-user"></i></div>
-            <div class="menu-title">USERS</div>
-        </a>
-        <ul>
-           <li><a href="<?= base_url('admin/employee/add') ?>">Add Employee</a></li>
-<li><a href="<?= base_url('admin/employee') ?>">List Employee</a></li>
-        </ul>
-    </li>
-
-
-    
-    <li>
-        <a href="javascript:;" class="has-arrow">
-            <div class="parent-icon">
-                <i class="fa fa-calendar"></i>
-            </div>
-            <div class="menu-title">Attendance</div>
-        </a>
-        <ul>
-            <li>
-                <a href="<?= base_url('admin/attendance/attendance_list') ?>">
-                    <i class="bx bx-radio-circle"></i>Attendance List
-                </a>
-            </li>
-        </ul>
-    </li>
-
-	 <li>
-<a href="javascript:;" class="has-arrow">
-<div class="parent-icon"><i class="fa fa-sign-out"></i></div>
-<div class="menu-title">Leave</div>
-</a>
-<ul>
-<!-- <li><a href="leave/add_leave">Add Leave</a></li> -->
-<li>
-<a href="<?= base_url('admin/leave') ?>">Leave List</a>
-
-</li>
-</ul>
-</li>
-
-<li>	
-		<a href="<?= site_url('admin/history') ?>">
-			<div class="parent-icon"><i class="fa fa-history"></i></div>
-			<div class="menu-title">History</div>
-		</a>
-	</li>
-
-		<li class="menu-item">
-  <a href="<?= base_url('admin/holidays') ?>">
-   <div class="parent-icon"> <i class="fa fa-calendar"></i></div>
-    <div class="menu-title"> Holidays</div>
-  </a>
-</li>
-
-</ul>	
-
-						
-                 
-				
-		</div>
-		<!--end sidebar wrapper -->
-		<!--start header -->
-		<header>
-			<div class="topbar">
-				<nav class="navbar navbar-expand gap-2 align-items-center">
-					<div class="mobile-toggle-menu d-flex"><i class='bx bx-menu'></i>
-					</div>
-
-					  <div class="search-bar d-lg-block d-none" data-bs-toggle="modal" data-bs-target="#SearchModal">
-					     <a href="avascript:;" class="btn d-flex align-items-center"><i class="bx bx-search"></i>Search</a>
-					  </div>
-
-					  <div class="top-menu ms-auto">
-						<ul class="navbar-nav align-items-center gap-1">
-							<li class="nav-item mobile-search-icon d-flex d-lg-none" data-bs-toggle="modal" data-bs-target="#SearchModal">
-								<a class="nav-link" href="avascript:;"><i class='bx bx-search'></i>
-								</a>
-							</li>
-							<li class="nav-item dark-mode d-none d-sm-flex">
-								<a class="nav-link dark-mode-icon" href="javascript:;"><i class='bx bx-moon'></i>
-								</a>
-							</li>
-
-							<li class="nav-item dropdown dropdown-app">
-								<div class="dropdown-menu dropdown-menu-end p-0">
-									<div class="app-container p-2 my-2">
-
-									</div>
-								</div>
-							</li>
-
-							<li class="nav-item dropdown dropdown-large">
-								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" data-bs-toggle="dropdown"><span class="alert-count">7</span>
-									<i class='bx bx-bell'></i>
-								</a>
-								<div class="dropdown-menu dropdown-menu-end">
-									<a href="javascript:;">
-										<div class="msg-header">
-											<p class="msg-header-title">Notifications</p>
-											<p class="msg-header-badge">8 New</p>
-										</div>
-									</a>
-									<div class="header-notifications-list">
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-1.png" class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Daisy Anderson<span class="msg-time float-end">5 sec
-												ago</span></h6>
-													<p class="msg-info">The standard chunk of lorem</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-danger text-danger">dc
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New Orders <span class="msg-time float-end">2 min
-												ago</span></h6>
-													<p class="msg-info">You have recived new orders</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-2.png" class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Althea Cabardo <span class="msg-time float-end">14
-												sec ago</span></h6>
-													<p class="msg-info">Many desktop publishing packages</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-success text-success">
-													<img src="assets/images/app/outlook.png" width="25" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Account Created<span class="msg-time float-end">28 min
-												ago</span></h6>
-													<p class="msg-info">Successfully created new email</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-info text-info">Ss
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New Product Approved <span
-												class="msg-time float-end">2 hrs ago</span></h6>
-													<p class="msg-info">Your new product has approved</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-4.png" class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Katherine Pechon <span class="msg-time float-end">15
-												min ago</span></h6>
-													<p class="msg-info">Making this the first true generator</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-success text-success"><i class='bx bx-check-square'></i>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Your item is shipped <span class="msg-time float-end">5 hrs
-												ago</span></h6>
-													<p class="msg-info">Successfully shipped your item</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-primary">
-													<img src="assets/images/app/github.png" width="25" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New 24 authors<span class="msg-time float-end">1 day
-												ago</span></h6>
-													<p class="msg-info">24 new authors joined last week</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-8.png" class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Peter Costanzo <span class="msg-time float-end">6 hrs
-												ago</span></h6>
-													<p class="msg-info">It was popularised in the 1960s</p>
-												</div>
-											</div>
-										</a>
-									</div>
-									<a href="javascript:;">
-										<div class="text-center msg-footer">
-											<button class="btn btn-primary w-100">View All Notifications</button>
-										</div>
-									</a>
-								</div>
-							</li>
-							<li class="nav-item dropdown dropdown-large">
-								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <span class="alert-count">8</span>
-									<i class='bx bx-shopping-bag'></i>
-								</a>
-								<div class="dropdown-menu dropdown-menu-end">
-									<a href="javascript:;">
-										<div class="msg-header">
-											<p class="msg-header-title">My Cart</p>
-											<p class="msg-header-badge">10 Items</p>
-										</div>
-									</a>
-									<div class="header-message-list">
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/11.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/02.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/03.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/04.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/05.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/06.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/07.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/08.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/09.png" class="" alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-									</div>
-									<a href="javascript:;">
-										<div class="text-center msg-footer">
-											<div class="d-flex align-items-center justify-content-between mb-3">
-												<h5 class="mb-0">Total</h5>
-												<h5 class="mb-0 ms-auto">$489.00</h5>
-											</div>
-											<button class="btn btn-primary w-100">Checkout</button>
-										</div>
-									</a>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<div class="user-box dropdown px-3">
-						<a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="<?= base_url('assets/images/avatars/avatar-2.png') ?>" class="user-img" alt="user avatar">
-							<div class="user-info">
-								<p class="user-name mb-0">Pauline Seitz</p>
-								<p class="designattion mb-0">Web Designer</p>
-							</div>
-						</a>
-						<ul class="dropdown-menu dropdown-menu-end">
-							<li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i class="bx bx-user fs-5"></i><span>Profile</span></a>
-							</li>
-							<li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i class="bx bx-cog fs-5"></i><span>Settings</span></a>
-							</li>
-							<li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i class="bx bx-home-circle fs-5"></i><span>Dashboard</span></a>
-							</li>
-							<li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i class="bx bx-dollar-circle fs-5"></i><span>Earnings</span></a>
-							</li>
-							<li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i class="bx bx-download fs-5"></i><span>Downloads</span></a>
-							</li>
-							<li>
-								<div class="dropdown-divider mb-0"></div>
-							</li>
-							<li><a class="dropdown-item d-flex align-items-center" href="javascript:;"><i class="bx bx-log-out-circle"></i><span>Logout</span></a>
-							</li>
-						</ul>
-					</div>
-				</nav>
-			</div>
-		</header> 
-		<!--end header -->
-
-        <div class="page-wrapper">
-			<div class="page-content">
-				<!--breadcrumb-->
-				
-				<!--end breadcrumb-->
-				<h6 class="mb-0 text-uppercase">Employee Attendance Details</h6>
-				<hr/>
-				<div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-primary">
-                    <tr>
-                        <th>Employee Name</th>
-                        <!-- <th>Present</th>
-                        <th>Absent</th> -->
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-
-                <?php if (!empty($employees)): ?>
-                    <?php foreach ($employees as $emp): ?>
-                        <tr>
-                            <td><?= ucfirst($emp->emp_name) ?></td>
-<!-- 
-                            <td>
-                                <span class="badge bg-success">
-                                    <?= $emp->present_count ?>
-                                </span>
-                            </td>
-
-                            <td>
-                                <span class="badge bg-danger">
-                                    <?= $emp->absent_count ?>
-                                </span>
-                            </td> -->
-
-                            <td>
-                                <a href="<?= site_url('admin/attendance/view_details/'.$emp->id) ?>" 
-   class="btn btn-sm btn-primary">
-   View Details
-</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="4" class="text-center text-muted">
-                            No attendance data found
-                        </td>
-                    </tr>
-                <?php endif; ?>
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-				<hr/>
-			</div>
-		</div>
-	</div>
-		<!--end page wrapper -->
-
-		<!-- footer  -->
-
-    			<footer class="page-footer">
-			<p class="mb-0">Copyright © 2024. All right reserved.</p>
-		</footer>
-	</div>
-	<!--end wrapper-->
-
-
-	<!-- search modal -->
-    <div class="modal" id="SearchModal" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down">
-		  <div class="modal-content">
-			<div class="modal-header gap-2">
-			  <div class="position-relative popup-search w-100">
-				<input class="form-control form-control-lg ps-5 border border-3 border-primary" type="search" placeholder="Search">
-				<span class="position-absolute top-50 search-show ms-3 translate-middle-y start-0 top-50 fs-4"><i class='bx bx-search'></i></span>
-			  </div>
-			  <button type="button" class="btn-close d-md-none" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<div class="search-list">
-				   <p class="mb-1">Html Templates</p>
-				   <div class="list-group">
-					  <a href="javascript:;" class="list-group-item list-group-item-action active align-items-center d-flex gap-2 py-1"><i class='bx bxl-angular fs-4'></i>Best Html Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-vuejs fs-4'></i>Html5 Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-magento fs-4'></i>Responsive Html5 Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-shopify fs-4'></i>eCommerce Html Templates</a>
-				   </div>
-				   <p class="mb-1 mt-3">Web Designe Company</p>
-				   <div class="list-group">
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-windows fs-4'></i>Best Html Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-dropbox fs-4' ></i>Html5 Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-opera fs-4'></i>Responsive Html5 Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-wordpress fs-4'></i>eCommerce Html Templates</a>
-				   </div>
-				   <p class="mb-1 mt-3">Software Development</p>
-				   <div class="list-group">
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-mailchimp fs-4'></i>Best Html Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-zoom fs-4'></i>Html5 Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-sass fs-4'></i>Responsive Html5 Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-vk fs-4'></i>eCommerce Html Templates</a>
-				   </div>
-				   <p class="mb-1 mt-3">Online Shoping Portals</p>
-				   <div class="list-group">
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-slack fs-4'></i>Best Html Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-skype fs-4'></i>Html5 Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-twitter fs-4'></i>Responsive Html5 Templates</a>
-					  <a href="javascript:;" class="list-group-item list-group-item-action align-items-center d-flex gap-2 py-1"><i class='bx bxl-vimeo fs-4'></i>eCommerce Html Templates</a>
-				   </div>
-				</div>
-			</div>
-		  </div>
-		</div>
-	  </div>
-    <!-- end search modal -->
-
-
-
-<!--start switcher-->
-<!-- <button class="btn btn-primary position-fixed bottom-0 end-0 m-3 d-flex align-items-center gap-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop">
-    <i class='bx bx-cog bx-spin'></i>Customize
-  </button> -->
-  
-  <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="staticBackdrop">
-    <div class="offcanvas-header border-bottom h-60">
-      <div class="">
-        <h5 class="mb-0 text-uppercase">Theme Customizer</h5>
+<div class="page-wrapper att-page">
+  <div class="page-content">
+    <div class="att-shell">
+      <div class="att-breadcrumb">
+        <a href="<?= base_url('admin/dashboard') ?>"><i class='bx bx-home-alt'></i> Home</a>
+        <i class='bx bx-chevron-right'></i>
+        <span>Employee Attendance</span>
       </div>
-	  <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <div>
-        <p>Theme variation</p>
 
-        <div class="row g-3">
-          <div class="col-12 col-xl-6">
-            <input type="radio" class="btn-check" name="theme-options" id="LightTheme" checked>
-            <label class="btn btn-outline-secondary d-flex flex-column gap-2 align-items-center justify-content-center p-3" for="LightTheme">
-				<span><i class='bx bx-sun fs-2'></i></span>
-                <span>Light</span>
-            </label>
+      <div class="att-head">
+        <div class="att-title">
+          <div class="att-icon"><i class='bx bx-calendar-check'></i></div>
+          <div>
+            <h1>Employee Attendance</h1>
+            <p>Track and manage attendance records for all employees</p>
           </div>
-          <div class="col-12 col-xl-6">
-            <input type="radio" class="btn-check" name="theme-options" id="DarkTheme">
-            <label class="btn btn-outline-secondary d-flex flex-column gap-2 align-items-center justify-content-center p-3" for="DarkTheme">
-				<span><i class='bx bx-moon fs-2'></i></span>
-                <span>Dark</span>
-            </label>
-          </div>
-          <div class="col-12 col-xl-6">
-            <input type="radio" class="btn-check" name="theme-options" id="SemiDarkTheme">
-            <label class="btn btn-outline-secondary d-flex flex-column gap-2 align-items-center justify-content-center p-3" for="SemiDarkTheme">
-				<span><i class='bx bx-brightness-half fs-2'></i></span>
-                <span>Semi Dark</span>
-            </label>
-          </div>
-          <div class="col-12 col-xl-6">
-            <input type="radio" class="btn-check" name="theme-options" id="BoderedTheme">
-            <label class="btn btn-outline-secondary d-flex flex-column gap-2 align-items-center justify-content-center p-3" for="BoderedTheme">
-				<span><i class='bx bx-border-all fs-2'></i></span>
-                <span>Bordered</span>
-            </label>
-          </div>
-        </div><!--end row-->
+        </div>
+      </div>
 
+      <div class="att-stats">
+        <div class="att-stat" style="--stat-color:var(--att-primary);--stat-bg:rgba(99,102,241,.12)"><div class="att-stat-icon"><i class='bx bx-group'></i></div><div><div class="att-stat-num"><?= !empty($employees) ? count($employees) : 0 ?></div><div class="att-stat-label">Total Employees</div></div></div>
+        <div class="att-stat" style="--stat-color:var(--att-success);--stat-bg:rgba(16,185,129,.12)"><div class="att-stat-icon"><i class='bx bx-check-circle'></i></div><div><div class="att-stat-num"><?= (int) $present_today ?></div><div class="att-stat-label">Present Today</div></div></div>
+        <div class="att-stat" style="--stat-color:var(--att-danger);--stat-bg:rgba(239,68,68,.12)"><div class="att-stat-icon"><i class='bx bx-x-circle'></i></div><div><div class="att-stat-num"><?= (int) $absent_today ?></div><div class="att-stat-label">Absent Today</div></div></div>
+        <div class="att-stat" style="--stat-color:var(--att-warning);--stat-bg:rgba(245,158,11,.12)"><div class="att-stat-icon"><i class='bx bx-time-five'></i></div><div><div class="att-stat-num">—</div><div class="att-stat-label">Late Arrivals</div></div></div>
+      </div>
+
+      <div class="att-card">
+        <div class="att-card-head">
+          <div class="att-card-title"><i class='bx bx-list-ul' style="color:var(--att-primary)"></i> Employee List <span class="att-count" id="employeeCount"><?= !empty($employees) ? count($employees) : 0 ?></span></div>
+          <div class="att-tools">
+            <div class="att-search"><i class='bx bx-search'></i><input type="text" id="employeeSearch" placeholder="Search employees..." autocomplete="off"></div>
+            <button type="button" class="att-filter"><i class='bx bx-filter-alt'></i> Filter</button>
+          </div>
+        </div>
+
+        <?php if (!empty($employees)): ?>
+          <div class="att-table-wrap">
+            <table class="att-table" id="attendanceTable">
+              <thead><tr><th style="width:70px">#</th><th>Employee</th><th>Status</th><th style="width:180px">Action</th></tr></thead>
+              <tbody>
+                <?php $index = 0; foreach ($employees as $emp): $index++;
+                  $name = trim($emp->emp_name ?? '');
+                  $parts = preg_split('/\s+/', $name);
+                  $initials = count($parts) > 1 ? strtoupper(substr($parts[0], 0, 1) . substr(end($parts), 0, 1)) : strtoupper(substr($name ?: '-', 0, 1));
+                ?>
+                  <tr class="emp-row">
+                    <td><span class="serial-num"><?= $index ?></span></td>
+                    <td>
+                      <div class="emp-cell">
+                        <div class="emp-avatar">
+                          <?php if (!empty($emp->photo)): ?>
+                            <img src="<?= base_url('uploads/profile/' . $emp->photo) ?>" alt="<?= htmlspecialchars($name) ?>">
+                          <?php else: ?>
+                            <div class="avatar-initial"><?= htmlspecialchars($initials) ?></div>
+                          <?php endif; ?>
+                          <span class="online-dot"></span>
+                        </div>
+                        <div><p class="emp-name"><?= htmlspecialchars(ucfirst($name)) ?></p><p class="emp-role">Employee</p></div>
+                      </div>
+                    </td>
+                    <td>
+                      <?php if ($emp->today_status === 'Present'): ?>
+                        <span class="status-pill active"><span class="dot"></span> Present</span>
+                      <?php else: ?>
+                        <span class="status-pill inactive"><span class="dot"></span> Absent</span>
+                      <?php endif; ?>
+                    </td>
+                    <td><a href="<?= site_url('admin/attendance/view_details/' . $emp->id) ?>" class="btn-view-details"><span>View Details</span><i class='bx bx-right-arrow-alt'></i></a></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="att-footer"><span>Showing <strong id="visibleCount"><?= count($employees) ?></strong> of <strong><?= count($employees) ?></strong> employees</span><span>Page 1</span></div>
+        <?php else: ?>
+          <div class="empty-state"><i class='bx bx-calendar-x'></i><h5>No Attendance Data Found</h5><p>No employee attendance records are available.</p></div>
+        <?php endif; ?>
       </div>
     </div>
   </div>
-  <!--start switcher-->
-
-	<!-- Bootstrap JS -->
-	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-	<script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
-	<!--plugins-->
-	<script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
-	<script src="<?= base_url('assets/plugins/simplebar/js/simplebar.min.js') ?>"></script>
-	<script src="<?= base_url('assets/plugins/metismenu/js/metisMenu.min.js') ?>"></script>
-	<script src="<?= base_url('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js') ?>"></script>
-	<script src="<?= base_url('assets/plugins/apexcharts-bundle/js/apexcharts.min.js') ?>"></script>
-	<!--app JS-->
-	<script src="<?= base_url('assets/js/app.js') ?>"></script>
-
-	<script src="<?= base_url('assets/js/index.js') ?>"></script>
-	<script src="<?= base_url('assets/plugins/peity/jquery.peity.min.js') ?>"></script>
-    <script>
-       $(".data-attributes span").peity("donut")
-    </script>
-
-<script src="<?= base_url('assets/plugins/datatable/js/jquery.dataTables.min.js') ?>"></script>
-<script src="<?= base_url('assets/plugins/datatable/js/dataTables.bootstrap5.min.js') ?>"></script>
-
-<script src="<?= base_url('assets/js/app.js') ?>"></script>
-
+</div>
 
 <script>
-$(document).ready(function () {
-    $('#example').DataTable({
-        pageLength: 10,
-        lengthMenu: [5,10,25,50,100],
-        paging: true,
-        searching: true,
-        ordering: true,
-        info: true,
-        responsive: true
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('employeeSearch');
+  if (!searchInput) return;
+
+  searchInput.addEventListener('input', function () {
+    const query = this.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    document.querySelectorAll('.emp-row').forEach(function (row) {
+      const visible = row.textContent.toLowerCase().includes(query);
+      row.style.display = visible ? '' : 'none';
+      if (visible) visibleCount++;
     });
+
+    document.getElementById('employeeCount').textContent = visibleCount;
+    document.getElementById('visibleCount').textContent = visibleCount;
+  });
 });
 </script>
-</body>
-
-</html>
