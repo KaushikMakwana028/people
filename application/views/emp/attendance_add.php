@@ -494,27 +494,16 @@
                                             </div>
                                         </div>
 
-                                        <!-- Status Selection -->
-                                        <div class="mb-4">
-                                            <label class="form-label-enhanced">
-                                                <i class="bx bx-user-check text-warning"></i> Attendance Status
-                                            </label>
-                                            <div class="row g-3">
-                                                <div class="col-6">
-                                                    <input type="radio" name="status" value="Present" 
-                                                           id="statusPresent" class="status-option" checked>
-                                                    <label for="statusPresent" class="status-label present-label w-100">
-                                                        <i class="bx bx-check-circle fs-4"></i>
-                                                        Present
-                                                    </label>
-                                                </div>
-                                                <div class="col-6">
-                                                    <input type="radio" name="status" value="Absent" 
-                                                           id="statusAbsent" class="status-option">
-                                                    <label for="statusAbsent" class="status-label absent-label w-100">
-                                                        <i class="bx bx-x-circle fs-4"></i>
-                                                        Absent
-                                                    </label>
+                                        <!-- Hidden Status (Always Present) -->
+                                        <input type="hidden" name="status" value="Present">
+
+                                        <!-- Informative Info Box -->
+                                        <div class="alert alert-info border-0 rounded-3 mb-4 py-3" style="background: rgba(102, 126, 234, 0.08); border-left: 4px solid #667eea !important;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="fs-4 text-primary"><i class="bx bx-info-circle"></i></div>
+                                                <div class="ms-3">
+                                                    <h6 class="mb-0 fw-bold text-dark" style="font-size: 14px;">Daily Check-In</h6>
+                                                    <p class="mb-0 text-muted small mt-1">Submitting this form will automatically mark your attendance as <strong>Present</strong> for today.</p>
                                                 </div>
                                             </div>
                                         </div>

@@ -17,13 +17,10 @@ class Attendance extends CI_Controller {
 
      if (
             !$this->session->userdata('logged_in') ||
-            $this->session->userdata('user_role') !== '0'
+            $this->session->userdata('user_role') != 0
             ) {
-
-            }else{
             redirect('sign_in');
-
-            }
+        }
 }
 
 public function index()
@@ -54,14 +51,19 @@ public function save()
         redirect('emp/attendance_add');
     }
 
-    $data = [
-        'user_id'         => $user_id,
-        'attendance_date' => date('Y-m-d'),
-        'status'          => $this->input->post('status'),
-        'created_at'      => date('Y-m-d H:i:s')
-    ];
+        $status = $this->input->post('status');
+        if (empty($status) || $status !== 'Absent') {
+            $status = 'Present';
+        }
 
-    $this->Attendance_model->mark_attendance($data);
+        $data = [
+            'user_id'         => $user_id,
+            'attendance_date' => date('Y-m-d'),
+            'status'          => $status,
+            'created_at'      => date('Y-m-d H:i:s')
+        ];
+
+        $this->Attendance_model->mark_attendance($data);
 
     redirect('emp/attendance_list');
 }

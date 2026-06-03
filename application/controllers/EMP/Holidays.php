@@ -17,12 +17,12 @@ class Holidays extends CI_Controller {
         return [
             'user' => $this->db
                 ->where('id', $this->session->userdata('user_id'))
-                ->get('employees')
+                ->get('users')
                 ->row(),
 
             'userRole'  => $this->session->userdata('user_role'),
             'userName'  => $this->session->userdata('user_name'),
-            'userPhoto' => $this->session->userdata('photo')
+            'userPhoto' => $this->session->userdata('user_photo')
         ];
     }
 
@@ -37,8 +37,8 @@ class Holidays extends CI_Controller {
 
    
     $data['user'] = $this->db
-        ->where('id', $this->session->userdata('emp_id'))
-        ->get('employees')
+        ->where('id', $this->session->userdata('user_id'))
+        ->get('users')
         ->row();
 
     $data['year'] = $year;

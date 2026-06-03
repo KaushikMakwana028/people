@@ -645,28 +645,7 @@
               </select>
             </div>
 
-            <div class="form-field">
-              <label><i class='bx bx-rupee'></i> Deal Value</label>
-              <input type="number" name="value"
-                value="<?= $lead['value'] ?? 0 ?>"
-                min="0" step="0.01" placeholder="0.00">
-              <div class="field-hint">
-                <i class='bx bx-info-circle'></i> Amount in Rupees (₹)
-              </div>
-            </div>
 
-            <div class="form-field">
-              <label><i class='bx bx-user-check'></i> Assign To</label>
-              <select name="assignee_id">
-                <option value="">— Unassigned —</option>
-                <?php foreach ($users as $u): ?>
-                  <option value="<?= $u['id'] ?>"
-                    <?= ($lead['assignee_id'] ?? '') == $u['id'] ? 'selected' : '' ?>>
-                    <?= htmlspecialchars($u['name']) ?>
-                  </option>
-                <?php endforeach; ?>
-              </select>
-            </div>
           </div>
         </div>
 

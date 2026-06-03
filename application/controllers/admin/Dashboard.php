@@ -13,9 +13,12 @@ class Dashboard extends CI_Controller {
 
         $this->load->model('Admin_model');
         
-     if ($this->session->userdata('user_role') == 0) {
-    redirect('emp/dashboard');
-}
+        $this->load->model('emp/Attendance_model');
+        $this->Attendance_model->auto_mark_absents();
+        
+        if ($this->session->userdata('user_role') == 0) {
+            redirect('emp/dashboard');
+        }
 
     }
 

@@ -670,12 +670,20 @@
                     <td>
                       <span class="type-pill">
                         <i class="bx bx-bookmark"></i>
-                        <?= str_replace('_', ' ', ucfirst($row->leave_type)) ?>
+                        <?php
+                          if ($row->leave_type == 'first_half') {
+                              echo '1st Half (10 AM - 2 PM)';
+                          } elseif ($row->leave_type == 'second_half') {
+                              echo '2nd Half (2 PM - 7 PM)';
+                          } else {
+                              echo str_replace('_', ' ', ucfirst($row->leave_type));
+                          }
+                        ?>
                       </span>
                     </td>
                     <td>
-                      <div class="reason-cell" title="<?= htmlspecialchars($row->reason) ?>">
-                        <?= htmlspecialchars($row->reason) ?>
+                      <div class="reason-cell" title="<?= !empty($row->reason) ? htmlspecialchars($row->reason) : 'No reason provided' ?>">
+                        <?= !empty($row->reason) ? htmlspecialchars($row->reason) : '<span class="text-muted" style="font-size: 11px; font-style: italic; opacity: 0.65;">No reason provided</span>' ?>
                       </div>
                     </td>
                     <td>

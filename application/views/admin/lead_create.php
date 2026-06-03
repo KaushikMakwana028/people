@@ -127,33 +127,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label">Deal Value (₹)</label>
-                                <div class="input-group">
-                                    <span class="input-group-text">₹</span>
-                                    <input type="number"
-                                        name="value"
-                                        class="form-control"
-                                        placeholder="50000"
-                                        step="0.01"
-                                        min="0">
-                                    <span class="input-group-text">INR</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Assign To</label>
-                                <div class="input-group">
-                                    <span class="input-group-text"><i class="bx bx-user-check"></i></span>
-                                    <select name="assignee_id" class="form-select">
-                                        <option value="">-- Select User --</option>
-                                        <?php foreach ($users as $user): ?>
-                                            <option value="<?= $user['id']; ?>">
-                                                <?= $user['name']; ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
 
@@ -612,15 +586,7 @@
             });
         }
 
-        // Deal value formatting
-        const valueInput = form.querySelector('input[name="value"]');
-        if (valueInput) {
-            valueInput.addEventListener('blur', function() {
-                if (this.value) {
-                    this.value = parseFloat(this.value).toFixed(2);
-                }
-            });
-        }
+
     });
 
     // Email validation function

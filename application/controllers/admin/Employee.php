@@ -106,8 +106,10 @@ public function view_profile($id)
         show_404();
     }
 
+    $data['performance'] = $this->Employee_model->get_employee_performance($id);
+
     $this->load->view('admin/header',$data);
-    $this->load->view('emp/profile',$data);
+    $this->load->view('admin/employee_view',$data);
     $this->load->view('admin/footer');
 }
 
@@ -117,9 +119,6 @@ public function view_profile($id)
         $data['emp'] = $this->db->where('id', $id)->get('users')->row();
         if (!$data['emp'])
             show_404();
-
-        // ⭐ ADD THIS LINE
-        $data['performance'] = $this->Employee_model->get_employee_performance($id);
 
         $this->load->view('admin/header');
         $this->load->view('admin/employee_edit', $data);
@@ -136,7 +135,52 @@ public function view_profile($id)
             'email' => $this->input->post('email'),
             'country' => $this->input->post('country'),
             'address' => $this->input->post('address'),
+            'designation' => $this->input->post('designation'),
+            'dob' => !empty($this->input->post('dob')) ? $this->input->post('dob') : null,
+            'aadhar_card' => $this->input->post('aadhar_card'),
+            'skills' => $this->input->post('skills'),
+            'bank_name' => $this->input->post('bank_name'),
+            'account_holder_name' => $this->input->post('account_holder_name'),
+            'account_number' => $this->input->post('account_number'),
+            'ifsc_code' => $this->input->post('ifsc_code'),
+            'bank_branch' => $this->input->post('bank_branch'),
         ];
+
+        // 📸 PHOTO UPDATE LOGIC
+        if (!empty($_FILES['photo']['name'])) {
+            $old_user = $this->db->where('id', $id)->get('users')->row();
+            $old_photo = $old_user ? $old_user->photo : null;
+
+            $config['upload_path']   = FCPATH . 'uploads/profile/';
+            $config['allowed_types'] = 'gif|jpg|jpeg|png|webp';
+            $config['max_size']      = 2048;
+            $config['encrypt_name']  = TRUE;
+
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+
+            if ($this->upload->do_upload('photo')) {
+                $upload = $this->upload->data();
+                $data['photo'] = $upload['file_name'];
+                if ($old_photo && file_exists(FCPATH . 'uploads/profile/' . $old_photo)) {
+                    unlink(FCPATH . 'uploads/profile/' . $old_photo);
+                }
+
+                // If updated user is logged in
+                if ($this->session->userdata('user_id') == $id) {
+                    $this->session->set_userdata('user_photo', $data['photo']);
+                }
+            } else {
+                $this->session->set_flashdata('error', $this->upload->display_errors('', ''));
+                redirect('admin/employee/edit/' . $id);
+                return;
+            }
+        }
+
+        // Sync session username if currently logged in user is being updated
+        if ($this->session->userdata('user_id') == $id) {
+            $this->session->set_userdata('user_name', $data['name']);
+        }
 
         // 🔐 PASSWORD UPDATE LOGIC
         if (!empty($password)) {

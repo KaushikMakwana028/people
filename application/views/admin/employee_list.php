@@ -1119,10 +1119,14 @@
                                 <!-- Employee Info -->
                                 <td>
                                     <div class="employee-info">
-                                        <div class="emp-avatar"
-                                             style="background: linear-gradient(135deg, <?= $colors[$colorIndex] ?>, <?= $colors[($colorIndex + 1) % count($colors)] ?>);">
-                                            <?= $initials ?>
-                                        </div>
+                                        <?php if (!empty($emp->photo) && file_exists(FCPATH . 'uploads/profile/' . $emp->photo)): ?>
+                                            <img class="emp-avatar" src="<?= base_url('uploads/profile/' . $emp->photo) ?>" alt="<?= htmlspecialchars($emp->name) ?>" style="object-fit: cover;">
+                                        <?php else: ?>
+                                            <div class="emp-avatar"
+                                                 style="background: linear-gradient(135deg, <?= $colors[$colorIndex] ?>, <?= $colors[($colorIndex + 1) % count($colors)] ?>);">
+                                                <?= $initials ?>
+                                            </div>
+                                        <?php endif; ?>
                                         <div>
                                             <div class="emp-name"><?= htmlspecialchars($emp->name) ?></div>
                                             <div class="emp-username">

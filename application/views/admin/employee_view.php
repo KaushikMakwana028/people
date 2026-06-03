@@ -1344,6 +1344,398 @@
     .pf-wrapper ::-webkit-scrollbar-thumb:hover {
         background: var(--pf-muted);
     }
+
+    /* Tabs for employee view */
+    .pf-tabs {
+        display: flex;
+        background: var(--pf-bg-alt);
+        border-bottom: 1px solid var(--pf-border);
+    }
+
+    .pf-tab {
+        flex: 1;
+        padding: 16px 20px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--pf-muted);
+        background: none;
+        border: none;
+        border-bottom: 2.5px solid transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.25s;
+        font-family: inherit;
+    }
+
+    .pf-tab:hover {
+        color: var(--pf-text);
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .pf-tab.active {
+        color: var(--pf-primary);
+        background: var(--pf-card);
+        border-bottom-color: var(--pf-primary);
+    }
+
+    .pf-tab i {
+        font-size: 1.15rem;
+    }
+
+    .pf-tab .pro-tag {
+        background: var(--pf-gradient);
+        color: #fff;
+        font-size: 0.6rem;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
+    .pf-panel {
+        display: none;
+        animation: pfPanelIn 0.35s ease forwards;
+    }
+
+    .pf-panel.active {
+        display: block;
+    }
+
+    @keyframes pfPanelIn {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: none;
+        }
+    }
+
+    /* ========== PERFORMANCE TAB ========== */
+
+    /* KPI Cards */
+    .pf-kpi-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 28px;
+    }
+
+    .pf-kpi {
+        background: var(--pf-card);
+        border: 1px solid var(--pf-border-light);
+        border-radius: var(--pf-radius-sm);
+        padding: 20px 16px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: var(--pf-transition);
+    }
+
+    .pf-kpi::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+    }
+
+    .pf-kpi:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--pf-shadow-md);
+    }
+
+    .pf-kpi.green::after {
+        background: var(--pf-success);
+    }
+
+    .pf-kpi.yellow::after {
+        background: var(--pf-warning);
+    }
+
+    .pf-kpi.blue::after {
+        background: var(--pf-info);
+    }
+
+    .pf-kpi.red::after {
+        background: var(--pf-danger);
+    }
+
+    .pf-kpi-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: var(--pf-radius-xs);
+        display: grid;
+        place-items: center;
+        font-size: 1.25rem;
+        margin: 0 auto 10px;
+    }
+
+    .pf-kpi.green .pf-kpi-icon {
+        background: var(--pf-success-light);
+        color: var(--pf-success);
+    }
+
+    .pf-kpi.yellow .pf-kpi-icon {
+        background: var(--pf-warning-light);
+        color: var(--pf-warning);
+    }
+
+    .pf-kpi.blue .pf-kpi-icon {
+        background: var(--pf-info-light);
+        color: var(--pf-info);
+    }
+
+    .pf-kpi.red .pf-kpi-icon {
+        background: var(--pf-danger-light);
+        color: var(--pf-danger);
+    }
+
+    .pf-kpi-val {
+        font-size: 1.7rem;
+        font-weight: 800;
+        color: var(--pf-dark);
+        line-height: 1;
+        margin-bottom: 4px;
+    }
+
+    .pf-kpi-lbl {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--pf-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .pf-kpi-trend {
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+        font-size: 0.68rem;
+        font-weight: 600;
+        margin-top: 8px;
+        padding: 2px 8px;
+        border-radius: 20px;
+    }
+
+    .pf-kpi-trend.up {
+        background: var(--pf-success-light);
+        color: var(--pf-success);
+    }
+
+    .pf-kpi-trend.down {
+        background: var(--pf-danger-light);
+        color: var(--pf-danger);
+    }
+
+    .pf-kpi-trend.flat {
+        background: var(--pf-bg-alt);
+        color: var(--pf-muted);
+    }
+
+    /* Chart Area */
+    .pf-charts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 0;
+    }
+
+    .pf-chart-box {
+        background: var(--pf-card);
+        border: 1px solid var(--pf-border-light);
+        border-radius: var(--pf-radius-sm);
+        overflow: hidden;
+        transition: var(--pf-transition);
+    }
+
+    .pf-chart-box:hover {
+        box-shadow: var(--pf-shadow);
+    }
+
+    .pf-chart-head {
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--pf-border-light);
+        background: var(--pf-bg);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .pf-chart-head h6 {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--pf-heading);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+
+    .pf-chart-head h6 i {
+        color: var(--pf-primary);
+        font-size: 1.1rem;
+    }
+
+    .pf-chart-head .tag {
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 3px 9px;
+        border-radius: 12px;
+        background: var(--pf-primary-light);
+        color: var(--pf-primary);
+    }
+
+    .pf-chart-body {
+        padding: 20px;
+    }
+
+    /* Circular Progress */
+    .pf-circle-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 0;
+    }
+
+    .pf-circle {
+        position: relative;
+        width: 130px;
+        height: 130px;
+    }
+
+    .pf-circle svg {
+        transform: rotate(-90deg);
+        width: 130px;
+        height: 130px;
+    }
+
+    .pf-circle .track {
+        fill: none;
+        stroke: var(--pf-bg-alt);
+        stroke-width: 10;
+    }
+
+    .pf-circle .fill {
+        fill: none;
+        stroke-width: 10;
+        stroke-linecap: round;
+        stroke-dasharray: 346;
+        stroke-dashoffset: 346;
+        transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .pf-circle .txt {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .pf-circle .val {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--pf-dark);
+        line-height: 1;
+    }
+
+    .pf-circle .lbl {
+        font-size: 0.68rem;
+        color: var(--pf-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-top: 3px;
+    }
+
+    /* Progress Bars */
+    .pf-bar-item {
+        margin-bottom: 16px;
+    }
+
+    .pf-bar-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .pf-bar-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .pf-bar-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--pf-text);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .pf-bar-label .dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    .pf-bar-value {
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--pf-heading);
+    }
+
+    .pf-bar-track {
+        width: 100%;
+        height: 7px;
+        background: var(--pf-bg-alt);
+        border-radius: 7px;
+        overflow: hidden;
+    }
+
+    .pf-bar-fill {
+        height: 100%;
+        border-radius: 7px;
+        width: 0;
+        transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .pf-bar-fill::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+        animation: pfBarShimmer 2s infinite;
+    }
+
+    @keyframes pfBarShimmer {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(100%);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .pf-kpi-row {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .pf-charts {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 
 <!-- ========== PROFESSIONAL PROFILE PAGE ========== -->
@@ -1477,24 +1869,35 @@
                             <!-- Form Card -->
                             <div class="pf-form-card pf-anim-right pf-d2">
 
-                                <!-- Header -->
-                                <div class="pf-form-header">
-                                    <div class="pf-form-header-left">
-                                        <div class="pf-form-icon">
-                                            <i class='bx bx-edit-alt'></i>
-                                        </div>
-                                        <div>
-                                            <h5 class="pf-form-title">Personal Information</h5>
-                                            <p class="pf-form-desc">Update your details and save changes</p>
-                                        </div>
-                                    </div>
-                                    <span class="pf-editable-badge">
-                                        <i class='bx bx-check-circle'></i> Editable
-                                    </span>
+                                <div class="pf-tabs">
+                                    <button type="button" class="pf-tab active" data-tab="personal">
+                                        <i class='bx bx-user'></i> Personal Info
+                                    </button>
+                                    <button type="button" class="pf-tab" data-tab="performance">
+                                        <i class='bx bx-bar-chart-alt-2'></i> Performance
+                                        <span class="pro-tag">PRO</span>
+                                    </button>
                                 </div>
 
-                                <!-- Body -->
-                                <div class="pf-form-body">
+                                <div class="pf-panel active" id="panel-personal">
+                                    <!-- Header -->
+                                    <div class="pf-form-header">
+                                        <div class="pf-form-header-left">
+                                            <div class="pf-form-icon">
+                                                <i class='bx bx-edit-alt'></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="pf-form-title">Personal Information</h5>
+                                                <p class="pf-form-desc">Employee profile details and contact info</p>
+                                            </div>
+                                        </div>
+                                        <span class="pf-editable-badge" style="background: var(--pf-primary-light); color: var(--pf-primary);">
+                                            <i class='bx bx-show'></i> Read-only
+                                        </span>
+                                    </div>
+
+                                    <!-- Body -->
+                                    <div class="pf-form-body">
 
                                     <!-- Section: Basic Info -->
                                     <p class="pf-section-label">Basic Information</p>
@@ -1707,6 +2110,147 @@
                                     <?php endif; ?>
 
                                 </div>
+                                </div>
+
+                                <!-- PANEL: PERFORMANCE -->
+                                <div class="pf-panel" id="panel-performance">
+                                    <div class="pf-form-header">
+                                        <div class="pf-form-header-left">
+                                            <div class="pf-form-icon" style="background: var(--pf-primary-light); color: var(--pf-primary);">
+                                                <i class='bx bx-bar-chart-alt-2'></i>
+                                            </div>
+                                            <div>
+                                                <h5 class="pf-form-title">Performance Analytics</h5>
+                                                <p class="pf-form-desc">Metrics, efficiency, and task distribution</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="pf-form-body" style="padding-top: 24px;">
+                                        
+                                        <!-- KPI widgets -->
+                                        <div class="pf-kpi-row">
+                                            <div class="pf-kpi green">
+                                                <div class="pf-kpi-icon"><i class='bx bx-check-double'></i></div>
+                                                <div class="pf-kpi-val" id="kpi-completed">0</div>
+                                                <div class="pf-kpi-lbl">Completed</div>
+                                                <span class="pf-kpi-trend up"><i class='bx bx-trending-up'></i> On Track</span>
+                                            </div>
+                                            <div class="pf-kpi yellow">
+                                                <div class="pf-kpi-icon"><i class='bx bx-time-five'></i></div>
+                                                <div class="pf-kpi-val" id="kpi-pending">0</div>
+                                                <div class="pf-kpi-lbl">Pending</div>
+                                                <span class="pf-kpi-trend flat"><i class='bx bx-minus'></i> Stable</span>
+                                            </div>
+                                            <div class="pf-kpi blue">
+                                                <div class="pf-kpi-icon"><i class='bx bx-calendar-check'></i></div>
+                                                <div class="pf-kpi-val" id="kpi-ontime">0</div>
+                                                <div class="pf-kpi-lbl">On Time</div>
+                                                <span class="pf-kpi-trend up"><i class='bx bx-trending-up'></i> Great</span>
+                                            </div>
+                                            <div class="pf-kpi red">
+                                                <div class="pf-kpi-icon"><i class='bx bx-error-circle'></i></div>
+                                                <div class="pf-kpi-val" id="kpi-delayed">0</div>
+                                                <div class="pf-kpi-lbl">Delayed</div>
+                                                <span class="pf-kpi-trend down"><i class='bx bx-trending-down'></i> Focus</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Charts Grid -->
+                                        <div class="pf-charts">
+                                            <div class="pf-chart-box">
+                                                <div class="pf-chart-head">
+                                                    <h6><i class='bx bx-bar-chart-alt-2'></i> Task Distribution</h6>
+                                                    <span class="tag">This Month</span>
+                                                </div>
+                                                <div class="pf-chart-body">
+                                                    <canvas id="empBarChart" height="220"></canvas>
+                                                </div>
+                                            </div>
+
+                                            <div class="pf-chart-box">
+                                                <div class="pf-chart-head">
+                                                    <h6><i class='bx bx-target-lock'></i> Efficiency Score</h6>
+                                                    <span class="tag">Live</span>
+                                                </div>
+                                                <div class="pf-chart-body">
+                                                    <div class="pf-circle-wrap">
+                                                        <div class="pf-circle">
+                                                            <svg viewBox="0 0 120 120">
+                                                                <circle class="track" cx="60" cy="60" r="50"></circle>
+                                                                <circle class="fill" cx="60" cy="60" r="50" id="progressCircle"
+                                                                    stroke="url(#grad1)"></circle>
+                                                                <defs>
+                                                                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                                                        <stop offset="0%" style="stop-color:#6366f1" />
+                                                                        <stop offset="100%" style="stop-color:#8b5cf6" />
+                                                                    </linearGradient>
+                                                                </defs>
+                                                            </svg>
+                                                            <div class="txt">
+                                                                <div class="val" id="effVal">0%</div>
+                                                                <div class="lbl">Efficiency</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="pf-chart-box" style="grid-column: 1 / -1;">
+                                                <div class="pf-chart-head">
+                                                    <h6><i class='bx bx-slider-alt'></i> Performance Breakdown</h6>
+                                                    <span class="tag">Detail</span>
+                                                </div>
+                                                <div class="pf-chart-body">
+                                                    <div class="pf-bar-item">
+                                                        <div class="pf-bar-top">
+                                                            <span class="pf-bar-label"><span class="dot"
+                                                                    style="background:#22c55e"></span> Completion Rate</span>
+                                                            <span class="pf-bar-value" id="bComp">0%</span>
+                                                        </div>
+                                                        <div class="pf-bar-track">
+                                                            <div class="pf-bar-fill" id="fComp"
+                                                                style="background: linear-gradient(90deg,#22c55e,#16a34a)"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pf-bar-item">
+                                                        <div class="pf-bar-top">
+                                                            <span class="pf-bar-label"><span class="dot"
+                                                                    style="background:#3b82f6"></span> On Time </span>
+                                                            <span class="pf-bar-value" id="bPunc">0%</span>
+                                                        </div>
+                                                        <div class="pf-bar-track">
+                                                            <div class="pf-bar-fill" id="fPunc"
+                                                                style="background: linear-gradient(90deg,#3b82f6,#2563eb)"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pf-bar-item">
+                                                        <div class="pf-bar-top">
+                                                            <span class="pf-bar-label"><span class="dot"
+                                                                    style="background:#f59e0b"></span> Pending Ratio</span>
+                                                            <span class="pf-bar-value" id="bPend">0%</span>
+                                                        </div>
+                                                        <div class="pf-bar-track">
+                                                            <div class="pf-bar-fill" id="fPend"
+                                                                style="background: linear-gradient(90deg,#f59e0b,#d97706)"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="pf-bar-item">
+                                                        <div class="pf-bar-top">
+                                                            <span class="pf-bar-label"><span class="dot"
+                                                                    style="background:#ef4444"></span> Delay Rate</span>
+                                                            <span class="pf-bar-value" id="bDel">0%</span>
+                                                        </div>
+                                                        <div class="pf-bar-track">
+                                                            <div class="pf-bar-fill" id="fDel"
+                                                                style="background: linear-gradient(90deg,#ef4444,#dc2626)"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Security Card -->
@@ -1730,6 +2274,7 @@
 </div>
 
 <!-- ===== Scripts ===== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
@@ -1861,5 +2406,124 @@
                 if (row) row.style.background = '';
             });
         });
+
+        // ===== Tab Switching =====
+        const tabs = document.querySelectorAll('.pf-tab');
+        const panels = document.querySelectorAll('.pf-panel');
+        let perfReady = false;
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                tabs.forEach(t => t.classList.remove('active'));
+                panels.forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('panel-' + this.dataset.tab).classList.add('active');
+                if (this.dataset.tab === 'performance' && !perfReady) {
+                    setTimeout(initPerf, 150);
+                    perfReady = true;
+                }
+            });
+        });
+
+        // ===== Performance Metrics & Chart Initialization =====
+        const perf = <?= json_encode($performance) ?>;
+        const total = (perf.completed || 0) + (perf.pending || 0) + (perf.ontime || 0) + (perf.delayed || 0);
+
+        function initPerf() {
+            const completedVal = parseInt(perf.completed) || 0;
+            const pendingVal = parseInt(perf.pending) || 0;
+            const ontimeVal = parseInt(perf.ontime) || 0;
+            const delayedVal = parseInt(perf.delayed) || 0;
+
+            animNum(document.getElementById('kpi-completed'), completedVal, '');
+            animNum(document.getElementById('kpi-pending'), pendingVal, '');
+            animNum(document.getElementById('kpi-ontime'), ontimeVal, '');
+            animNum(document.getElementById('kpi-delayed'), delayedVal, '');
+
+            const compPct = total > 0 ? Math.round((completedVal / total) * 100) : 0;
+            const puncPct = completedVal > 0 ? Math.round((ontimeVal / completedVal) * 100) : 0;
+            const pendPct = total > 0 ? Math.round((pendingVal / total) * 100) : 0;
+            const delPct = total > 0 ? Math.round((delayedVal / total) * 100) : 0;
+            const efficiency = total > 0 ? Math.round(((completedVal + ontimeVal) / (total + delayedVal)) * 100) : 0;
+
+            const circle = document.getElementById('progressCircle');
+            if (circle) {
+                const circ = 2 * Math.PI * 50;
+                circle.style.strokeDasharray = circ;
+                setTimeout(() => {
+                    circle.style.strokeDashoffset = circ - (circ * Math.min(efficiency, 100) / 100);
+                }, 300);
+            }
+            animNum(document.getElementById('effVal'), efficiency, '%');
+
+            setTimeout(() => {
+                const fComp = document.getElementById('fComp'), bComp = document.getElementById('bComp');
+                const fPunc = document.getElementById('fPunc'), bPunc = document.getElementById('bPunc');
+                const fPend = document.getElementById('fPend'), bPend = document.getElementById('bPend');
+                const fDel = document.getElementById('fDel'), bDel = document.getElementById('bDel');
+
+                if (fComp) { fComp.style.width = compPct + '%'; bComp.textContent = compPct + '%'; }
+                if (fPunc) { fPunc.style.width = puncPct + '%'; bPunc.textContent = puncPct + '%'; }
+                if (fPend) { fPend.style.width = pendPct + '%'; bPend.textContent = pendPct + '%'; }
+                if (fDel) { fDel.style.width = delPct + '%'; bDel.textContent = delPct + '%'; }
+            }, 400);
+
+            const chartEl = document.getElementById('empBarChart');
+            if (chartEl) {
+                const ctx = chartEl.getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Completed', 'Pending', 'On Time', 'Delayed'],
+                        datasets: [{
+                            label: 'Tasks',
+                            data: [completedVal, pendingVal, ontimeVal, delayedVal],
+                            backgroundColor: ['rgba(34,197,94,0.12)', 'rgba(245,158,11,0.12)', 'rgba(59,130,246,0.12)', 'rgba(239,68,68,0.12)'],
+                            borderColor: ['#22c55e', '#f59e0b', '#3b82f6', '#ef4444'],
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#1e293b',
+                                titleFont: { family: 'Inter', weight: '600' },
+                                bodyFont: { family: 'Inter' },
+                                padding: 12,
+                                cornerRadius: 8,
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { family: 'Inter', size: 11, weight: '600' }, color: '#94a3b8' },
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false },
+                                ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8', stepSize: 1 },
+                            }
+                        },
+                        animation: { duration: 1200, easing: 'easeOutQuart' }
+                    }
+                });
+            }
+        }
+
+        function animNum(el, target, suffix) {
+            if (!el) return;
+            const dur = 1000, start = performance.now();
+            (function step(now) {
+                const p = Math.min((now - start) / dur, 1);
+                const ease = 1 - Math.pow(1 - p, 3);
+                el.textContent = Math.round(target * ease) + suffix;
+                if (p < 1) requestAnimationFrame(step);
+            })(start);
+        }
     });
 </script>

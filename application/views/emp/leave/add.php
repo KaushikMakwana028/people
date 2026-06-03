@@ -850,22 +850,22 @@ textarea.input-enhanced {
                   </div>
 
                   <div class="leave-type-option">
-                    <input type="radio" name="leave_type" value="half_day_1"
+                    <input type="radio" name="leave_type" value="first_half"
                            id="type_half1">
                     <label for="type_half1">
                       <i class="bx bx-cloud-light-rain"></i>
                       <span class="type-name">1st Half</span>
-                      <span class="type-time">Morning Session</span>
+                      <span class="type-time">10:00 AM - 02:00 PM</span>
                     </label>
                   </div>
 
                   <div class="leave-type-option">
-                    <input type="radio" name="leave_type" value="half_day_2"
+                    <input type="radio" name="leave_type" value="second_half"
                            id="type_half2">
                     <label for="type_half2">
                       <i class="bx bx-moon"></i>
                       <span class="type-name">2nd Half</span>
-                      <span class="type-time">Afternoon Session</span>
+                      <span class="type-time">02:00 PM - 07:00 PM</span>
                     </label>
                   </div>
                 </div>
@@ -949,7 +949,7 @@ textarea.input-enhanced {
               </div>
               <div class="info-item-text">
                 <h6>2nd Half (Afternoon)</h6>
-                <p>03:00 PM – 07:00 PM. Counts as 0.5 leave day.</p>
+                <p>02:00 PM – 07:00 PM. Counts as 0.5 leave day.</p>
               </div>
             </div>
 
@@ -999,12 +999,12 @@ const timeText  = document.getElementById('time_text');
 
 radios.forEach(radio => {
   radio.addEventListener('change', function () {
-    if (this.value === 'half_day_1') {
+    if (this.value === 'first_half') {
       infoBox.className = 'time-info-box show warning';
       timeText.innerHTML = '<strong>1st Half:</strong> 10:00 AM – 02:00 PM';
-    } else if (this.value === 'half_day_2') {
+    } else if (this.value === 'second_half') {
       infoBox.className = 'time-info-box show info';
-      timeText.innerHTML = '<strong>2nd Half:</strong> 03:00 PM – 07:00 PM';
+      timeText.innerHTML = '<strong>2nd Half:</strong> 02:00 PM – 07:00 PM';
     } else {
       infoBox.className = 'time-info-box hidden';
       timeText.innerHTML = '';

@@ -44,47 +44,55 @@ public function index($id = null)
     {
         $id = $this->session->userdata('user_id');
 
-     $data = [
-    'name'         => $this->input->post('name', true),
-    'email'        => $this->input->post('email', true),
-    'phone'        => $this->input->post('phone', true),
-    'address'      => $this->input->post('address', true),
-    'designation'  => $this->input->post('designation', true),
-    'skills'       => $this->input->post('skills', true),
-    'aadhar_card'  => $this->input->post('aadhar_card', true),
-    'dob'          => $this->input->post('dob', true),
-];
-if (!empty($_FILES['photo']['name'])) {
+        $data = [
+            'name'         => $this->input->post('name', true),
+            'email'        => $this->input->post('email', true),
+            'phone'        => $this->input->post('phone', true),
+            'address'      => $this->input->post('address', true),
+            'designation'  => $this->input->post('designation', true),
+            'skills'       => $this->input->post('skills', true),
+            'aadhar_card'  => $this->input->post('aadhar_card', true),
+            'dob'          => $this->input->post('dob', true),
+            'bank_name'    => $this->input->post('bank_name', true),
+            'account_holder_name' => $this->input->post('account_holder_name', true),
+            'account_number' => $this->input->post('account_number', true),
+            'ifsc_code'    => $this->input->post('ifsc_code', true),
+            'bank_branch'  => $this->input->post('bank_branch', true),
+        ];
+        
+        if (!empty($_FILES['photo']['name'])) {
+            $old_user = $this->Dashboard_model->get_user($id);
+            $old_photo = $old_user ? $old_user->photo : null;
 
-    $config['upload_path']   = FCPATH . 'uploads/profile/';
-    $config['allowed_types'] = '*';   // 🔥 TEMPORARY FOR TEST
-    $config['max_size']      = 2048;
-    $config['encrypt_name']  = TRUE;
+            $config['upload_path']   = FCPATH . 'uploads/profile/';
+            $config['allowed_types'] = 'gif|jpg|jpeg|png|webp';
+            $config['max_size']      = 2048;
+            $config['encrypt_name']  = TRUE;
 
-    $this->load->library('upload', $config);
-    $this->upload->initialize($config);
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
 
-    if (!$this->upload->do_upload('photo')) {
+            if (!$this->upload->do_upload('photo')) {
+                echo $this->upload->display_errors();
+                exit;
+            } else {
+                $upload = $this->upload->data();
+                $data['photo'] = $upload['file_name'];
+                if ($old_photo && file_exists(FCPATH . 'uploads/profile/' . $old_photo)) {
+                    unlink(FCPATH . 'uploads/profile/' . $old_photo);
+                }
 
-        echo $this->upload->display_errors();
-        exit;
-
-    } else {
-
-        $upload = $this->upload->data();
-        $data['photo'] = $upload['file_name'];
-
-        $this->session->set_userdata('user_photo', $data['photo']);
-    }
-}
+                $this->session->set_userdata('user_photo', $data['photo']);
+            }
+        }
 
         $this->Dashboard_model->update_user($id, $data);
 
-       $this->session->set_userdata([
-    'user_name'  => $data['name'],
-    'user_email' => $data['email'],
-    'user_photo' => isset($data['photo']) ? $data['photo'] : $this->session->userdata('user_photo')
-]);
+        $this->session->set_userdata([
+            'user_name'  => $data['name'],
+            'user_email' => $data['email'],
+            'user_photo' => isset($data['photo']) ? $data['photo'] : $this->session->userdata('user_photo')
+        ]);
 
         $this->session->set_flashdata('success','Profile updated');
         redirect('emp/profile');

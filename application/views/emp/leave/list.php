@@ -870,8 +870,8 @@
       <select class="filter-select" id="typeFilter">
         <option value="">All Types</option>
         <option value="full_day">Full Day</option>
-        <option value="half_day_1">Half Day (1st)</option>
-        <option value="half_day_2">Half Day (2nd)</option>
+        <option value="first_half">1st Half (10 AM - 2 PM)</option>
+        <option value="second_half">2nd Half (2 PM - 7 PM)</option>
       </select>
     </div>
 
@@ -914,13 +914,13 @@
                 $typeClass = 'full-day';
                 $typeLabel = 'Full Day';
                 $typeIcon  = 'bx-sun';
-                if ($row->leave_type == 'half_day_1') {
+                if ($row->leave_type == 'first_half') {
                   $typeClass = 'half-1';
-                  $typeLabel = '1st Half';
+                  $typeLabel = '1st Half (10 AM - 2 PM)';
                   $typeIcon  = 'bx-cloud-light-rain';
-                } elseif ($row->leave_type == 'half_day_2') {
+                } elseif ($row->leave_type == 'second_half') {
                   $typeClass = 'half-2';
-                  $typeLabel = '2nd Half';
+                  $typeLabel = '2nd Half (2 PM - 7 PM)';
                   $typeIcon  = 'bx-moon';
                 }
 

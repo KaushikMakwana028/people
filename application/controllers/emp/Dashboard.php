@@ -22,6 +22,9 @@ class Dashboard extends CI_Controller
             redirect('sign_in');
         }
 
+        $this->load->model('emp/Attendance_model');
+        $this->Attendance_model->auto_mark_absents();
+
         if ($this->session->userdata('user_role') == 1) {
             redirect('admin/dashboard');
         }
@@ -394,7 +397,7 @@ class Dashboard extends CI_Controller
         if ($leave) {
 
             // 2nd Half Leave → employee worked only first half
-            if ($leave->leave_type == 'half_day_2') {
+            if ($leave->leave_type == 'second_half') {
                 // Employee worked only first half (10 AM – 2 PM)
                 $reportHour = 14; // 2 PM
             }

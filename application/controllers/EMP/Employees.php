@@ -40,10 +40,10 @@ class Emp extends CI_Controller
         $type = $this->input->post('leave_type');
 
         $session = null;
-        if ($type == 'half_day_1') {
+        if ($type == 'first_half') {
             $session = '10:00-14:00';
-        } elseif ($type == 'half_day_2') {
-            $session = '15:00-19:00';
+        } elseif ($type == 'second_half') {
+            $session = '14:00-19:00';
         }
 
         $data = [

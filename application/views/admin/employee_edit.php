@@ -45,7 +45,7 @@
                 }
 
                 .ee-wrapper {
-                    max-width: 800px;
+                    max-width: 1200px;
                     margin: 0 auto;
                     padding: 12px 0 60px;
                     font-family: 'Inter', -apple-system, sans-serif;
@@ -1028,6 +1028,37 @@
                         font-size: 1.4rem;
                     }
                 }
+
+                .ee-avatar img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                .ee-camera-trigger {
+                    position: absolute;
+                    bottom: -2px;
+                    right: -2px;
+                    width: 24px;
+                    height: 24px;
+                    background: linear-gradient(135deg, var(--primary), var(--accent));
+                    color: #fff;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    cursor: pointer;
+                    border: 2px solid var(--white);
+                    font-size: 0.75rem;
+                    transition: all 0.2s ease;
+                    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+                    z-index: 4;
+                }
+
+                .ee-camera-trigger:hover {
+                    transform: scale(1.1);
+                }
             </style>
 
             <div class="ee-wrapper">
@@ -1045,7 +1076,7 @@
                         <div class="ee-header-icon"><i class='bx bx-edit-alt'></i></div>
                         <div>
                             <h3>Edit Employee</h3>
-                            <p>Update information and view performance</p>
+                            <p>Update employee profile and security credentials</p>
                         </div>
                     </div>
                     <a href="<?= base_url('admin/employee') ?>" class="ee-back-btn">
@@ -1053,25 +1084,32 @@
                     </a>
                 </div>
 
-                <form method="post" action="<?= base_url('admin/employee/update/' . $emp->id) ?>" id="editForm">
+                <form method="post" action="<?= base_url('admin/employee/update/' . $emp->id) ?>" id="editForm" enctype="multipart/form-data">
                     <div class="ee-card">
 
-                        <div class="ee-tabs">
-                            <button type="button" class="ee-tab active" data-tab="personal">
-                                <i class='bx bx-user'></i> Personal Info
-                            </button>
-                            <button type="button" class="ee-tab" data-tab="work">
-                                <i class='bx bx-bar-chart-alt-2'></i> Performance
-                                <span class="pro-tag">PRO</span>
-                            </button>
+                        <div class="ee-form-header" style="padding: 20px 28px; border-bottom: 1px solid var(--gray-200); background: var(--gray-50); display: flex; align-items: center; justify-content: space-between;">
+                            <h5 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: var(--gray-800);"><i class='bx bx-user' style='margin-right: 6px; color: var(--primary);'></i> Personal Information</h5>
+                            <span class="pro-tag" style="font-size: 0.65rem; background: var(--primary-light); color: var(--primary); padding: 3px 10px; border-radius: 20px; font-weight: 600;">Edit Mode</span>
                         </div>
 
                         <div class="ee-panel active" id="panel-personal">
 
                             <div class="ee-avatar-block">
-                                <div class="ee-avatar">
-                                    <span id="avatarInitials"><?= strtoupper(substr($emp->name, 0, 1)) ?></span>
-                                    <span class="online-dot"></span>
+                                <div style="position: relative;">
+                                    <div class="ee-avatar" id="avatarDiv" style="<?= (!empty($emp->photo) && file_exists(FCPATH . 'uploads/profile/' . $emp->photo)) ? 'background: none;' : '' ?>">
+                                        <?php if (!empty($emp->photo) && file_exists(FCPATH . 'uploads/profile/' . $emp->photo)): ?>
+                                            <img id="avatarImage" src="<?= base_url('uploads/profile/' . $emp->photo) ?>" alt="Profile Photo">
+                                            <span id="avatarInitials" style="display: none;"><?= strtoupper(substr($emp->name, 0, 1)) ?></span>
+                                        <?php else: ?>
+                                            <img id="avatarImage" src="" alt="Profile Photo" style="display: none;">
+                                            <span id="avatarInitials"><?= strtoupper(substr($emp->name, 0, 1)) ?></span>
+                                        <?php endif; ?>
+                                        <span class="online-dot"></span>
+                                    </div>
+                                    <label for="photoInput" class="ee-camera-trigger" title="Change photo">
+                                        <i class="bx bx-camera"></i>
+                                    </label>
+                                    <input type="file" name="photo" id="photoInput" style="display: none;" accept="image/*">
                                 </div>
                                 <div class="ee-avatar-info">
                                     <h5 id="previewName"><?= $emp->name ?></h5>
@@ -1117,14 +1155,7 @@
                                     </div>
                                 </div>
 
-                                <div class="ee-field">
-                                    <label><i class='bx bx-globe'></i> Country</label>
-                                    <div class="ee-input-wrap">
-                                        <input type="text" name="country" class="ee-input" value="<?= $emp->country ?>"
-                                            placeholder="Enter country">
-                                        <i class='bx bx-globe ico'></i>
-                                    </div>
-                                </div>
+                                
 
                                 <div class="ee-field span-2">
                                     <label><i class='bx bx-map'></i> Address</label>
@@ -1135,6 +1166,101 @@
                                         <i class='bx bx-map ico'></i>
                                     </div>
                                     <div class="ee-char-count" id="charWrap"><span id="charNum">0</span> / 300</div>
+                                </div>
+                            </div>
+
+                            <div class="ee-divider">
+                                <span class="marker"></span>
+                                <h6>Professional & Identity Info</h6>
+                                <span class="rule"></span>
+                            </div>
+
+                            <div class="ee-grid">
+                                <div class="ee-field">
+                                    <label><i class='bx bx-briefcase'></i> Designation</label>
+                                    <div class="ee-input-wrap">
+                                        <input type="text" name="designation" class="ee-input"
+                                            value="<?= htmlspecialchars($emp->designation ?? '') ?>" placeholder="Enter designation">
+                                        <i class='bx bx-briefcase ico'></i>
+                                    </div>
+                                </div>
+
+                                <div class="ee-field">
+                                    <label><i class='bx bx-cake'></i> Date of Birth</label>
+                                    <div class="ee-input-wrap">
+                                        <input type="date" name="dob" class="ee-input"
+                                            value="<?= htmlspecialchars($emp->dob ?? '') ?>">
+                                    </div>
+                                </div>
+
+                                <div class="ee-field">
+                                    <label><i class='bx bx-id-card'></i> Aadhar Card</label>
+                                    <div class="ee-input-wrap">
+                                        <input type="text" name="aadhar_card" class="ee-input"
+                                            value="<?= htmlspecialchars($emp->aadhar_card ?? '') ?>" placeholder="Enter Aadhar Card Number">
+                                        <i class='bx bx-id-card ico'></i>
+                                    </div>
+                                </div>
+
+                                <div class="ee-field span-2">
+                                    <label><i class='bx bx-code-alt'></i> Skills & Expertise</label>
+                                    <div class="ee-input-wrap is-textarea">
+                                        <textarea name="skills" class="ee-input" placeholder="e.g. PHP, JavaScript, React (comma separated)"><?= htmlspecialchars($emp->skills ?? '') ?></textarea>
+                                        <i class='bx bx-code-alt ico'></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="ee-divider">
+                                <span class="marker"></span>
+                                <h6>Bank Details</h6>
+                                <span class="rule"></span>
+                            </div>
+
+                            <div class="ee-grid">
+                                <div class="ee-field">
+                                    <label><i class='bx bx-buildings'></i> Bank Name</label>
+                                    <div class="ee-input-wrap">
+                                        <input type="text" name="bank_name" class="ee-input"
+                                            value="<?= htmlspecialchars($emp->bank_name ?? '') ?>" placeholder="Enter bank name">
+                                        <i class='bx bx-buildings ico'></i>
+                                    </div>
+                                </div>
+
+                                <div class="ee-field">
+                                    <label><i class='bx bx-user-check'></i> Account Holder Name</label>
+                                    <div class="ee-input-wrap">
+                                        <input type="text" name="account_holder_name" class="ee-input"
+                                            value="<?= htmlspecialchars($emp->account_holder_name ?? '') ?>" placeholder="Enter account holder name">
+                                        <i class='bx bx-user-check ico'></i>
+                                    </div>
+                                </div>
+
+                                <div class="ee-field">
+                                    <label><i class='bx bx-hash'></i> Account Number</label>
+                                    <div class="ee-input-wrap">
+                                        <input type="text" name="account_number" class="ee-input"
+                                            value="<?= htmlspecialchars($emp->account_number ?? '') ?>" placeholder="Enter account number">
+                                        <i class='bx bx-hash ico'></i>
+                                    </div>
+                                </div>
+
+                                <div class="ee-field">
+                                    <label><i class='bx bx-barcode'></i> IFSC Code</label>
+                                    <div class="ee-input-wrap">
+                                        <input type="text" name="ifsc_code" class="ee-input"
+                                            value="<?= htmlspecialchars($emp->ifsc_code ?? '') ?>" placeholder="Enter IFSC code">
+                                        <i class='bx bx-barcode ico'></i>
+                                    </div>
+                                </div>
+
+                                <div class="ee-field span-2">
+                                    <label><i class='bx bx-map-alt'></i> Branch</label>
+                                    <div class="ee-input-wrap">
+                                        <input type="text" name="bank_branch" class="ee-input"
+                                            value="<?= htmlspecialchars($emp->bank_branch ?? '') ?>" placeholder="Enter branch details">
+                                        <i class='bx bx-map-alt ico'></i>
+                                    </div>
                                 </div>
                             </div>
 
@@ -1179,140 +1305,7 @@
                             </div>
                         </div>
 
-                        <div class="ee-panel" id="panel-work">
 
-                            <div class="ee-divider">
-                                <span class="marker"></span>
-                                <h6>Key Metrics</h6>
-                                <span class="rule"></span>
-                            </div>
-
-                            <div class="ee-kpi-row">
-                                <div class="ee-kpi green">
-                                    <div class="ee-kpi-icon"><i class='bx bx-check-double'></i></div>
-                                    <div class="ee-kpi-val" data-count="0">0</div>
-                                    <div class="ee-kpi-lbl">Completed</div>
-                                    <span class="ee-kpi-trend up"><i class='bx bx-trending-up'></i> On Track</span>
-                                </div>
-                                <div class="ee-kpi yellow">
-                                    <div class="ee-kpi-icon"><i class='bx bx-time-five'></i></div>
-                                    <div class="ee-kpi-val" data-count="0">0</div>
-                                    <div class="ee-kpi-lbl">Pending</div>
-                                    <span class="ee-kpi-trend flat"><i class='bx bx-minus'></i> Stable</span>
-                                </div>
-                                <div class="ee-kpi blue">
-                                    <div class="ee-kpi-icon"><i class='bx bx-calendar-check'></i></div>
-                                    <div class="ee-kpi-val" data-count="0">0</div>
-                                    <div class="ee-kpi-lbl">On Time</div>
-                                    <span class="ee-kpi-trend up"><i class='bx bx-trending-up'></i> Great</span>
-                                </div>
-                                <div class="ee-kpi red">
-                                    <div class="ee-kpi-icon"><i class='bx bx-error-circle'></i></div>
-                                    <div class="ee-kpi-val" data-count="0">0</div>
-                                    <div class="ee-kpi-lbl">Delayed</div>
-                                    <span class="ee-kpi-trend down"><i class='bx bx-trending-down'></i> Focus</span>
-                                </div>
-                            </div>
-
-                            <div class="ee-divider">
-                                <span class="marker"></span>
-                                <h6>Analytics Overview</h6>
-                                <span class="rule"></span>
-                            </div>
-
-                            <div class="ee-charts">
-                                <div class="ee-chart-box">
-                                    <div class="ee-chart-head">
-                                        <h6><i class='bx bx-bar-chart-alt-2'></i> Task Distribution</h6>
-                                        <span class="tag">This Month</span>
-                                    </div>
-                                    <div class="ee-chart-body">
-                                        <canvas id="empBarChart" height="220"></canvas>
-                                    </div>
-                                </div>
-
-                                <div class="ee-chart-box">
-                                    <div class="ee-chart-head">
-                                        <h6><i class='bx bx-target-lock'></i> Efficiency Score</h6>
-                                        <span class="tag">Live</span>
-                                    </div>
-                                    <div class="ee-chart-body">
-                                        <div class="ee-circle-wrap">
-                                            <div class="ee-circle">
-                                                <svg viewBox="0 0 120 120">
-                                                    <circle class="track" cx="60" cy="60" r="50"></circle>
-                                                    <circle class="fill" cx="60" cy="60" r="50" id="progressCircle"
-                                                        stroke="url(#grad1)"></circle>
-                                                    <defs>
-                                                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                                                            <stop offset="0%" style="stop-color:#6366f1" />
-                                                            <stop offset="100%" style="stop-color:#8b5cf6" />
-                                                        </linearGradient>
-                                                    </defs>
-                                                </svg>
-                                                <div class="txt">
-                                                    <div class="val" id="effVal">0%</div>
-                                                    <div class="lbl">Efficiency</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="ee-chart-box" style="grid-column: 1 / -1;">
-                                    <div class="ee-chart-head">
-                                        <h6><i class='bx bx-slider-alt'></i> Performance Breakdown</h6>
-                                        <span class="tag">Detail</span>
-                                    </div>
-                                    <div class="ee-chart-body">
-                                        <div class="ee-bar-item">
-                                            <div class="ee-bar-top">
-                                                <span class="ee-bar-label"><span class="dot"
-                                                        style="background:#22c55e"></span> Completion Rate</span>
-                                                <span class="ee-bar-value" id="bComp">0%</span>
-                                            </div>
-                                            <div class="ee-bar-track">
-                                                <div class="ee-bar-fill" id="fComp"
-                                                    style="background: linear-gradient(90deg,#22c55e,#16a34a)"></div>
-                                            </div>
-                                        </div>
-                                        <div class="ee-bar-item">
-                                            <div class="ee-bar-top">
-                                                <span class="ee-bar-label"><span class="dot"
-                                                        style="background:#3b82f6"></span> On Time </span>
-                                                <span class="ee-bar-value" id="bPunc">0%</span>
-                                            </div>
-                                            <div class="ee-bar-track">
-                                                <div class="ee-bar-fill" id="fPunc"
-                                                    style="background: linear-gradient(90deg,#3b82f6,#2563eb)"></div>
-                                            </div>
-                                        </div>
-                                        <div class="ee-bar-item">
-                                            <div class="ee-bar-top">
-                                                <span class="ee-bar-label"><span class="dot"
-                                                        style="background:#f59e0b"></span> Pending Ratio</span>
-                                                <span class="ee-bar-value" id="bPend">0%</span>
-                                            </div>
-                                            <div class="ee-bar-track">
-                                                <div class="ee-bar-fill" id="fPend"
-                                                    style="background: linear-gradient(90deg,#f59e0b,#d97706)"></div>
-                                            </div>
-                                        </div>
-                                        <div class="ee-bar-item">
-                                            <div class="ee-bar-top">
-                                                <span class="ee-bar-label"><span class="dot"
-                                                        style="background:#ef4444"></span> Delay Rate</span>
-                                                <span class="ee-bar-value" id="bDel">0%</span>
-                                            </div>
-                                            <div class="ee-bar-track">
-                                                <div class="ee-bar-fill" id="fDel"
-                                                    style="background: linear-gradient(90deg,#ef4444,#dc2626)"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="ee-footer">
                             <div class="ee-footer-note">
@@ -1341,30 +1334,35 @@
         <span id="toastMsg">Changes saved successfully!</span>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
         (function () {
             'use strict';
 
-            const perf = <?= json_encode($performance) ?>;
-            const total = (perf.completed || 0) + (perf.pending || 0) + (perf.ontime || 0) + (perf.delayed || 0);
             const q = s => document.querySelector(s);
             const qa = s => document.querySelectorAll(s);
-            let perfReady = false;
 
-            qa('.ee-tab').forEach(tab => {
-                tab.addEventListener('click', function () {
-                    qa('.ee-tab').forEach(t => t.classList.remove('active'));
-                    qa('.ee-panel').forEach(p => p.classList.remove('active'));
-                    this.classList.add('active');
-                    q('#panel-' + this.dataset.tab).classList.add('active');
-                    if (this.dataset.tab === 'work' && !perfReady) {
-                        setTimeout(initPerf, 150);
-                        perfReady = true;
-                    }
+            const photoInput = q('#photoInput');
+            const avatarImage = q('#avatarImage');
+            const avatarInitials = q('#avatarInitials');
+            const avatarDiv = q('#avatarDiv');
+
+            if (photoInput) {
+                photoInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        avatarImage.src = e.target.result;
+                        avatarImage.style.display = 'block';
+                        avatarInitials.style.display = 'none';
+                        avatarDiv.style.background = 'none';
+                    };
+                    reader.readAsDataURL(file);
                 });
-            });
+            }
+
+
 
             q('#nameInput').addEventListener('input', function () {
                 const v = this.value.trim();
@@ -1440,86 +1438,6 @@
                 q('#saveBtn').classList.add('loading');
                 q('#saveBtn').disabled = true;
             });
-
-            function initPerf() {
-                const vals = [perf.completed, perf.pending, perf.ontime, perf.delayed];
-                qa('.ee-kpi-val').forEach((el, i) => animNum(el, vals[i] || 0, ''));
-
-                const compPct = total > 0 ? Math.round((perf.completed / total) * 100) : 0;
-                const puncPct = perf.completed > 0 ? Math.round((perf.ontime / perf.completed) * 100) : 0;
-                const pendPct = total > 0 ? Math.round((perf.pending / total) * 100) : 0;
-                const delPct = total > 0 ? Math.round((perf.delayed / total) * 100) : 0;
-                const efficiency = total > 0 ? Math.round(((perf.completed + perf.ontime) / (total + perf.delayed)) * 100) : 0;
-
-                const circle = q('#progressCircle');
-                const circ = 2 * Math.PI * 50;
-                circle.style.strokeDasharray = circ;
-                setTimeout(() => {
-                    circle.style.strokeDashoffset = circ - (circ * Math.min(efficiency, 100) / 100);
-                }, 300);
-                animNum(q('#effVal'), efficiency, '%');
-
-                setTimeout(() => {
-                    q('#fComp').style.width = compPct + '%'; q('#bComp').textContent = compPct + '%';
-                    q('#fPunc').style.width = puncPct + '%'; q('#bPunc').textContent = puncPct + '%';
-                    q('#fPend').style.width = pendPct + '%'; q('#bPend').textContent = pendPct + '%';
-                    q('#fDel').style.width = delPct + '%'; q('#bDel').textContent = delPct + '%';
-                }, 400);
-
-                const ctx = q('#empBarChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Completed', 'Pending', 'On Time', 'Delayed'],
-                        datasets: [{
-                            label: 'Tasks',
-                            data: [perf.completed, perf.pending, perf.ontime, perf.delayed],
-                            backgroundColor: ['rgba(34,197,94,0.12)', 'rgba(245,158,11,0.12)', 'rgba(59,130,246,0.12)', 'rgba(239,68,68,0.12)'],
-                            borderColor: ['#22c55e', '#f59e0b', '#3b82f6', '#ef4444'],
-                            borderWidth: 2,
-                            borderRadius: 8,
-                            borderSkipped: false,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false },
-                            tooltip: {
-                                backgroundColor: '#1e293b',
-                                titleFont: { family: 'Inter', weight: '600' },
-                                bodyFont: { family: 'Inter' },
-                                padding: 12,
-                                cornerRadius: 8,
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: { display: false },
-                                ticks: { font: { family: 'Inter', size: 11, weight: '600' }, color: '#94a3b8' },
-                            },
-                            y: {
-                                beginAtZero: true,
-                                grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false },
-                                ticks: { font: { family: 'Inter', size: 11 }, color: '#94a3b8', stepSize: 1 },
-                            }
-                        },
-                        animation: { duration: 1200, easing: 'easeOutQuart' }
-                    }
-                });
-            }
-
-            function animNum(el, target, suffix) {
-                if (!el) return;
-                const dur = 1000, start = performance.now();
-                (function step(now) {
-                    const p = Math.min((now - start) / dur, 1);
-                    const ease = 1 - Math.pow(1 - p, 3);
-                    el.textContent = Math.round(target * ease) + suffix;
-                    if (p < 1) requestAnimationFrame(step);
-                })(start);
-            }
 
             window.showToast = function (msg) {
                 q('#toastMsg').textContent = msg || 'Changes saved successfully!';

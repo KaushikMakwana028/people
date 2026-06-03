@@ -750,13 +750,13 @@ tr:hover .status-pill {
           <tbody>
             <?php if (!empty($rows)): ?>
               <?php foreach ($rows as $r):
-                $ts        = strtotime($r->created_at);
+                $isPresent = ($r->status === 'Present');
+                $ts        = strtotime($r->attendance_date);
                 $dayNum    = date('d', $ts);
                 $dayAbbr   = strtoupper(date('D', $ts));
                 $dateFull  = date('d M Y', $ts);
                 $weekday   = date('l', $ts);
-                $time      = date('h:i A', $ts);
-                $isPresent = ($r->status === 'Present');
+                $time      = $isPresent ? date('h:i A', strtotime($r->created_at)) : '--';
               ?>
                 <tr>
                   <!-- Date -->

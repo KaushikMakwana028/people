@@ -15,13 +15,10 @@ class Add_attendance extends CI_Controller {
 
         if (
             !$this->session->userdata('logged_in') ||
-            $this->session->userdata('user_role') !== '0'
+            $this->session->userdata('user_role') != 0
             ) {
-
-            }else{
             redirect('sign_in');
-
-            }
+        }
            
     }
 
@@ -74,10 +71,15 @@ if ($leave) {
             redirect('emp/attendance_add');
         }
 
+        $status = $this->input->post('status');
+        if (empty($status) || $status !== 'Absent') {
+            $status = 'Present';
+        }
+
         $data = [
             'user_id'         => $user_id,
             'attendance_date' => date('Y-m-d'),
-            'status'          => $this->input->post('status'),
+            'status'          => $status,
             'created_at'      => date('Y-m-d H:i:s')
         ];
 

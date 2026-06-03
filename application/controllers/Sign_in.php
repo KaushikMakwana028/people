@@ -53,6 +53,10 @@ class Sign_in extends CI_Controller
                 'logged_in'  => true
             ]);
 
+            // ✅ Auto-mark absent days upon login
+            $this->load->model('emp/Attendance_model');
+            $this->Attendance_model->auto_mark_absents();
+
             if ($role == 1) {
                 redirect('admin/dashboard');
             } else {

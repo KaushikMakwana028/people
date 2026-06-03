@@ -530,6 +530,28 @@ function format_value($val)
     transform: translateY(-1px);
   }
 
+  .action-whatsapp {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+  }
+
+  .action-whatsapp:hover {
+    background: #22c55e;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  .action-call {
+    background: rgba(14, 165, 233, 0.1);
+    color: #0ea5e9;
+  }
+
+  .action-call:hover {
+    background: #0ea5e9;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
   /* Empty State */
   .lead-empty {
     text-align: center;
@@ -775,12 +797,28 @@ function format_value($val)
                   <td style="font-size:12px;color:var(--text-secondary)"><?= date('M j, Y', strtotime($lead['created_at'])) ?></td>
                   <td>
                     <div class="lead-actions">
-                      <a href="javascript:;" onclick="viewLead(<?= (int) $lead['id'] ?>)" class="lead-action-btn action-view" title="View">
-                        <i class='bx bx-show'></i>
-                      </a>
-                      <a href="<?= base_url('admin/leads/edit/' . $lead['id']) ?>" class="lead-action-btn action-edit" title="Edit">
-                        <i class='bx bx-edit'></i>
-                      </a>
+                      <?php
+                      $has_phone = !empty($lead['phone']) && trim($lead['phone']) !== '—';
+                      if ($has_phone):
+                        $clean_phone = preg_replace('/[^0-9+]/', '', $lead['phone']);
+                      ?>
+                        <a href="javascript:;" onclick="viewLead(<?= (int) $lead['id'] ?>)" class="lead-action-btn action-view" title="View">
+                          <i class='bx bx-show'></i>
+                        </a>
+
+                        <a href="<?= base_url('admin/leads/edit/' . $lead['id']) ?>" class="lead-action-btn action-edit" title="Edit">
+                          <i class='bx bx-edit'></i>
+                        </a>
+
+                        <a href="https://wa.me/<?= $clean_phone ?>" target="_blank" class="lead-action-btn action-whatsapp" title="WhatsApp">
+                          <i class='bx bxl-whatsapp'></i>
+                        </a>
+                        <a href="tel:<?= htmlspecialchars($lead['phone']) ?>" class="lead-action-btn action-call" title="Call">
+                          <i class='bx bx-phone-call'></i>
+                        </a>
+                      <?php endif; ?>
+
+
                       <button class="lead-action-btn action-delete" onclick="confirmDelete(<?= $lead['id'] ?>)" title="Delete">
                         <i class='bx bx-trash'></i>
                       </button>
@@ -953,7 +991,7 @@ function format_value($val)
         document.getElementById('v_phone').textContent = data.phone || '—';
         document.getElementById('v_company').textContent = data.company || '—';
         document.getElementById('v_source').textContent = data.source || '—';
-        
+
         let badgeHtml = '';
         if (data.status === 'in-progress') {
           badgeHtml = '<span class="sbadge" style="background:rgba(99,102,241,.12);color:#6366f1"><span class="sdot" style="background:#6366f1"></span>In Progress</span>';
@@ -966,7 +1004,7 @@ function format_value($val)
         }
         document.getElementById('v_status').innerHTML = badgeHtml;
         document.getElementById('v_notes').textContent = data.notes || 'No notes added.';
-        
+
         new bootstrap.Modal(document.getElementById('viewLeadModal')).show();
       })
       .catch(err => {
