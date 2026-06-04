@@ -757,7 +757,7 @@ function pl_status_pill($status)
         <div class="pm-leads-card">
           <div class="pm-leads-header">
             <h2><i class='bx bx-data'></i> Leads Storage</h2>
-            <span class="pm-record-badge"><?= count($leads) ?> records found</span>
+            <span class="pm-record-badge"><?= isset($total_leads_count) ? $total_leads_count : count($leads) ?> records found</span>
           </div>
 
           <?php if (empty($leads)): ?>
@@ -797,7 +797,7 @@ function pl_status_pill($status)
                         <div class="pm-actions">
                           <a href="<?= site_url('admin/product_leads/delete/' . $lead->id) ?>"
                             class="pm-icon"
-                            onclick="return confirm('Are you sure you want to delete this lead?')"
+                            onclick="return confirmSweetAction(this, 'Are you sure you want to delete this lead?')"
                             title="Delete Lead">
                             <i class='bx bx-trash'></i>
                           </a>
@@ -834,7 +834,7 @@ function pl_status_pill($status)
                   <div class="pm-mobile-actions">
                     <a href="<?= site_url('admin/product_leads/delete/' . $lead->id) ?>"
                       class="pm-icon"
-                      onclick="return confirm('Are you sure you want to delete this lead?')"
+                      onclick="return confirmSweetAction(this, 'Are you sure you want to delete this lead?')"
                       title="Delete Lead">
                       <i class='bx bx-trash'></i>
                     </a>
@@ -842,6 +842,11 @@ function pl_status_pill($status)
                 </div>
               <?php endforeach; ?>
             </div>
+
+            <!-- Pagination Links -->
+            <?php if (!empty($total_rows) && $total_rows > $per_page): ?>
+              <?= render_custom_pagination($total_rows, $per_page, $current_page, 'pm') ?>
+            <?php endif; ?>
 
           <?php endif; ?>
         </div>

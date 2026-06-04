@@ -11,8 +11,16 @@ class Salaries extends CI_Controller
         $this->load->helper(['url', 'form']);
 
         // Auth guard
-        if (!$this->session->userdata('admin_id')) {
-            redirect('admin/login');
+        if (!$this->session->userdata('logged_in')) {
+            redirect('sign_in');
+        }
+
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
     }
 
@@ -27,7 +35,7 @@ class Salaries extends CI_Controller
         $data['stats'] = $this->Salary_model->get_stats($selected_month);
         $data['developers'] = $this->Salary_model->get_developers_overview($selected_month);
         $data['history'] = $this->Salary_model->get_payments_history();
-        
+
         // List of all active developers for the add payment modal dropdown
         $data['active_devs'] = $this->db
             ->where('role', 0)
@@ -138,13 +146,16 @@ class Salaries extends CI_Controller
             $att['month_abr'] = date('M', $dateObj);
         }
 
+        // Calculate salary breakdown
+        $salary_calc = $this->Salary_model->calculate_salary($user_id, $month_year);
+
         // Get payment details for the selected month
         $month_payment = $this->db
             ->where('user_id', $user_id)
             ->where('month_year', $month_year)
             ->get('salary_payments')
             ->row_array();
-            
+
         if ($month_payment) {
             $month_payment['formatted_payment_date'] = date('M j, Y', strtotime($month_payment['payment_date']));
         }
@@ -168,6 +179,7 @@ class Salaries extends CI_Controller
             'success' => true,
             'data' => [
                 'user' => $user,
+                'salary_calc' => $salary_calc,
                 'attendance' => [
                     'present' => $present_count,
                     'absent' => $absent_count,

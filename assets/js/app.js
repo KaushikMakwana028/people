@@ -57,6 +57,10 @@ $(function () {
 		$(".wrapper").toggleClass("toggled");
 	});
 
+	$(document).on("click", ".overlay", function () {
+		$(".wrapper").removeClass("toggled");
+	});
+
 	$(window).on("scroll", function () {
 		$(this).scrollTop() > 300
 			? $(".back-to-top").fadeIn()

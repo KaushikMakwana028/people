@@ -179,6 +179,10 @@
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
     }
 
+    .input-icon-group {
+        position: relative;
+    }
+
     .input-icon-group .input-icon {
         position: absolute;
         left: 12px;
@@ -426,15 +430,15 @@
                         <div class="form-steps">
                             <div class="form-step active" id="step1Indicator">
                                 <div class="step-circle">1</div>
-                                <span class="step-label">PERSONAL</span>
+                                <span class="step-label">PERSONAL DETAILS</span>
                             </div>
                             <div class="form-step" id="step2Indicator">
                                 <div class="step-circle">2</div>
-                                <span class="step-label">ACCOUNT</span>
+                                <span class="step-label">ACCOUNT DETAILS</span>
                             </div>
                             <div class="form-step" id="step3Indicator">
                                 <div class="step-circle">3</div>
-                                <span class="step-label">DETAILS</span>
+                                <span class="step-label">BANK DETAILS</span>
                             </div>
                         </div>
 
@@ -507,6 +511,27 @@
                                         <?php endif; ?>
                                     </div>
                                 </div>
+
+                                <!-- Address -->
+                                <div class="row mb-3">
+                                    <label class="col-sm-2 col-form-label">
+                                        Address <span class="required">*</span>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <div class="input-icon-group">
+                                            <i class="bx bx-map-pin input-icon" style="top:14px;"></i>
+                                            <textarea name="address"
+                                                id="address"
+                                                rows="2"
+                                                class="form-control <?= form_error('address') ? 'is-invalid' : '' ?>"
+                                                placeholder="Enter full address..."><?= set_value('address') ?></textarea>
+                                        </div>
+                                        <div class="invalid-feedback" id="addressError">Address is required.</div>
+                                        <?php if (form_error('address')): ?>
+                                            <div class="invalid-feedback d-block"><?= form_error('address') ?></div>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Section 2: Account Details -->
@@ -566,14 +591,14 @@
                                     </label>
                                     <div class="col-sm-10">
                                         <div class="input-icon-group">
-                                            <!-- <i class="bx bx-lock input-icon"></i> -->
+                                            <i class="bx bx-lock input-icon"></i>
                                             <input type="password"
                                                 name="password"
                                                 id="password"
                                                 class="form-control <?= form_error('password') ? 'is-invalid' : '' ?>"
-                                                placeholder="Min. 8 characters">
+                                                placeholder="Min. 6 characters">
                                         </div>
-                                        <div class="invalid-feedback" id="pwError">Password must be at least 8 characters.</div>
+                                        <div class="invalid-feedback" id="pwError">Password must be at least 6 characters.</div>
                                         <?php if (form_error('password')): ?>
                                             <div class="invalid-feedback d-block"><?= form_error('password') ?></div>
                                         <?php endif; ?>
@@ -712,33 +737,7 @@
                                 </div>
                             </div>
 
-                            <!-- Section 3: Location -->
-                            <div class="form-section">
-                                <div class="form-section-title">
-                                    <i class="bx bx-map"></i> LOCATION DETAILS
-                                </div>
 
-                                <!-- Address -->
-                                <div class="row mb-3">
-                                    <label class="col-sm-2 col-form-label">
-                                        Address <span class="required">*</span>
-                                    </label>
-                                    <div class="col-sm-10">
-                                        <div class="input-icon-group">
-                                            <i class="bx bx-map-pin input-icon" style="top:14px;"></i>
-                                            <textarea name="address"
-                                                id="address"
-                                                rows="2"
-                                                class="form-control <?= form_error('address') ? 'is-invalid' : '' ?>"
-                                                placeholder="Enter full address..."><?= set_value('address') ?></textarea>
-                                        </div>
-                                        <div class="invalid-feedback" id="addressError">Address is required.</div>
-                                        <?php if (form_error('address')): ?>
-                                            <div class="invalid-feedback d-block"><?= form_error('address') ?></div>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                            </div>
 
                             <!-- Action Buttons -->
                             <div class="row mt-3 pt-2" style="border-top: 1px solid var(--border-color);">
@@ -784,23 +783,23 @@
     function updateStepStatus() {
         const nameValid = fullName && fullName.value.trim().length >= 2;
         const phoneValid = phone && phone.value.trim().length >= 7;
-        const step1Ok = nameValid && phoneValid;
+        const addressOk = address && address.value.trim().length > 0;
+        const step1Ok = nameValid && phoneValid && addressOk;
 
         const userValid = username && username.value.trim().length >= 3;
         const emailValid = email && /^[^\s@]+@([^\s@.,]+\.)+[^\s@]{2,}$/.test(email.value.trim());
-        const pwValid = password && password.value.length >= 8;
+        const pwValid = password && password.value.length >= 6;
         const confirmOk = confirmPw && (password.value === confirmPw.value) && (password.value !== '');
         const step2Ok = userValid && emailValid && pwValid && confirmOk;
 
-        const addressOk = address && address.value.trim().length > 0;
-        const step3Ok = addressOk;
+        const step3Ok = true; // Bank details are optional
 
         if (step1Ok) {
             step1Ind.classList.add('completed');
             step1Ind.classList.remove('active');
         } else {
             step1Ind.classList.remove('completed');
-            if (!step2Ok && !step3Ok) step1Ind.classList.add('active');
+            if (!step2Ok) step1Ind.classList.add('active');
             else step1Ind.classList.remove('active');
         }
 
@@ -814,20 +813,14 @@
             step2Ind.classList.remove('active', 'completed');
         }
 
-        if (step1Ok && step2Ok && step3Ok) {
-            step3Ind.classList.add('completed');
-            step3Ind.classList.remove('active');
-        } else if (step1Ok && step2Ok && !step3Ok) {
+        if (step1Ok && step2Ok) {
             step3Ind.classList.add('active');
-            step3Ind.classList.remove('completed');
         } else {
             step3Ind.classList.remove('active', 'completed');
         }
 
         if (!step1Ok) {
             step2Ind.classList.remove('active', 'completed');
-            step3Ind.classList.remove('active', 'completed');
-        } else if (step1Ok && !step2Ok) {
             step3Ind.classList.remove('active', 'completed');
         }
     }
@@ -841,7 +834,7 @@
                         if (confirmPw.value !== password.value) confirmPw.classList.add('is-invalid');
                         else confirmPw.classList.remove('is-invalid');
                     } else if (field.id === 'password') {
-                        if (password.value.length < 8) password.classList.add('is-invalid');
+                        if (password.value.length < 6) password.classList.add('is-invalid');
                         else password.classList.remove('is-invalid');
                         if (confirmPw.value !== '' && confirmPw.value !== password.value) confirmPw.classList.add('is-invalid');
                         else if (confirmPw.value !== '') confirmPw.classList.remove('is-invalid');
@@ -890,7 +883,7 @@
             email.classList.add('is-invalid');
             isValid = false;
         } else email.classList.remove('is-invalid');
-        if (password.value.length < 8) {
+        if (password.value.length < 6) {
             password.classList.add('is-invalid');
             isValid = false;
         } else password.classList.remove('is-invalid');

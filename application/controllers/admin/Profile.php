@@ -10,9 +10,12 @@ class Profile extends CI_Controller {
             redirect('sign_in');
         }
 
-        // 🔴 EMPLOYEE BLOCK
-        if ($this->session->userdata('user_role') == 0) {
-            redirect('emp/dashboard');
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
 
         $this->load->model('Admin_model');

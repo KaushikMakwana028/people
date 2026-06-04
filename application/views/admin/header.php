@@ -1,3 +1,102 @@
+<?php
+if (!function_exists('render_custom_pagination')) {
+    function render_custom_pagination($total_rows, $per_page, $current_page, $prefix = 'prod', $query_param = 'page') {
+        $total_pages = (int)ceil($total_rows / $per_page);
+        if ($total_pages <= 1) {
+            return '';
+        }
+
+        $links = [];
+
+        $get_page_link = function($page) use ($query_param) {
+            $get = $_GET;
+            $get[$query_param] = $page;
+            return current_url() . '?' . http_build_query($get);
+        };
+
+        // Prev link
+        if ($current_page > 1) {
+            $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link($current_page - 1) . '">&larr; Prev</a></li>';
+        } else {
+            $links[] = '<li class="cust-pag-item"><span class="cust-pag-link disabled">&larr; Prev</span></li>';
+        }
+
+        // Page items
+        if ($total_pages <= 5) {
+            for ($i = 1; $i <= $total_pages; $i++) {
+                if ($i == $current_page) {
+                    $links[] = '<li class="cust-pag-item"><span class="cust-pag-link active">' . $i . '</span></li>';
+                } else {
+                    $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link($i) . '">' . $i . '</a></li>';
+                }
+            }
+        } else {
+            // Case 1: Near beginning (current_page <= 3) -> 1 2 3 ... total_pages
+            if ($current_page <= 3) {
+                for ($i = 1; $i <= 3; $i++) {
+                    if ($i == $current_page) {
+                        $links[] = '<li class="cust-pag-item"><span class="cust-pag-link active">' . $i . '</span></li>';
+                    } else {
+                        $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link($i) . '">' . $i . '</a></li>';
+                    }
+                }
+                $links[] = '<li class="cust-pag-item"><span class="cust-pag-dots">...</span></li>';
+                $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link($total_pages) . '">' . $total_pages . '</a></li>';
+            }
+            // Case 2: Near end (current_page >= total_pages - 2) -> 1 ... total_pages-2 total_pages-1 total_pages
+            elseif ($current_page >= $total_pages - 2) {
+                $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link(1) . '">1</a></li>';
+                $links[] = '<li class="cust-pag-item"><span class="cust-pag-dots">...</span></li>';
+                for ($i = $total_pages - 2; $i <= $total_pages; $i++) {
+                    if ($i == $current_page) {
+                        $links[] = '<li class="cust-pag-item"><span class="cust-pag-link active">' . $i . '</span></li>';
+                    } else {
+                        $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link($i) . '">' . $i . '</a></li>';
+                    }
+                }
+            }
+            // Case 3: Middle -> 1 ... page-1 page page+1 ... total_pages
+            else {
+                $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link(1) . '">1</a></li>';
+                $links[] = '<li class="cust-pag-item"><span class="cust-pag-dots">...</span></li>';
+                
+                for ($i = $current_page - 1; $i <= $current_page + 1; $i++) {
+                    if ($i == $current_page) {
+                        $links[] = '<li class="cust-pag-item"><span class="cust-pag-link active">' . $i . '</span></li>';
+                    } else {
+                        $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link($i) . '">' . $i . '</a></li>';
+                    }
+                }
+                
+                $links[] = '<li class="cust-pag-item"><span class="cust-pag-dots">...</span></li>';
+                $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link($total_pages) . '">' . $total_pages . '</a></li>';
+            }
+        }
+
+        // Next link
+        if ($current_page < $total_pages) {
+            $links[] = '<li class="cust-pag-item"><a class="cust-pag-link" href="' . $get_page_link($current_page + 1) . '">Next &rarr;</a></li>';
+        } else {
+            $links[] = '<li class="cust-pag-item"><span class="cust-pag-link disabled">Next &rarr;</span></li>';
+        }
+
+        // Calculate record range text
+        $start = $total_rows == 0 ? 0 : ($current_page - 1) * $per_page + 1;
+        $end = min($current_page * $per_page, $total_rows);
+        $showing_text = "Showing {$start}–{$end} of {$total_rows}";
+
+        return '
+        <div class="cust-pag-container">
+            <div class="cust-pag-info">
+                ' . $showing_text . '
+            </div>
+            <ul class="cust-pag-list">
+                ' . implode('', $links) . '
+            </ul>
+        </div>';
+    }
+}
+?>
 <!doctype html>
 <html lang="en" data-bs-theme="light">
 
@@ -228,7 +327,17 @@
 					<ul>
 						<li><a href="<?= site_url('project/all_projects'); ?>"><i class="bx bx-radio-circle"></i>Projects</a></li>
 						<li><a href="<?= site_url('project/clients'); ?>"><i class="bx bx-radio-circle"></i>Clients</a></li>
-						<li><a href="<?= base_url('index.php/task/add'); ?>"><i class="bx bx-radio-circle"></i>Task Add</a></li>
+					</ul>
+				</li>
+
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="bx bx-task"></i></div>
+						<div class="menu-title">Task Management</div>
+					</a>
+					<ul>
+						<li><a href="<?= site_url('task/add'); ?>"><i class="bx bx-radio-circle"></i>Add Task</a></li>
+						<li><a href="<?= site_url('task/list'); ?>"><i class="bx bx-radio-circle"></i>Task List</a></li>
 					</ul>
 				</li>
 
@@ -319,13 +428,6 @@
 					<div class="mobile-toggle-menu d-flex"><i class='bx bx-menu'></i>
 					</div>
 
-					<div class="search-bar d-lg-block d-none" data-bs-toggle="modal" data-bs-target="#SearchModal">
-						<div class="premium-search-box">
-							<i class='bx bx-search'></i>
-							<input type="text" placeholder="Search anything...">
-						</div>
-					</div>
-
 					<div class="top-menu ms-auto">
 						<ul class="navbar-nav align-items-center gap-1">
 							<!-- <li class="nav-item">
@@ -395,7 +497,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="<?= base_url('assets/images/avatars/avatar-2.png') ?>"
+													<img src="<?= base_url('assets/default.jpg') ?>"
 														class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
@@ -792,7 +894,7 @@
 
 							<img src="<?= (!empty($photo)
 											? base_url('uploads/profile/' . $photo)
-											: base_url('assets/images/avatars/avatar-2.png')) . '?v=' . time(); ?>" class="user-img rounded-circle" width="40" height="40"
+											: base_url('assets/default.jpg')) . '?v=' . time(); ?>" class="user-img rounded-circle" width="40" height="40"
 								style="object-fit:cover;">
 
 
@@ -816,7 +918,7 @@
 								<div class="dropdown-divider mb-0"></div>
 							</li>
 							<li><a href="<?= base_url('admin/logout') ?>"
-									onclick="return confirm('Are you sure you want to logout?')" class="dropdown-item">
+									onclick="return confirmSweetAction(this, 'Are you sure you want to logout?')" class="dropdown-item">
 									<i class="bx bx-log-out-circle"></i> Logout
 								</a>
 							</li>

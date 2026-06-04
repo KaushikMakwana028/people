@@ -328,7 +328,7 @@
                                         <!-- DELETE -->
                                         <a href="<?= base_url('index.php/project/delete/' . $p->id) ?>"
                                             class="btn btn-sm btn-danger" title="Delete"
-                                            onclick="return confirm('Are you sure to delete this project?');">
+                                            onclick="return confirmSweetAction(this, 'Are you sure to delete this project?');">
                                             <i class="bx bx-trash"></i>
                                         </a>
 
@@ -428,7 +428,7 @@
 
                                             <a href="<?= base_url('index.php/project/delete/' . $p->id) ?>"
                                                 class="btn btn-sm btn-danger flex-fill"
-                                                onclick="return confirm('Delete this project?');">
+                                                onclick="return confirmSweetAction(this, 'Delete this project?');">
                                                 <i class="bx bx-trash"></i> Delete
                                             </a>
 

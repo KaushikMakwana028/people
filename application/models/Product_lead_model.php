@@ -14,14 +14,17 @@ class Product_lead_model extends CI_Model
      */
     private function _apply_date_filters($filters)
     {
+        // Allow callers to specify which date column to filter on (e.g. updated_at for history)
+        $date_col = !empty($filters['date_column']) ? $filters['date_column'] : 'pl.created_at';
+
         if (!empty($filters['date'])) {
-            $this->db->where('DATE(pl.created_at)', $filters['date']);
+            $this->db->where("DATE({$date_col})", $filters['date']);
         } else {
             if (!empty($filters['month'])) {
-                $this->db->where('MONTH(pl.created_at)', (int)$filters['month']);
+                $this->db->where("MONTH({$date_col})", (int)$filters['month']);
             }
             if (!empty($filters['year'])) {
-                $this->db->where('YEAR(pl.created_at)', (int)$filters['year']);
+                $this->db->where("YEAR({$date_col})", (int)$filters['year']);
             }
         }
     }
@@ -43,6 +46,19 @@ class Product_lead_model extends CI_Model
             $this->db->where('pl.status', $filters['status']);
         }
 
+        // History mode: exclude 'New' leads (no status change yet)
+        if (!empty($filters['exclude_new'])) {
+            $this->db->where('pl.status !=', 'New');
+        }
+
+        if (isset($filters['sales_id'])) {
+            if ($filters['sales_id'] === 'NULL') {
+                $this->db->where('pl.sales_id IS NULL', null, false);
+            } else {
+                $this->db->where('pl.sales_id', (int)$filters['sales_id']);
+            }
+        }
+
         $this->_apply_date_filters($filters);
 
         if (!empty($search)) {
@@ -57,12 +73,23 @@ class Product_lead_model extends CI_Model
             $this->db->limit((int)$limit, (int)$offset);
         }
 
-        $allowed_sorts = ['pl.id', 'pl.name', 'pl.mobile', 'pl.city', 'pl.status', 'pl.created_at'];
+        $allowed_sorts = ['pl.id', 'pl.name', 'pl.mobile', 'pl.city', 'pl.status', 'pl.created_at', 'status_sequence'];
         if (!in_array($order_by, $allowed_sorts)) {
             $order_by = 'pl.id';
         }
-        $order_dir = strtoupper($order_dir) === 'ASC' ? 'ASC' : 'DESC';
-        $this->db->order_by($order_by, $order_dir);
+        if ($order_by === 'status_sequence') {
+            $this->db->order_by("CASE 
+                WHEN pl.status = 'Contacted' THEN 1 
+                WHEN pl.status = 'Follow Up' THEN 2 
+                WHEN pl.status = 'Converted' THEN 3 
+                WHEN pl.status = 'Not Interested' THEN 4 
+                ELSE 5 
+            END", "ASC", false);
+            $this->db->order_by('pl.id', 'DESC');
+        } else {
+            $order_dir = strtoupper($order_dir) === 'ASC' ? 'ASC' : 'DESC';
+            $this->db->order_by($order_by, $order_dir);
+        }
 
         return $this->db->get()->result();
     }
@@ -80,6 +107,19 @@ class Product_lead_model extends CI_Model
 
         if (!empty($filters['status'])) {
             $this->db->where('pl.status', $filters['status']);
+        }
+
+        // History mode: exclude 'New' leads (no status change yet)
+        if (!empty($filters['exclude_new'])) {
+            $this->db->where('pl.status !=', 'New');
+        }
+
+        if (isset($filters['sales_id'])) {
+            if ($filters['sales_id'] === 'NULL') {
+                $this->db->where('pl.sales_id IS NULL', null, false);
+            } else {
+                $this->db->where('pl.sales_id', (int)$filters['sales_id']);
+            }
         }
 
         $this->_apply_date_filters($filters);
@@ -114,6 +154,19 @@ class Product_lead_model extends CI_Model
             $this->db->where('pl.product_id', (int)$product_id);
         }
         
+        if (isset($filters['sales_id'])) {
+            if ($filters['sales_id'] === 'NULL') {
+                $this->db->where('pl.sales_id IS NULL', null, false);
+            } else {
+                $this->db->where('pl.sales_id', (int)$filters['sales_id']);
+            }
+        }
+
+        // History mode: exclude 'New' leads (no status change yet)
+        if (!empty($filters['exclude_new'])) {
+            $this->db->where('pl.status !=', 'New');
+        }
+
         $this->_apply_date_filters($filters);
 
         if (!empty($search)) {
@@ -169,7 +222,7 @@ class Product_lead_model extends CI_Model
     /**
      * Update lead status and notes
      */
-    public function update_status($id, $status, $notes)
+    public function update_status($id, $status, $notes, $sales_id = null)
     {
         $data = [
             'status' => $status,
@@ -177,6 +230,9 @@ class Product_lead_model extends CI_Model
         ];
         if ($notes !== null) {
             $data['notes'] = $notes;
+        }
+        if ($sales_id !== null) {
+            $data['sales_id'] = $sales_id;
         }
 
         $this->db->where('id', (int)$id);

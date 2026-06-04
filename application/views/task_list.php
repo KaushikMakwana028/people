@@ -1514,18 +1514,14 @@
 
         <!-- Footer / Pagination -->
         <?php if ($totalTasks > 0): ?>
-            <div class="tl-table-footer">
-                <div class="tl-showing-text">
-                    Showing <strong>1–
-                        <?= $totalTasks ?>
-                    </strong> of <strong>
-                        <?= $totalTasks ?>
-                    </strong> tasks
+            <div class="cust-pag-container">
+                <div class="cust-pag-info">
+                    Showing <strong>1–<?= $totalTasks ?></strong> of <strong><?= $totalTasks ?></strong> tasks
                 </div>
-                <ul class="tl-pagination">
-                    <li><a href="javascript:;" class="tl-page-btn"><i class='bx bx-chevron-left'></i></a></li>
-                    <li><a href="javascript:;" class="tl-page-btn active">1</a></li>
-                    <li><a href="javascript:;" class="tl-page-btn"><i class='bx bx-chevron-right'></i></a></li>
+                <ul class="cust-pag-list">
+                    <li class="cust-pag-item"><span class="cust-pag-link disabled">&larr; Prev</span></li>
+                    <li class="cust-pag-item"><span class="cust-pag-link active">1</span></li>
+                    <li class="cust-pag-item"><span class="cust-pag-link disabled">Next &rarr;</span></li>
                 </ul>
             </div>
         <?php endif; ?>

@@ -30,30 +30,30 @@ class Dashboard_model extends CI_Model
         return $this->db->insert('break_logs', $data);
     }
 
- public function today_breaks()
-{
-    return $this->db
-        ->select('users.name, break_logs.reason')
-        ->from('break_logs')
-        ->join('users', 'users.id = break_logs.user_id')
-        ->where('DATE(break_logs.start_time)', date('Y-m-d'))
-        ->where('break_logs.end_time IS NULL', null, false)   // ⭐ ONLY RUNNING BREAK
-        ->get()
-        ->result();
-}
+    public function today_breaks()
+    {
+        return $this->db
+            ->select('users.name, break_logs.reason')
+            ->from('break_logs')
+            ->join('users', 'users.id = break_logs.user_id')
+            ->where('DATE(break_logs.start_time)', date('Y-m-d'))
+            ->where('break_logs.end_time IS NULL', null, false)   // ⭐ ONLY RUNNING BREAK
+            ->get()
+            ->result();
+    }
 
 
-public function get_today_breaks($user_id)
-{
-    $today = date('Y-m-d');
+    public function get_today_breaks($user_id)
+    {
+        $today = date('Y-m-d');
 
-    return $this->db
-        ->from('break_logs')
-        ->where('user_id', $user_id)
-        ->where('DATE(start_time)', $today)
-        ->get()
-        ->result();
-}
+        return $this->db
+            ->from('break_logs')
+            ->where('user_id', $user_id)
+            ->where('DATE(start_time)', $today)
+            ->get()
+            ->result();
+    }
 
     public function get_today_break_summary($user_id)
     {
@@ -71,23 +71,23 @@ public function get_today_breaks($user_id)
 
     public function start_work($user_id)
     {
-       $today = date('Y-m-d');
+        $today = date('Y-m-d');
 
-$already = $this->db
-    ->where('user_id', $user_id)
-    ->where('DATE(start_time)', $today)
-    ->where('end_time IS NULL', null, false)
-    ->get('work_logs')
-    ->row();
+        $already = $this->db
+            ->where('user_id', $user_id)
+            ->where('DATE(start_time)', $today)
+            ->where('end_time IS NULL', null, false)
+            ->get('work_logs')
+            ->row();
 
-if ($already) {
-    return false; // already running
-}
+        if ($already) {
+            return false; // already running
+        }
 
-return $this->db->insert('work_logs', [
-    'user_id' => $user_id,
-    'start_time' => date('Y-m-d H:i:s')
-]);
+        return $this->db->insert('work_logs', [
+            'user_id' => $user_id,
+            'start_time' => date('Y-m-d H:i:s')
+        ]);
     }
 
 
@@ -138,6 +138,22 @@ return $this->db->insert('work_logs', [
             ->order_by('start_time', 'ASC')
             ->get()
             ->result();
+    }
+
+    public function get_running_work_start($user_id)
+    {
+        $row = $this->db
+            ->select('start_time')
+            ->from('work_logs')
+            ->where('user_id', $user_id)
+            ->where('DATE(start_time)', date('Y-m-d'))
+            ->where('end_time IS NULL', null, false)
+            ->order_by('id', 'DESC')
+            ->limit(1)
+            ->get()
+            ->row();
+
+        return $row ? $row->start_time : null;
     }
 
 

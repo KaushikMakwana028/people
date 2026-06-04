@@ -594,7 +594,10 @@ function pm_status($status)
                     <td><?= pm_rupees($p->remaining_amount ?? 0) ?></td>
                     <td><?= (int)($p->progress ?? 0) ?>%</td>
                     <td>
-                      <div class="pm-actions"><a class="pm-icon" href="<?= site_url('project/view/' . $p->id) ?>" title="View Project Details"><i class="bx bx-show"></i></a><button class="pm-icon" onclick='editProject(<?= json_encode($p, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' title="Edit Project"><i class="bx bx-pencil"></i></button><button class="pm-icon" onclick="openRequirement(<?= (int)$p->id ?>)" title="Manage Requirements"><i class="bx bx-list-check"></i></button><button class="pm-icon" onclick="openPayment(<?= (int)$p->id ?>)" title="Add Payment Log"><i class="bx bx-rupee"></i></button><a class="pm-icon" href="<?= site_url('project/tasks_by_project/' . $p->id) ?>" title="View Tasks"><i class="bx bx-sitemap"></i></a></div>
+                      <div class="pm-actions">
+                        <a class="pm-icon" href="<?= site_url('project/view/' . $p->id) ?>" title="View Project Details"><i class="bx bx-show"></i></a>
+                        <a class="pm-icon" href="<?= site_url('project/tasks_by_project/' . $p->id) ?>" title="View Tasks"><i class="bx bx-sitemap"></i></a>
+                      </div>
                     </td>
                   </tr><?php endforeach; ?>
               </tbody>
@@ -605,7 +608,9 @@ function pm_status($status)
                 <div class="pm-sub"><?= htmlspecialchars($p->client_name ?: '-') ?></div>
                 <div class="pm-row"><span>Paid</span><strong><?= pm_rupees($p->paid_amount ?? 0) ?></strong></div>
                 <div class="pm-row"><span>Remaining</span><strong><?= pm_rupees($p->remaining_amount ?? 0) ?></strong></div>
-                <div class="pm-actions mt-2"><a class="pm-icon" href="<?= site_url('project/view/' . $p->id) ?>" title="View Project Details"><i class="bx bx-show"></i></a><button class="pm-icon" onclick='editProject(<?= json_encode($p, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)' title="Edit Project"><i class="bx bx-pencil"></i></button><button class="pm-icon" onclick="openPayment(<?= (int)$p->id ?>)" title="Add Payment Log"><i class="bx bx-rupee"></i></button></div>
+                <div class="pm-actions mt-2">
+                  <a class="pm-icon" href="<?= site_url('project/view/' . $p->id) ?>" title="View Project Details"><i class="bx bx-show"></i></a>
+                </div>
               </div><?php endforeach; ?></div>
         <?php endif; ?>
       </section>

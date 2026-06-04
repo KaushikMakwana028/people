@@ -1897,10 +1897,10 @@
                             <div class="pro-timer-actions">
                                 <button id="btnStart" onclick="startWatch()" class="pro-timer-btn pro-btn-start"
                                     <?= ($report_submitted || $leave_type_today == 'full_day') ? 'disabled' : '' ?>>START</button>
-                                    <button id="btnStop" onclick="stopWatch()" class="pro-timer-btn pro-btn-pause"
-                                        <?= ($report_submitted || $leave_type_today == 'full_day') ? 'disabled' : '' ?>>BREAK</button>
-                                        <button id="btnReset" onclick="resetWatch()" class="pro-timer-btn pro-btn-reset"
-                                            <?= ($report_submitted || $leave_type_today == 'full_day') ? 'disabled' : '' ?>>RESET</button>
+                                <button id="btnStop" onclick="stopWatch()" class="pro-timer-btn pro-btn-pause"
+                                    <?= ($report_submitted || $leave_type_today == 'full_day') ? 'disabled' : '' ?>>BREAK</button>
+                                <button id="btnReset" onclick="resetWatch()" class="pro-timer-btn pro-btn-reset"
+                                    <?= ($report_submitted || $leave_type_today == 'full_day') ? 'disabled' : '' ?>>RESET</button>
                             </div>
                         </div>
                     </div>
@@ -2483,14 +2483,15 @@
         setInterval(tick, 30000);
     })();
 
-    // Timer Logic
+    // ===== TIMER LOGIC (DB-synced, works across devices) =====
     let timer = null;
     let display = document.getElementById("display");
+    let dbStartTime = null; // ISO string from DB
 
     function updateDisplay() {
-        let start = localStorage.getItem("startTime");
-        if (!start) return;
-        let s = Math.floor((Date.now() - start) / 1000);
+        if (!dbStartTime) return;
+        let s = Math.floor((Date.now() - new Date(dbStartTime).getTime()) / 1000);
+        if (s < 0) s = 0;
         let h = String(Math.floor(s / 3600)).padStart(2, '0');
         let m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
         let sec = String(s % 60).padStart(2, '0');
@@ -2499,12 +2500,24 @@
 
     function startWatch() {
         if (timer) return;
-        localStorage.setItem("startTime", Date.now());
-        fetch("<?= site_url('emp/dashboard/start_work') ?>");
-        timer = setInterval(updateDisplay, 1000);
-        btnStart.disabled = true;
-        btnStop.disabled = false;
-        btnReset.disabled = true;
+        fetch("<?= site_url('emp/dashboard/start_work') ?>")
+            .then(r => r.json())
+            .then(() => {
+                // Fetch the actual DB start_time so all devices are in sync
+                return fetch("<?= site_url('emp/dashboard/get_work_status') ?>");
+            })
+            .then(r => r.json())
+            .then(data => {
+                if (data.running && data.start_time) {
+                    // Convert IST DB time to JS Date properly
+                    dbStartTime = data.start_time.replace(' ', 'T') + '+05:30';
+                    timer = setInterval(updateDisplay, 1000);
+                    updateDisplay();
+                    btnStart.disabled = true;
+                    btnStop.disabled = false;
+                    btnReset.disabled = true;
+                }
+            });
     }
 
     function stopWatch() {
@@ -2532,44 +2545,57 @@
         }).then(() => {
             clearInterval(timer);
             timer = null;
-            localStorage.removeItem("startTime");
+            dbStartTime = null;
             breakMode();
             location.reload();
         });
     }
-
-    window.onload = function() {
-        const today = new Date().toISOString().slice(0, 10);
-        const savedDate = localStorage.getItem("work_date");
-        if (savedDate === today && localStorage.getItem("startTime")) {
-            timer = setInterval(updateDisplay, 1000);
-        } else {
-            localStorage.removeItem("startTime");
-        }
-        localStorage.setItem("work_date", today);
-    };
 
     function resetWatch() {
         if (timer) {
             clearInterval(timer);
             timer = null;
         }
-        fetch("<?= site_url('emp/dashboard/stop_work') ?>");
-        localStorage.removeItem("startTime");
-        display.innerText = "00:00:00";
-        location.reload();
+        fetch("<?= site_url('emp/dashboard/stop_work') ?>").then(() => {
+            dbStartTime = null;
+            display.innerText = "00:00:00";
+            location.reload();
+        });
     }
 
     function resumeWork() {
         fetch("<?= site_url('emp/dashboard/stop_timer') ?>")
             .then(() => fetch("<?= site_url('emp/dashboard/start_work') ?>"))
-            .then(() => {
-                localStorage.setItem("startTime", Date.now());
-                timer = setInterval(updateDisplay, 1000);
-                workMode();
-                location.reload();
+            .then(() => fetch("<?= site_url('emp/dashboard/get_work_status') ?>"))
+            .then(r => r.json())
+            .then(data => {
+                if (data.running && data.start_time) {
+                    dbStartTime = data.start_time.replace(' ', 'T') + '+05:30';
+                    timer = setInterval(updateDisplay, 1000);
+                    updateDisplay();
+                    workMode();
+                    location.reload();
+                }
             });
     }
+
+    // ===== On page load: check DB for running session =====
+    window.addEventListener("DOMContentLoaded", function() {
+        if (reportSubmitted || onBreak) return;
+
+        fetch("<?= site_url('emp/dashboard/get_work_status') ?>")
+            .then(r => r.json())
+            .then(data => {
+                if (data.running && data.start_time) {
+                    dbStartTime = data.start_time.replace(' ', 'T') + '+05:30';
+                    timer = setInterval(updateDisplay, 1000);
+                    updateDisplay();
+                    btnStart.disabled = true;
+                    btnStop.disabled = false;
+                    btnReset.disabled = true;
+                }
+            });
+    });
 </script>
 
 <script>
@@ -2680,16 +2706,13 @@
             breakMode();
             return;
         }
-        if (localStorage.getItem("startTime")) {
-            btnStart.disabled = true;
-            btnStop.disabled = false;
+        // Button state is handled by DOMContentLoaded fetch above
+        // Default safe state if fetch hasn't resolved yet:
+        if (!timer) {
+            btnStart.disabled = false;
+            btnStop.disabled = true;
             btnReset.disabled = true;
-            timer = setInterval(updateDisplay, 1000);
-            return;
         }
-        btnStart.disabled = false;
-        btnStop.disabled = true;
-        btnReset.disabled = true;
     });
 </script>
 

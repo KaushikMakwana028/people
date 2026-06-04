@@ -11,15 +11,18 @@ class Dashboard extends CI_Controller {
             redirect('sign_in');
         }
 
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
+        }
+
         $this->load->model('Admin_model');
         
         $this->load->model('emp/Attendance_model');
         $this->Attendance_model->auto_mark_absents();
-        
-        if ($this->session->userdata('user_role') == 0) {
-            redirect('emp/dashboard');
-        }
-
     }
 
 private function headerData()

@@ -122,6 +122,7 @@ $route['admin/change_password/save'] = 'admin/change_password/save';
 
 
 $route['emp/view-profile/(:num)'] = 'emp/dashboard/view_profile/$1';
+$route['emp/dashboard/get_work_status'] = 'emp/Dashboard/get_work_status';
 
 
 

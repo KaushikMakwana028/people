@@ -685,7 +685,7 @@
                                     <img id="imagePreview"
                                         src="<?= !empty($user->photo)
                                                     ? base_url('uploads/profile/' . $user->photo)
-                                                    : base_url('assets/images/avatars/avatar-2.png'); ?>"
+                                                    : base_url('assets/default.jpg'); ?>"
                                         class="rounded-circle"
                                         width="130"
                                         height="130"
@@ -1153,7 +1153,7 @@
                     ];
                     
                     const photoChanged = imageUpload.files.length > 0 ||
-                        imagePreview.src.indexOf('avatar') === -1;
+                        (imagePreview.src.indexOf('avatar') === -1 && imagePreview.src.indexOf('default.jpg') === -1);
 
                     let filled = fields.filter(f => f && f.trim()).length;
                     if (photoChanged) filled++;

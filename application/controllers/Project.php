@@ -17,7 +17,11 @@ class Project extends CI_Controller
         }
 
         if ($this->session->userdata('user_role') != 1) {
-            redirect('sign_in');
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
     }
 
@@ -60,7 +64,7 @@ class Project extends CI_Controller
 
         $this->Project_model->update_project($id, $this->projectPayload(false));
         $this->session->set_flashdata('success', 'Project updated successfully.');
-        redirect('project/all_projects');
+        redirect('project/view/' . $id);
     }
 
     public function all_projects()

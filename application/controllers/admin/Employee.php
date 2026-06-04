@@ -14,7 +14,14 @@ class Employee extends CI_Controller
 
         if (!$this->session->userdata('logged_in')) {
             redirect('sign_in');
+        }
 
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
     }
 
@@ -134,7 +141,6 @@ public function view_profile($id)
             'name' => $this->input->post('name'),
             'phone' => $this->input->post('phone'),
             'email' => $this->input->post('email'),
-            'country' => $this->input->post('country'),
             'address' => $this->input->post('address'),
             'designation' => $this->input->post('designation'),
             'dob' => !empty($this->input->post('dob')) ? $this->input->post('dob') : null,

@@ -885,7 +885,7 @@
                         </button>
                         <a href="<?= base_url('admin/holidays/delete/' . $h->id) ?>"
                           class="btn-action btn-delete"
-                          onclick="return confirm('Are you sure you want to delete this holiday?')">
+                          onclick="return confirmSweetAction(this, 'Are you sure you want to delete this holiday?')">
                           <i class="bx bx-trash"></i> Delete
                         </a>
                       </div>

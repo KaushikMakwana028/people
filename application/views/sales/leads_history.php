@@ -1,15 +1,3 @@
-<!-- 
-  ============================================================
-  SALES LEADS PAGE — ENHANCED
-  Changes:
-  ─ Mobile: All filters hidden behind a filter icon → bottom sheet drawer
-  ─ Desktop: Clean single-row filter bar (no multi-row clutter)
-  ─ Both: Improved visual polish, spacing, badge styles
-  ============================================================
-  Drop-in replacement for your existing view file.
-  PHP/CodeIgniter template tags are preserved exactly as original.
--->
-
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
@@ -747,6 +735,7 @@
         box-shadow: var(--sl-shadow);
         transition: transform 0.2s, box-shadow 0.2s;
     }
+
     .sl-mob-card:hover {
         transform: translateY(-2px);
         box-shadow: var(--sl-shadow-lg);
@@ -809,7 +798,6 @@
         margin: 0 !important;
     }
 
-    /* ─── Modals ─────────────────────────────────────────────── */
     .sl-modal-overlay {
         position: fixed;
         inset: 0;
@@ -1101,39 +1089,145 @@
             <div class="sl-breadcrumb">
                 <a href="<?= base_url('admin/dashboard') ?>"><i class='bx bx-home-alt'></i> Dashboard</a>
                 <i class='bx bx-chevron-right'></i>
-                <span>My Leads</span>
+                <span>Lead History</span>
             </div>
 
             <!-- Page Header -->
             <div>
-                <h1 class="sl-h1">New Leads</h1>
+                <h1 class="sl-h1">Lead History</h1>
                 <p class="sl-h1-sub" id="slProductLabel">
                     <?= $selected_product ? htmlspecialchars($selected_product->name) : 'All Connected Products' ?>
                 </p>
             </div>
 
+            <!-- KPI Cards -->
+            <div class="sl-kpi-grid">
+                <div class="sl-kpi" style="--kpi-c: var(--c-con);">
+                    <div class="sl-kpi-icon"><i class='bx bx-phone-call'></i></div>
+                    <div>
+                        <div class="sl-kpi-label">Contacted</div>
+                        <div class="sl-kpi-value"><?= (int)($kpis['Contacted'] ?? 0) ?></div>
+                    </div>
+                </div>
+                <div class="sl-kpi" style="--kpi-c: var(--c-fup);">
+                    <div class="sl-kpi-icon"><i class='bx bx-time-five'></i></div>
+                    <div>
+                        <div class="sl-kpi-label">Follow Up</div>
+                        <div class="sl-kpi-value"><?= (int)($kpis['Follow Up'] ?? 0) ?></div>
+                    </div>
+                </div>
+                <div class="sl-kpi" style="--kpi-c: var(--c-conv);">
+                    <div class="sl-kpi-icon"><i class='bx bx-badge-check'></i></div>
+                    <div>
+                        <div class="sl-kpi-label">Converted</div>
+                        <div class="sl-kpi-value"><?= (int)($kpis['Converted'] ?? 0) ?></div>
+                    </div>
+                </div>
+                <div class="sl-kpi" style="--kpi-c: var(--c-ni);">
+                    <div class="sl-kpi-icon"><i class='bx bx-x-circle'></i></div>
+                    <div>
+                        <div class="sl-kpi-label">Not Interested</div>
+                        <div class="sl-kpi-value"><?= (int)($kpis['Not Interested'] ?? 0) ?></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- ── DESKTOP TOOLBAR ── -->
-            <div class="sl-toolbar" style="padding: 14px 20px; margin-bottom: 20px;">
+            <div class="sl-toolbar">
                 <form id="slFilterForm" onsubmit="event.preventDefault(); slTrigger();">
                     <input type="hidden" id="slProductId" value="<?= htmlspecialchars($selected_product_id ?? '') ?>">
                     <input type="hidden" id="slPage" value="<?= $page ?>">
-                    <input type="hidden" id="slSortBy" value="pl.id">
-                    <input type="hidden" id="slSortDir" value="DESC">
-                    <input type="hidden" id="slStatus" value="New">
-                    <input type="hidden" id="slDate" value="">
-                    <input type="hidden" id="slMonth" value="">
-                    <input type="hidden" id="slYear" value="">
+                    <input type="hidden" id="slSortBy" value="<?= $sort_by ?>">
+                    <input type="hidden" id="slSortDir" value="<?= $sort_dir ?>">
 
-                    <div class="sl-search-wrap" style="width: 100%;">
-                        <i class='bx bx-search'></i>
-                        <input type="text" id="slSearch" placeholder="Search by name, mobile, city…"
-                            value="<?= htmlspecialchars($search) ?>"
-                            oninput="slDebounce()">
+                    <div class="sl-toolbar-main">
+                        <!-- Search -->
+                        <div class="sl-search-wrap">
+                            <i class='bx bx-search'></i>
+                            <input type="text" id="slSearch" placeholder="Search by name, mobile, city…"
+                                value="<?= htmlspecialchars($search) ?>"
+                                oninput="slDebounce()">
+                        </div>
+
+                        <button type="button" class="sl-btn-reset" onclick="slReset()">
+                            <i class='bx bx-refresh'></i> Reset Filters
+                        </button>
+                    </div>
+
+                    <div class="sl-toolbar-filters">
+                        <!-- Date -->
+                        <div class="sl-filter-field">
+                            <label>Date</label>
+                            <input type="date" id="slDate" class="sl-date"
+                                value="<?= htmlspecialchars($filter_date ?? '') ?>"
+                                onchange="slOnDate()">
+                        </div>
+
+                        <!-- Month -->
+                        <div class="sl-filter-field">
+                            <label>Month</label>
+                            <select id="slMonth" class="sl-select" onchange="slOnMonth()">
+                                <option value="">Select Month</option>
+                                <?php $months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+                                foreach ($months as $mi => $mn): ?>
+                                    <option value="<?= $mi + 1 ?>" <?= (isset($filter_month) && $filter_month == $mi + 1) ? 'selected' : '' ?>><?= $mn ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Year -->
+                        <div class="sl-filter-field">
+                            <label>Year</label>
+                            <select id="slYear" class="sl-select" onchange="slOnMonth()">
+                                <option value="">Select Year</option>
+                                <?php $cy = (int)date('Y');
+                                for ($y = $cy; $y >= $cy - 5; $y--): ?>
+                                    <option value="<?= $y ?>" <?= (isset($filter_year) && $filter_year == $y) ? 'selected' : '' ?>><?= $y ?></option>
+                                <?php endfor; ?>
+                            </select>
+                        </div>
+
+                        <!-- Product -->
+                        <div class="sl-filter-field">
+                            <label>Product</label>
+                            <select id="slProduct" class="sl-select" onchange="slChangeProduct(this.value)">
+                                <option value="">All Products</option>
+                                <?php foreach ($products as $p): ?>
+                                    <option value="<?= $p->id ?>" <?= ($selected_product_id == $p->id) ? 'selected' : '' ?>><?= htmlspecialchars($p->name) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="sl-filter-field">
+                            <label>Status</label>
+                            <select id="slStatus" class="sl-select" onchange="slTrigger()">
+                                <option value="">All Statuses</option>
+                                <option value="New" <?= ($status_filter == 'New')          ? 'selected' : '' ?>>New</option>
+                                <option value="Contacted" <?= ($status_filter == 'Contacted')    ? 'selected' : '' ?>>Contacted</option>
+                                <option value="Follow Up" <?= ($status_filter == 'Follow Up')    ? 'selected' : '' ?>>Follow Up</option>
+                                <option value="Converted" <?= ($status_filter == 'Converted')    ? 'selected' : '' ?>>Converted</option>
+                                <option value="Not Interested" <?= ($status_filter == 'Not Interested') ? 'selected' : '' ?>>Not Interested</option>
+                            </select>
+                        </div>
+
+                        <!-- Sort -->
+                        <div class="sl-filter-field">
+                            <label>Sort By</label>
+                            <select id="slSort" class="sl-select" onchange="slChangeSort(this.value)">
+                                <option value="status_sequence|ASC" <?= ($sort_by == 'status_sequence' && $sort_dir == 'ASC') ? 'selected' : '' ?>>Status Sequence</option>
+                                <option value="pl.id|DESC" <?= ($sort_by == 'pl.id'   && $sort_dir == 'DESC') ? 'selected' : '' ?>>Newest First</option>
+                                <option value="pl.id|ASC" <?= ($sort_by == 'pl.id'   && $sort_dir == 'ASC')  ? 'selected' : '' ?>>Oldest First</option>
+                                <option value="pl.name|ASC" <?= ($sort_by == 'pl.name' && $sort_dir == 'ASC')  ? 'selected' : '' ?>>Name A-Z</option>
+                                <option value="pl.name|DESC" <?= ($sort_by == 'pl.name' && $sort_dir == 'DESC') ? 'selected' : '' ?>>Name Z-A</option>
+                                <option value="pl.city|ASC" <?= ($sort_by == 'pl.city' && $sort_dir == 'ASC')  ? 'selected' : '' ?>>City A-Z</option>
+                            </select>
+                        </div>
                     </div>
                 </form>
             </div>
 
-            <!-- ── MOBILE SEARCH ── -->
+            <!-- ── MOBILE SEARCH + FILTER BTN ── -->
             <div class="sl-mobile-bar">
                 <div class="sl-mobile-search-wrap">
                     <i class='bx bx-search'></i>
@@ -1141,6 +1235,10 @@
                         value="<?= htmlspecialchars($search) ?>"
                         oninput="slMobileDebounce()">
                 </div>
+                <button class="sl-filter-btn" id="slFilterOpenBtn" onclick="slOpenDrawer()" aria-label="Open filters">
+                    <i class='bx bx-slider-alt'></i>
+                    <span class="sl-filter-count" id="slFilterCount">0</span>
+                </button>
             </div>
 
             <!-- ── LEADS CARD ── -->
@@ -1177,7 +1275,83 @@
     </div>
 </div>
 
-
+<!-- ══════════════════════════════════════════════════════════
+     MOBILE FILTER DRAWER
+════════════════════════════════════════════════════════════ -->
+<div class="sl-drawer-overlay" id="slDrawerOverlay" onclick="slCloseDrawer()"></div>
+<div class="sl-drawer" id="slDrawer">
+    <div class="sl-drawer-handle"></div>
+    <div class="sl-drawer-header">
+        <div class="sl-drawer-title">
+            <i class='bx bx-slider-alt' style="color:var(--sl-primary);"></i> Filters
+        </div>
+        <button class="sl-drawer-close" onclick="slCloseDrawer()"><i class='bx bx-x'></i></button>
+    </div>
+    <div class="sl-drawer-body">
+        <div class="sl-drawer-field">
+            <label>Date</label>
+            <input type="date" id="slDrDate" value="<?= htmlspecialchars($filter_date ?? '') ?>">
+        </div>
+        <div class="sl-drawer-field">
+            <label>Month</label>
+            <select id="slDrMonth">
+                <option value="">Select Month</option>
+                <?php foreach ($months as $mi => $mn): ?>
+                    <option value="<?= $mi + 1 ?>" <?= (isset($filter_month) && $filter_month == $mi + 1) ? 'selected' : '' ?>><?= $mn ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="sl-drawer-field">
+            <label>Year</label>
+            <select id="slDrYear">
+                <option value="">Select Year</option>
+                <?php $cy = (int)date('Y');
+                for ($y = $cy; $y >= $cy - 5; $y--): ?>
+                    <option value="<?= $y ?>" <?= (isset($filter_year) && $filter_year == $y) ? 'selected' : '' ?>><?= $y ?></option>
+                <?php endfor; ?>
+            </select>
+        </div>
+        <div class="sl-drawer-field">
+            <label>Product</label>
+            <select id="slDrProduct">
+                <option value="">All Products</option>
+                <?php foreach ($products as $p): ?>
+                    <option value="<?= $p->id ?>" <?= ($selected_product_id == $p->id) ? 'selected' : '' ?>><?= htmlspecialchars($p->name) ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="sl-drawer-field">
+            <label>Status</label>
+            <select id="slDrStatus">
+                <option value="">All Status</option>
+                <option value="New" <?= ($status_filter == 'New')          ? 'selected' : '' ?>>New</option>
+                <option value="Contacted" <?= ($status_filter == 'Contacted')    ? 'selected' : '' ?>>Contacted</option>
+                <option value="Follow Up" <?= ($status_filter == 'Follow Up')    ? 'selected' : '' ?>>Follow Up</option>
+                <option value="Converted" <?= ($status_filter == 'Converted')    ? 'selected' : '' ?>>Converted</option>
+                <option value="Not Interested" <?= ($status_filter == 'Not Interested') ? 'selected' : '' ?>>Not Interested</option>
+            </select>
+        </div>
+        <div class="sl-drawer-field">
+            <label>Sort By</label>
+            <select id="slDrSort">
+                <option value="status_sequence|ASC" <?= ($sort_by == 'status_sequence' && $sort_dir == 'ASC') ? 'selected' : '' ?>>Status Sequence</option>
+                <option value="pl.id|DESC" <?= ($sort_by == 'pl.id'   && $sort_dir == 'DESC') ? 'selected' : '' ?>>Newest First</option>
+                <option value="pl.id|ASC" <?= ($sort_by == 'pl.id'   && $sort_dir == 'ASC')  ? 'selected' : '' ?>>Oldest First</option>
+                <option value="pl.name|ASC" <?= ($sort_by == 'pl.name' && $sort_dir == 'ASC')  ? 'selected' : '' ?>>Name A-Z</option>
+                <option value="pl.name|DESC" <?= ($sort_by == 'pl.name' && $sort_dir == 'DESC') ? 'selected' : '' ?>>Name Z-A</option>
+                <option value="pl.city|ASC" <?= ($sort_by == 'pl.city' && $sort_dir == 'ASC')  ? 'selected' : '' ?>>City A-Z</option>
+            </select>
+        </div>
+    </div>
+    <div class="sl-drawer-actions">
+        <button class="sl-drawer-reset" onclick="slDrawerReset()">
+            <i class='bx bx-refresh'></i> Reset
+        </button>
+        <button class="sl-drawer-apply" onclick="slDrawerApply()">
+            <i class='bx bx-check'></i> Apply Filters
+        </button>
+    </div>
+</div>
 
 <!-- ══════════════════════════════════════════════════════════
      MODAL: Update Status
@@ -1390,7 +1564,7 @@
         };
         window.slDrawerReset = function() {
             ['slDrDate', 'slDrMonth', 'slDrYear', 'slDrProduct', 'slDrStatus'].forEach(id => $(id).value = '');
-            $('slDrSort').value = 'pl.id|DESC';
+            $('slDrSort').value = 'status_sequence|ASC';
             slCloseDrawer();
             slReset();
         };
@@ -1455,17 +1629,19 @@
             _mDebT = setTimeout(slTrigger, 280);
         };
         window.slReset = function() {
-            ['slSearch', 'slDate', 'slMonth', 'slYear', 'slStatus'].forEach(id => {
+            ['slSearch', 'slMonth', 'slYear', 'slStatus'].forEach(id => {
                 if ($(id)) $(id).value = '';
             });
-            ['slDrDate', 'slDrMonth', 'slDrYear', 'slDrStatus'].forEach(id => {
+            ['slDrMonth', 'slDrYear', 'slDrStatus'].forEach(id => {
                 if ($(id)) $(id).value = '';
             });
+            if ($('slDate')) $('slDate').value = '<?= date('Y-m-d') ?>';
+            if ($('slDrDate')) $('slDrDate').value = '<?= date('Y-m-d') ?>';
             if ($('slMobileSearch')) $('slMobileSearch').value = '';
-            $('slSort').value = 'pl.id|DESC';
-            $('slDrSort').value = 'pl.id|DESC';
-            $('slSortBy').value = 'pl.id';
-            $('slSortDir').value = 'DESC';
+            $('slSort').value = 'status_sequence|ASC';
+            $('slDrSort').value = 'status_sequence|ASC';
+            $('slSortBy').value = 'status_sequence';
+            $('slSortDir').value = 'ASC';
             slUpdateFilterCount();
             slTrigger();
         };
@@ -1490,7 +1666,7 @@
             tbody.style.opacity = '0.45';
             mList.style.opacity = '0.45';
 
-            fetch(`<?= site_url('sales/leads') ?>?${params}`, {
+            fetch(`<?= site_url('sales/leads/history') ?>?${params}`, {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'
                     }
@@ -1597,19 +1773,19 @@
             function addBtn(p, active = false, label = null) {
                 const li = document.createElement('li');
                 li.className = 'cust-pag-item';
-                
+
                 const b = document.createElement('button');
                 b.type = 'button';
                 b.textContent = label || p;
                 b.className = 'cust-pag-link' + (active ? ' active' : '');
-                
+
                 if (!active) {
                     b.addEventListener('click', () => {
                         $('slPage').value = p;
                         slFetch();
                     });
                 }
-                
+
                 li.appendChild(b);
                 cont.appendChild(li);
             }
@@ -1617,11 +1793,11 @@
             function addDisabled(label) {
                 const li = document.createElement('li');
                 li.className = 'cust-pag-item';
-                
+
                 const s = document.createElement('span');
                 s.textContent = label;
                 s.className = 'cust-pag-link disabled';
-                
+
                 li.appendChild(s);
                 cont.appendChild(li);
             }
@@ -1629,11 +1805,11 @@
             function addDots() {
                 const li = document.createElement('li');
                 li.className = 'cust-pag-item';
-                
+
                 const s = document.createElement('span');
                 s.textContent = '...';
                 s.className = 'cust-pag-dots';
-                
+
                 li.appendChild(s);
                 cont.appendChild(li);
             }

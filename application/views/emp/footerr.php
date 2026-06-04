@@ -1,4 +1,6 @@
-	
+	<!--start overlay-->
+	<div class="overlay mobile-toggle-icon"></div>
+	<!--end overlay-->
 	</div>
 	<!--end wrapper-->
 
@@ -219,8 +221,111 @@ if ('serviceWorker' in navigator) {
 	}, 200);
 </script>
 
-<!-- SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+  	(function() {
+  		var nativeAlert = window.alert ? window.alert.bind(window) : function(message) {
+  			console.log(message);
+  		};
+
+  		function cleanMessage(message) {
+  			return String(message || '').replace(/\n/g, '<br>');
+  		}
+
+  		function alertTitle(type) {
+  			if (type === 'success') return 'Success';
+  			if (type === 'error') return 'Error';
+  			if (type === 'warning') return 'Warning';
+  			return 'Notice';
+  		}
+
+  		function removeLegacyFlashAlerts() {
+  			var selectors = [
+  				'.alert',
+  				'.lead-flash',
+  				'.exp-alert',
+  				'.txn-alert',
+  				'.pay-alert',
+  				'.pm-alert',
+  				'.pd-alert',
+  				'.adm-manual-alert',
+  				'.pl-alert'
+  			];
+  			document.querySelectorAll(selectors.join(',')).forEach(function(el) {
+  				el.remove();
+  			});
+  		}
+
+  		var nativeConfirm = window.confirm ? window.confirm.bind(window) : function() {
+  			return true;
+  		};
+
+  		window.showSweetAlert = function(message, type, title) {
+  			type = type || 'info';
+  			if (window.Swal && typeof window.Swal.fire === 'function') {
+  				return window.Swal.fire({
+  					icon: type,
+  					title: title || alertTitle(type),
+  					html: cleanMessage(message),
+  					confirmButtonColor: '#5f61f6'
+  				});
+  			}
+
+  			nativeAlert(String(message || ''));
+  		};
+
+  		window.alert = function(message) {
+  			return window.showSweetAlert(message, 'info');
+  		};
+
+  		window.confirmSweetAction = function(element, message, title) {
+  			if (!window.Swal || typeof window.Swal.fire !== 'function') {
+  				return nativeConfirm(message);
+  			}
+
+  			window.Swal.fire({
+  				icon: 'warning',
+  				title: title || 'Are you sure?',
+  				text: message,
+  				showCancelButton: true,
+  				confirmButtonColor: '#ef4444',
+  				cancelButtonColor: '#64748b',
+  				confirmButtonText: 'Yes',
+  				cancelButtonText: 'Cancel'
+  			}).then(function(result) {
+  				if (!result.isConfirmed || !element) return;
+
+  				if (element.tagName && element.tagName.toLowerCase() === 'form') {
+  					element.submit();
+  					return;
+  				}
+
+  				var href = element.getAttribute ? element.getAttribute('href') : '';
+  				if (href && href !== 'javascript:;') {
+  					window.location.href = href;
+  				}
+  			});
+
+  			return false;
+  		};
+
+  		document.addEventListener('DOMContentLoaded', function() {
+  			var flashMessages = [
+  				{type: 'success', message: <?= json_encode($this->session->flashdata('success')) ?>},
+  				{type: 'error', message: <?= json_encode($this->session->flashdata('error')) ?>},
+  				{type: 'error', message: <?= json_encode($this->session->flashdata('login_error')) ?>}
+  			];
+
+  			flashMessages.forEach(function(item) {
+  				if (item.message) {
+  					removeLegacyFlashAlerts();
+  					window.showSweetAlert(item.message, item.type);
+  				}
+  			});
+  		});
+  	})();
+  </script>
 </body>
 
 </html>

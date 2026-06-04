@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script>
-		(function () {
+		(function() {
 			var savedTheme = localStorage.getItem('admin-theme') || 'light';
 			document.documentElement.setAttribute('data-bs-theme', savedTheme);
 		})();
@@ -46,7 +46,7 @@
 			display: none !important;
 		}
 
-		.sidebar-wrapper .metismenu > li > a {
+		.sidebar-wrapper .metismenu>li>a {
 			position: relative;
 			z-index: 2;
 		}
@@ -88,6 +88,55 @@
 		a {
 			font-family: 'Poppins', sans-serif !important;
 		}
+
+		/* Header mobile fixes */
+		.topbar {
+			padding: 0 12px;
+		}
+
+		.topbar .navbar {
+			min-height: 60px;
+			padding: 8px 0;
+		}
+
+		/* Give the dark mode icon proper styling */
+		.premium-icon-btn.dark-mode-icon {
+			display: flex !important;
+			align-items: center;
+			justify-content: center;
+			width: 38px;
+			height: 38px;
+			border-radius: 10px;
+			border: 1.5px solid var(--border-color, #e2e8f0);
+			background: var(--bg-primary, #fff);
+			color: var(--text-primary, #0f172a);
+			font-size: 18px;
+			cursor: pointer;
+			text-decoration: none;
+		}
+
+		/* Space between hamburger and right icons */
+		.mobile-toggle-menu {
+			padding: 6px 8px;
+			font-size: 22px;
+			cursor: pointer;
+			color: var(--text-primary, #0f172a);
+		}
+
+		@media (max-width: 768px) {
+			.topbar {
+				padding: 0 8px;
+			}
+
+			.user-box.dropdown {
+				padding-left: 6px !important;
+				padding-right: 0 !important;
+			}
+
+			.top-menu .navbar-nav {
+				gap: 6px !important;
+			}
+		}
 	</style>
 </head>
 
@@ -124,8 +173,8 @@
 					</a>
 					<ul>
 						<li><a href="<?= base_url('sales/leads') ?>"><i class="bx bx-radio-circle"></i>All Leads</a></li>
-						<?php 
-						$CI =& get_instance();
+						<?php
+						$CI = &get_instance();
 						$CI->load->database();
 						$sidebar_products = $CI->db->get('products')->result();
 						foreach ($sidebar_products as $sp):
@@ -138,6 +187,13 @@
 							</li>
 						<?php endforeach; ?>
 					</ul>
+				</li>
+
+				<li>
+					<a href="<?= base_url('sales/leads/history') ?>">
+						<div class="parent-icon"><i class="bx bx-history"></i></div>
+						<div class="menu-title">History</div>
+					</a>
 				</li>
 
 
@@ -156,372 +212,39 @@
 		<!--start header -->
 		<header>
 			<div class="topbar">
+				<!-- Replace the existing nav content inside .topbar -->
 				<nav class="navbar navbar-expand gap-2 align-items-center">
-					<div class="mobile-toggle-menu d-flex"><i class='bx bx-menu'></i>
+
+					<!-- Hamburger (mobile toggle) -->
+					<div class="mobile-toggle-menu d-flex">
+						<i class='bx bx-menu'></i>
 					</div>
 
-					<div class="search-bar d-lg-block d-none" data-bs-toggle="modal" data-bs-target="#SearchModal">
-						<div class="premium-search-box">
-							<i class='bx bx-search'></i>
-							<input type="text" placeholder="Search anything...">
-						</div>
-					</div>
-
+					<!-- Right side icons -->
 					<div class="top-menu ms-auto">
 						<ul class="navbar-nav align-items-center gap-1">
-							<li class="nav-item dark-mode d-none d-sm-flex">
-								<a class="premium-icon-btn dark-mode-icon" href="javascript:;"><i class='bx bx-moon'></i></a>
+
+							<!-- ✅ Dark/Light toggle — ALWAYS visible (removed d-none d-sm-flex) -->
+							<li class="nav-item dark-mode">
+								<a class="premium-icon-btn dark-mode-icon" href="javascript:;"
+									title="Toggle Theme"
+									style="display:flex;align-items:center;justify-content:center;
+                          width:38px;height:38px;border-radius:10px;
+                          border:1.5px solid var(--border-color, #e2e8f0);
+                          background:var(--bg-primary, #fff);
+                          color:var(--text-primary, #0f172a);
+                          font-size:18px;cursor:pointer;text-decoration:none;">
+									<i class='bx bx-moon'></i>
+								</a>
 							</li>
 
-							<li class="nav-item dropdown dropdown-app">
-								<div class="dropdown-menu dropdown-menu-end p-0">
-									<div class="app-container p-2 my-2">
-
-									</div>
-								</div>
-							</li>
-
-							<li class="nav-item dropdown dropdown-large">
-								<div class="dropdown-menu dropdown-menu-end">
-									<a href="javascript:;">
-										<div class="msg-header">
-											<p class="msg-header-title">Notifications</p>
-											<p class="msg-header-badge">8 New</p>
-										</div>
-									</a>
-									<div class="header-notifications-list">
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="<?= base_url('assets/images/avatars/avatar-1.png') ?>"
-														class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Daisy Anderson<span
-															class="msg-time float-end">5 sec
-															ago</span></h6>
-													<p class="msg-info">The standard chunk of lorem</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-danger text-danger">dc
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New Orders <span class="msg-time float-end">2
-															min
-															ago</span></h6>
-													<p class="msg-info">You have recived new orders</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="<?= base_url('assets/images/avatars/avatar-2.png') ?>"
-														class="msg-avatar" alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Althea Cabardo <span
-															class="msg-time float-end">14
-															sec ago</span></h6>
-													<p class="msg-info">Many desktop publishing packages</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-success text-success">
-													<img src="assets/images/app/outlook.png" width="25"
-														alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Account Created<span
-															class="msg-time float-end">28 min
-															ago</span></h6>
-													<p class="msg-info">Successfully created new email</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-info text-info">Ss
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New Product Approved <span
-															class="msg-time float-end">2 hrs ago</span></h6>
-													<p class="msg-info">Your new product has approved</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-4.png" class="msg-avatar"
-														alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Katherine Pechon <span
-															class="msg-time float-end">15
-															min ago</span></h6>
-													<p class="msg-info">Making this the first true generator</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-success text-success"><i
-														class='bx bx-check-square'></i>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Your item is shipped <span
-															class="msg-time float-end">5 hrs
-															ago</span></h6>
-													<p class="msg-info">Successfully shipped your item</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="notify bg-light-primary">
-													<img src="assets/images/app/github.png" width="25"
-														alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">New 24 authors<span
-															class="msg-time float-end">1 day
-															ago</span></h6>
-													<p class="msg-info">24 new authors joined last week</p>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center">
-												<div class="user-online">
-													<img src="assets/images/avatars/avatar-8.png" class="msg-avatar"
-														alt="user avatar">
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="msg-name">Peter Costanzo <span
-															class="msg-time float-end">6 hrs
-															ago</span></h6>
-													<p class="msg-info">It was popularised in the 1960s</p>
-												</div>
-											</div>
-										</a>
-									</div>
-									<a href="javascript:;">
-										<div class="text-center msg-footer">
-											<button class="btn btn-primary w-100">View All Notifications</button>
-										</div>
-									</a>
-								</div>
-							</li>
-
-
-
-
-							<li class="nav-item dropdown dropdown-large">
-								<div class="dropdown-menu dropdown-menu-end">
-									<a href="javascript:;">
-										<div class="msg-header">
-											<p class="msg-header-title">My Cart</p>
-											<p class="msg-header-badge">10 Items</p>
-										</div>
-									</a>
-									<div class="header-message-list">
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/11.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/02.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/03.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/04.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/05.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/06.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/07.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/08.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-										<a class="dropdown-item" href="javascript:;">
-											<div class="d-flex align-items-center gap-3">
-												<div class="position-relative">
-													<div class="cart-product rounded-circle bg-light">
-														<img src="assets/images/products/09.png" class=""
-															alt="product image">
-													</div>
-												</div>
-												<div class="flex-grow-1">
-													<h6 class="cart-product-title mb-0">Men White T-Shirt</h6>
-													<p class="cart-product-price mb-0">1 X $29.00</p>
-												</div>
-												<div class="">
-													<p class="cart-price mb-0">$250</p>
-												</div>
-												<div class="cart-product-cancel"><i class="bx bx-x"></i>
-												</div>
-											</div>
-										</a>
-									</div>
-									<a href="javascript:;">
-										<div class="text-center msg-footer">
-											<div class="d-flex align-items-center justify-content-between mb-3">
-												<h5 class="mb-0">Total</h5>
-												<h5 class="mb-0 ms-auto">$489.00</h5>
-											</div>
-											<button class="btn btn-primary w-100">Checkout</button>
-										</div>
-									</a>
-								</div>
-							</li>
 						</ul>
-
 					</div>
 
-					<div class="user-box dropdown px-3">
-						<a class="d-flex align-items-center nav-link dropdown-toggle gap-3 dropdown-toggle-nocaret"
-							href="javascript:;" role="button" data-bs-toggle="dropdown"
-							aria-expanded="false">
+					<!-- User box -->
+					<div class="user-box dropdown px-2">
+						<a class="d-flex align-items-center nav-link dropdown-toggle gap-2 dropdown-toggle-nocaret"
+							href="javascript:;" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 
 							<?php
 							$headerUser = null;
@@ -544,36 +267,37 @@
 
 							<img src="<?= (!empty($photo)
 											? base_url('uploads/profile/' . $photo)
-											: base_url('assets/images/avatars/avatar-2.png')) . '?v=' . time(); ?>" class="user-img rounded-circle" width="40" height="40"
-								style="object-fit:cover;">
+											: base_url('assets/default.jpg')) . '?v=' . time(); ?>"
+								class="user-img rounded-circle" width="38" height="38" style="object-fit:cover;">
 
-
-							<div class="user-info">
-								<p class="user-name mb-0 fw-semibold">
+							<!-- Name hidden on mobile to save space -->
+							<div class="user-info d-none d-md-block">
+								<p class="user-name mb-0 fw-semibold" style="font-size:13px;line-height:1.2;">
 									<?= htmlspecialchars(ucfirst($this->session->userdata('user_name') ?? 'User')) ?>
-
-
 								</p>
-								<p class="designattion mb-0 text-muted small">
-									Sales
-								</p>
+								<p class="designattion mb-0 text-muted" style="font-size:11px;">Sales</p>
 							</div>
 						</a>
-						<ul class="dropdown-menu dropdown-menu-end">
-							<li><a class="dropdown-item d-flex align-items-center" href="<?= site_url('sales/profile'); ?>"><i
-										class="bx bx-user fs-5"></i><span>Profile</span></a>
-							</li>
 
+						<ul class="dropdown-menu dropdown-menu-end">
+							<li>
+								<a class="dropdown-item d-flex align-items-center gap-2" href="<?= site_url('sales/profile'); ?>">
+									<i class="bx bx-user fs-5"></i><span>Profile</span>
+								</a>
+							</li>
 							<li>
 								<div class="dropdown-divider mb-0"></div>
 							</li>
-							<li><a href="<?= base_url('sales/logout') ?>"
-									onclick="return confirm('Are you sure you want to logout?')" class="dropdown-item">
-									<i class="bx bx-log-out-circle"></i> Logout
+							<li>
+								<a href="<?= base_url('sales/logout') ?>"
+									onclick="return confirmSweetAction(this, 'Are you sure you want to logout?')"
+									class="dropdown-item d-flex align-items-center gap-2">
+									<i class="bx bx-log-out-circle fs-5"></i> Logout
 								</a>
 							</li>
 						</ul>
 					</div>
+
 				</nav>
 			</div>
 		</header>

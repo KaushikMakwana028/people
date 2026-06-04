@@ -12,8 +12,15 @@ class Product_leads extends CI_Controller
         $this->load->helper(['url', 'form']);
 
         // Check if admin is logged in (role = 1)
-        if (!$this->session->userdata('logged_in') || $this->session->userdata('user_role') != 1) {
+        if (!$this->session->userdata('logged_in')) {
             redirect('sign_in');
+        }
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
     }
 
@@ -32,8 +39,59 @@ class Product_leads extends CI_Controller
         }
         $search = $this->input->get('search') ?? '';
 
-        $data['leads'] = $this->Product_lead_model->get_leads($product_id, $filters, $search);
+        // Calculate total rows for pagination
+        $total_rows = $this->Product_lead_model->count_leads($product_id, $filters, $search);
+
+        $this->load->library('pagination');
+
+        // Build base URL keeping query parameters
+        $get_params = $this->input->get();
+        unset($get_params['page']); // remove page from query string to avoid duplication
+
+        $config['base_url'] = base_url('admin/product_leads') . '?' . http_build_query($get_params);
+        $config['total_rows'] = $total_rows;
+        $config['per_page'] = 10;
+        $config['use_page_numbers'] = TRUE;
+        $config['page_query_string'] = TRUE;
+        $config['query_string_segment'] = 'page';
+
+        // Styling for Bootstrap 5
+        $config['full_tag_open'] = '<nav class="mt-4"><ul class="pagination justify-content-center">';
+        $config['full_tag_close'] = '</ul></nav>';
+        $config['first_link'] = 'First';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+        $config['last_link'] = 'Last';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+        $config['next_link'] = '&raquo;';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_link'] = '&laquo;';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+        $config['attributes'] = array('class' => 'page-link');
+
+        $this->pagination->initialize($config);
+
+        $page = $this->input->get('page') ? (int)$this->input->get('page') : 1;
+        if ($page < 1) $page = 1;
+        $offset = ($page - 1) * $config['per_page'];
+
+        // Get matching leads with limit and offset
+        $data['leads'] = $this->Product_lead_model->get_leads($product_id, $filters, $search, $config['per_page'], $offset);
         $data['kpis'] = $this->Product_lead_model->get_kpi_counts($product_id);
+        
+        // Pass total count of matching leads and pagination links
+        $data['total_leads_count'] = $total_rows;
+        $data['current_page'] = $page;
+        $data['per_page'] = $config['per_page'];
+        $data['total_rows'] = $total_rows;
+        $data['pagination_links'] = $this->pagination->create_links();
 
         $data['status_filter'] = $this->input->get('status') ?? '';
         $data['search'] = $search;

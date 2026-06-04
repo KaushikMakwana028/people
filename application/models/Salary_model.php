@@ -43,7 +43,7 @@ class Salary_model extends CI_Model
             ->where('month_year', $month_year)
             ->get($this->table)
             ->result_array();
-        
+
         $paid_user_ids = array_column($paid_user_ids_query, 'user_id');
 
         $this->db->where('role', 0)->where('is_active', 1);
@@ -139,13 +139,19 @@ class Salary_model extends CI_Model
             ->like('attendance_date', $month_year, 'after')
             ->count_all_results('attendance');
 
+        // Get full salary calculation breakdown
+        $calc = $this->calculate_salary($user_id, $month_year);
+
         return [
-            'base_salary' => $user['monthly_salary'] ?? 0.00,
-            'present_days' => $present,
-            'absent_days' => $absent
+            'base_salary'    => $user['monthly_salary'] ?? 0.00,
+            'present_days'   => $present,
+            'absent_days'    => $absent,
+            'working_days'   => $calc['working_days']   ?? 0,
+            'daily_rate'     => $calc['daily_rate']     ?? 0,
+            'deduction'      => $calc['deduction']      ?? 0,
+            'net_payable'    => $calc['net_payable']    ?? 0,
         ];
     }
-
     /**
      * Get payment history logs
      */
@@ -186,5 +192,83 @@ class Salary_model extends CI_Model
             ->where('id', $user_id)
             ->where('role', 0)
             ->update('users', ['monthly_salary' => $monthly_salary]);
+    }
+
+    public function calculate_salary($user_id, $month_year)
+    {
+        // Get user base salary
+        $user = $this->db->where('id', $user_id)->get('users')->row_array();
+        if (!$user) return null;
+
+        $monthly_salary = floatval($user['monthly_salary'] ?? 0);
+
+        // Parse month/year
+        $year  = date('Y', strtotime($month_year . '-01'));
+        $month = date('m', strtotime($month_year . '-01'));
+        $num_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        // Count weekdays (Mon-Fri) in the month
+        $total_weekdays = 0;
+        for ($d = 1; $d <= $num_days; $d++) {
+            $day_of_week = date('N', strtotime("$year-$month-$d"));
+            if ($day_of_week >= 1 && $day_of_week <= 5) {
+                $total_weekdays++;
+            }
+        }
+
+        // Fetch holidays in this month set by admin
+        $holidays = $this->db
+            ->like('holiday_date', $month_year, 'after')
+            ->get('holidays')
+            ->result_array();
+
+        // Count only holidays that fall on weekdays
+        $holiday_weekday_count = 0;
+        foreach ($holidays as $h) {
+            $dow = date('N', strtotime($h['holiday_date']));
+            if ($dow >= 1 && $dow <= 5) {
+                $holiday_weekday_count++;
+            }
+        }
+
+        // Net working days = weekdays - holidays
+        $working_days = $total_weekdays - $holiday_weekday_count;
+        if ($working_days <= 0) $working_days = 1; // safety
+
+        // Count absent days for this user this month (only weekdays, non-holiday)
+        $absent_records = $this->db
+            ->where('user_id', $user_id)
+            ->where('status', 'Absent')
+            ->like('attendance_date', $month_year, 'after')
+            ->get('attendance')
+            ->result_array();
+
+        // Filter out any absent records that are on holidays or weekends
+        $holiday_dates = array_column($holidays, 'holiday_date');
+        $counted_absent = 0;
+        foreach ($absent_records as $a) {
+            $dow = date('N', strtotime($a['attendance_date']));
+            // Skip weekends
+            if ($dow == 6 || $dow == 7) continue;
+            // Skip holidays
+            if (in_array($a['attendance_date'], $holiday_dates)) continue;
+            $counted_absent++;
+        }
+
+        // Salary calculation
+        $daily_rate   = $monthly_salary / $working_days;
+        $deduction    = $daily_rate * $counted_absent;
+        $net_payable  = $monthly_salary - $deduction;
+
+        return [
+            'monthly_salary'    => $monthly_salary,
+            'working_days'      => $working_days,
+            'total_weekdays'    => $total_weekdays,
+            'holiday_count'     => $holiday_weekday_count,
+            'absent_days'       => $counted_absent,
+            'daily_rate'        => round($daily_rate),
+            'deduction'         => round($deduction),
+            'net_payable'       => round($net_payable),
+        ];
     }
 }

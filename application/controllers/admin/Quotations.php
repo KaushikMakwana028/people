@@ -7,6 +7,18 @@ class Quotations extends CI_Controller
     {
         parent::__construct();
 
+        if (!$this->session->userdata('logged_in')) {
+            redirect('sign_in');
+        }
+
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
+        }
+
         $this->load->model('Quotation_model');
     }
 

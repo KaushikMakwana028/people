@@ -10,10 +10,16 @@ class Leads extends CI_Controller
         $this->load->library(['session', 'form_validation']);
         $this->load->helper(['url', 'form']);
 
-        // ── Auth guard ──────────────────────────────────────
-        // Adjust to match your project's session key / login check
-        if (!$this->session->userdata('admin_id')) {
-            redirect('admin/login');
+        if (!$this->session->userdata('logged_in')) {
+            redirect('sign_in');
+        }
+
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
     }
 

@@ -2099,9 +2099,20 @@
 
     /* === DUPLICATE === */
     function duplicateProject(id) {
-        if (confirm('Create a duplicate of this project?')) {
-            window.location.href = '<?= base_url("index.php/project/duplicate/") ?>' + id;
-        }
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: 'Create a duplicate of this project?',
+            showCancelButton: true,
+            confirmButtonColor: '#5f61f6',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if (result.isConfirmed) {
+                window.location.href = '<?= base_url("index.php/project/duplicate/") ?>' + id;
+            }
+        });
     }
 
     /* === EXPORT === */

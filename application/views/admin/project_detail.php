@@ -347,6 +347,12 @@ if (!function_exists('pd_label')) {
     box-shadow: 0 0 0 3px rgba(108, 92, 231, .14)
   }
 
+  .pd-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px
+  }
+
   @media(max-width:992px) {
     .pd-stats {
       grid-template-columns: repeat(2, 1fr)
@@ -392,6 +398,10 @@ if (!function_exists('pd_label')) {
     .pd-modal-foot .pd-btn {
       width: 100%
     }
+
+    .pd-form-grid {
+      grid-template-columns: 1fr
+    }
   }
 </style>
 
@@ -402,7 +412,7 @@ if (!function_exists('pd_label')) {
 
       <div class="pd-top">
         <a class="pd-btn light" href="<?= site_url('project/all_projects') ?>"><i class="bx bx-arrow-back"></i> Back to Projects</a>
-        <a class="pd-btn" href="<?= site_url('project/all_projects') ?>"><i class="bx bx-pencil"></i> Edit Project</a>
+        <button class="pd-btn" onclick="openPd('projectModal')"><i class="bx bx-pencil"></i> Edit Project</button>
       </div>
 
       <section class="pd-hero">
@@ -527,6 +537,36 @@ if (!function_exists('pd_label')) {
         <div class="pd-field"><label>Price</label><input class="pd-input" name="amount" type="number" min="0" step="0.01" placeholder="Enter price" required></div>
       </div>
       <div class="pd-modal-foot"><button type="button" class="pd-btn light" onclick="closePd('requirementModal')">Cancel</button><button class="pd-btn" type="submit">Add Requirement</button></div>
+    </form>
+  </div>
+</div>
+
+<div class="pd-modal" id="projectModal">
+  <div class="pd-box">
+    <form method="post" id="projectForm" action="<?= site_url('project/update/' . $project->id) ?>">
+      <div class="pd-modal-head">
+        <div class="pd-modal-title">Edit Project</div><button type="button" class="pd-close" onclick="closePd('projectModal')"><i class="bx bx-x"></i></button>
+      </div>
+      <div class="pd-modal-body">
+        <div class="pd-form-grid">
+          <div class="pd-field" style="grid-column: 1 / -1;"><label>Project Name</label><input class="pd-input" name="project_name" value="<?= htmlspecialchars($project->project_name) ?>" required></div>
+          <div class="pd-field" style="grid-column: 1 / -1;"><label>Project Description</label><textarea class="pd-textarea" name="project_description"><?= htmlspecialchars($project->project_description) ?></textarea></div>
+          <div class="pd-field"><label>Client Name</label><input class="pd-input" name="client_name" value="<?= htmlspecialchars($project->client_name) ?>" required></div>
+          <div class="pd-field"><label>Client Email</label><input class="pd-input" name="client_email" type="email" value="<?= htmlspecialchars($project->client_email) ?>"></div>
+          <div class="pd-field"><label>Client Phone</label><input class="pd-input" name="client_phone" value="<?= htmlspecialchars($project->client_phone) ?>"></div>
+          <div class="pd-field"><label>Status</label><select class="pd-select" name="status">
+              <option value="active" <?= ($project->status === 'active') ? 'selected' : '' ?>>Active</option>
+              <option value="completed" <?= ($project->status === 'completed') ? 'selected' : '' ?>>Completed</option>
+              <option value="on-hold" <?= ($project->status === 'on-hold') ? 'selected' : '' ?>>On Hold</option>
+              <option value="cancelled" <?= ($project->status === 'cancelled') ? 'selected' : '' ?>>Cancelled</option>
+            </select></div>
+          <div class="pd-field"><label>Base Amount (₹)</label><input class="pd-input" name="base_amount" type="number" min="0" step="0.01" value="<?= htmlspecialchars($project->base_amount) ?>"></div>
+          <div class="pd-field"><label>Progress %</label><input class="pd-input" name="progress" type="number" min="0" max="100" value="<?= htmlspecialchars($project->progress) ?>"></div>
+          <div class="pd-field"><label>Start Date</label><input class="pd-input" name="start_date" type="date" value="<?= htmlspecialchars($project->start_date) ?>"></div>
+          <div class="pd-field"><label>Due Date</label><input class="pd-input" name="due_date" type="date" value="<?= htmlspecialchars($project->due_date) ?>"></div>
+        </div>
+      </div>
+      <div class="pd-modal-foot"><button type="button" class="pd-btn light" onclick="closePd('projectModal')">Cancel</button><button class="pd-btn" type="submit">Save Changes</button></div>
     </form>
   </div>
 </div>

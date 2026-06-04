@@ -11,8 +11,15 @@ class Products extends CI_Controller
         $this->load->helper(['url', 'form']);
 
         // Check if admin is logged in (role = 1)
-        if (!$this->session->userdata('logged_in') || $this->session->userdata('user_role') != 1) {
+        if (!$this->session->userdata('logged_in')) {
             redirect('sign_in');
+        }
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
     }
 
@@ -21,7 +28,52 @@ class Products extends CI_Controller
      */
     public function index()
     {
-        $data['products'] = $this->Product_model->get_all_products();
+        $this->load->library('pagination');
+
+        $config['base_url'] = base_url('admin/products');
+        $config['total_rows'] = $this->db->count_all('products');
+        $config['per_page'] = 8;
+        $config['use_page_numbers'] = TRUE;
+        $config['page_query_string'] = TRUE;
+        $config['query_string_segment'] = 'page';
+
+        // Styling for Bootstrap 5
+        $config['full_tag_open'] = '<nav class="mt-4"><ul class="pagination justify-content-center">';
+        $config['full_tag_close'] = '</ul></nav>';
+        $config['first_link'] = 'First';
+        $config['first_tag_open'] = '<li class="page-item">';
+        $config['first_tag_close'] = '</li>';
+        $config['last_link'] = 'Last';
+        $config['last_tag_open'] = '<li class="page-item">';
+        $config['last_tag_close'] = '</li>';
+        $config['next_link'] = '&raquo;';
+        $config['next_tag_open'] = '<li class="page-item">';
+        $config['next_tag_close'] = '</li>';
+        $config['prev_link'] = '&laquo;';
+        $config['prev_tag_open'] = '<li class="page-item">';
+        $config['prev_tag_close'] = '</li>';
+        $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+        $config['cur_tag_close'] = '</a></li>';
+        $config['num_tag_open'] = '<li class="page-item">';
+        $config['num_tag_close'] = '</li>';
+        $config['attributes'] = array('class' => 'page-link');
+
+        $this->pagination->initialize($config);
+
+        $page = $this->input->get('page') ? (int)$this->input->get('page') : 1;
+        if ($page < 1) $page = 1;
+        $offset = ($page - 1) * $config['per_page'];
+
+        $data['products'] = $this->db->order_by('created_at', 'DESC')
+                                     ->limit($config['per_page'], $offset)
+                                     ->get('products')
+                                     ->result();
+
+        $data['current_page'] = $page;
+        $data['per_page'] = $config['per_page'];
+        $data['total_rows'] = $config['total_rows'];
+        $data['pagination_links'] = $this->pagination->create_links();
+
         $this->load->view('admin/header');
         $this->load->view('admin/products_list', $data);
         $this->load->view('admin/footer');

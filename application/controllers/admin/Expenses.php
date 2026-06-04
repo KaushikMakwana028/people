@@ -15,6 +15,14 @@ class Expenses extends CI_Controller
             redirect('sign_in');
         }
 
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
+        }
+
         $this->load->model('Expense_model');
         $this->load->library(['session', 'form_validation']);
         $this->load->helper(['url', 'form']);

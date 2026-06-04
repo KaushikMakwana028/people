@@ -14,7 +14,7 @@ class Task extends CI_Controller
         $this->load->helper('url');
 
         if ($this->session->userdata('logged_in') !== true) {
-            redirect('login');
+            redirect('sign_in');
         }
     }
 
@@ -31,6 +31,16 @@ class Task extends CI_Controller
 ===================================================== */
     public function my_tasks()
     {
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         $user_id = $this->session->userdata('user_id');
 
         $data['tasks'] = $this->Task_model->get_user_tasks($user_id);
@@ -46,6 +56,16 @@ class Task extends CI_Controller
 ===================================================== */
     public function my_task_logs($task_id)
     {
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         if (!$task_id) {
             show_404();
         }
@@ -71,7 +91,11 @@ class Task extends CI_Controller
     public function list()
     {
         if ($this->session->userdata('user_role') != 1) {
-            redirect('login');
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
 
         $assigned_to = $this->input->get('assigned_to');
@@ -91,7 +115,11 @@ class Task extends CI_Controller
     public function add()
     {
         if ($this->session->userdata('user_role') != 1) {
-            redirect('login');
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
 
         $data['users'] = $this->User_model->get_all_users();
@@ -145,7 +173,11 @@ class Task extends CI_Controller
     public function edit($id)
     {
         if ($this->session->userdata('user_role') != 1) {
-            redirect('project/tasks_by_project');
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
 
         $data['task'] = $this->Task_model->get_task_by_id($id);
@@ -164,7 +196,11 @@ class Task extends CI_Controller
     public function update($id)
     {
         if ($this->session->userdata('user_role') != 1) {
-            redirect('login');
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
 
         $dueDate = $this->input->post('due_date');
@@ -199,7 +235,11 @@ class Task extends CI_Controller
     public function delete($id)
     {
         if ($this->session->userdata('user_role') != 1) {
-            redirect('login');
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
 
         $task = $this->Task_model->get_task_by_id($id);
@@ -227,6 +267,16 @@ class Task extends CI_Controller
 ===================================================== */
     public function start($task_id)
     {
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         $user_id = $this->session->userdata('user_id');
 
         // 1️⃣ Check if user already has a running task
@@ -258,6 +308,16 @@ class Task extends CI_Controller
 
     public function stop($task_id)
     {
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         $user_id = $this->session->userdata('user_id');
 
         // 🔥 get latest RUNNING log for this user & task
@@ -295,6 +355,16 @@ class Task extends CI_Controller
 
     public function complete($task_id)
     {
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         // 1️⃣ Stop running log
         $runningLog = $this->db
             ->where('task_id', $task_id)
@@ -341,8 +411,14 @@ class Task extends CI_Controller
 
     public function history()
     {
-        if (strtolower($this->session->userdata('user_role')) !== 'user') {
-            redirect('login');
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
         }
 
         $data['history'] = $this->Task_model->get_user_task_history(
@@ -360,6 +436,16 @@ class Task extends CI_Controller
 ===================================================== */
     public function task_list()
     {
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         $user_id = $this->session->userdata('user_id');
 
         $data['tasks'] = $this->Task_model->get_user_tasks($user_id);
@@ -378,6 +464,16 @@ class Task extends CI_Controller
 
     public function project_tasks($project_id)
     {
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         $user_id = $this->session->userdata('user_id');
 
         $data['tasks'] = $this->Task_model
@@ -391,6 +487,16 @@ class Task extends CI_Controller
 
     public function task_details($task_id = null)
     {
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         if (!$task_id) {
             show_404();
         }

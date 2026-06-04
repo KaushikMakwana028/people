@@ -574,7 +574,7 @@ foreach (($projects ?? []) as $project) {
                     <td><?= txn_label($txn->payment_mode ?: '-') ?></td>
                     <td><?= htmlspecialchars($txn->notes ?: '-') ?></td>
                     <td>
-                      <a href="<?= base_url('admin/transactions/delete/' . $txn->id) ?>" class="txn-btn danger" onclick="return confirm('Are you sure you want to delete this transaction?')">
+                      <a href="<?= base_url('admin/transactions/delete/' . $txn->id) ?>" class="txn-btn danger" onclick="return confirmSweetAction(this, 'Are you sure you want to delete this transaction?')">
                         <i class="bx bx-trash"></i>
                       </a>
                     </td>

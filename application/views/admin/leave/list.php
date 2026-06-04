@@ -697,12 +697,12 @@
                         <div class="action-btns">
                           <a href="<?= base_url('admin/leave/approve/' . $row->id) ?>"
                             class="btn-approve"
-                            onclick="return confirm('Approve this leave request?')">
+                            onclick="return confirmSweetAction(this, 'Approve this leave request?')">
                             <i class="bx bx-check"></i> Approve
                           </a>
                           <a href="<?= base_url('admin/leave/reject/' . $row->id) ?>"
                             class="btn-reject"
-                            onclick="return confirm('Reject this leave request?')">
+                            onclick="return confirmSweetAction(this, 'Reject this leave request?')">
                             <i class="bx bx-x"></i> Reject
                           </a>
                         </div>

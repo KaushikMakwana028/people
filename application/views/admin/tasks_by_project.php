@@ -497,7 +497,7 @@
                                             </a>
                                             <a href="<?= site_url('task/delete/' . $t->id); ?>" class="tl-action-btn act-delete"
                                                 data-tooltip="Delete Task"
-                                                onclick="return confirm('Are you sure you want to delete this task?');">
+                                                onclick="return confirmSweetAction(this, 'Are you sure you want to delete this task?');">
                                                 <i class='bx bx-trash'></i>
                                             </a>
                                         </div>
@@ -620,7 +620,7 @@
                                                     <i class="bx bx-edit-alt"></i>
                                                 </a>
                                                 <a href="<?= site_url('task/delete/' . $t->id); ?>" class="tc-act-btn tc-delete"
-                                                    title="Delete" onclick="return confirm('Are you sure?');">
+                                                    title="Delete" onclick="return confirmSweetAction(this, 'Are you sure?');">
                                                     <i class="bx bx-trash"></i>
                                                 </a>
                                             </div>

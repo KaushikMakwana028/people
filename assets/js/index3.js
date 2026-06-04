@@ -720,7 +720,13 @@ $(function() {
 		showTooltip: !0,
 		onRegionClick: function(e, t, o) {
 			var r = 'You clicked "' + o + '" which has the code: ' + t.toUpperCase();
-			alert(r)
+			if (window.showSweetAlert) {
+				window.showSweetAlert(r, 'info')
+			} else if (window.Swal) {
+				window.Swal.fire({icon: 'info', title: 'Notice', text: r})
+			} else {
+				console.log(r)
+			}
 		}
 	}),
 	

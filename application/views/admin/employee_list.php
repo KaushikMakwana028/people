@@ -1290,10 +1290,10 @@ function confirmDelete(url, name) {
 function exportTable(type) {
     if (type === 'excel') {
         // Implement Excel export
-        alert('Excel export feature — integrate with SheetJS or server-side export');
+        showSweetAlert('Excel export feature - integrate with SheetJS or server-side export', 'info');
     } else if (type === 'pdf') {
         // Implement PDF export
-        alert('PDF export feature — integrate with jsPDF or server-side export');
+        showSweetAlert('PDF export feature - integrate with jsPDF or server-side export', 'info');
     }
 }
 </script>

@@ -596,56 +596,90 @@
         color: #667eea;
     }
 
-    .profile-card{
-    border:none;
-    border-radius:16px;
-    box-shadow:0 4px 24px rgba(0,0,0,.06);
-    margin-top:0px !important;
-    position:relative;
-    z-index:1;
-}
+    .profile-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, .06);
+        margin-top: 0px !important;
+        position: relative;
+        z-index: 1;
+    }
 
-.profile-wrapper{
-    position:relative;
-    z-index:5;
-}
+    .profile-wrapper {
+        position: relative;
+        z-index: 5;
+    }
 
-.profile-wrapper::after{
-    content:'';
-    position:absolute;
-    bottom:-40px;
-    left:0;
-    width:100%;
-    height:40px;
-    background:transparent;
-}
+    .profile-wrapper::after {
+        content: '';
+        position: absolute;
+        bottom: -40px;
+        left: 0;
+        width: 100%;
+        height: 40px;
+        background: transparent;
+    }
 
-.profile-avatar-wrapper{
-    position:relative;
-    z-index:2;
-}
+    .profile-avatar-wrapper {
+        position: relative;
+        z-index: 2;
+    }
 
 
-.btn-change-password{
-background: linear-gradient(135deg,#fbbf24 0%,#f59e0b 100%);
-border:none;
-padding:12px 26px;
-border-radius:12px;
-font-weight:600;
-color:#fff;
-display:inline-flex;
-align-items:center;
-gap:6px;
-transition:all .3s ease;
-height:48px;
-}
+    .btn-change-password {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        border: none;
+        padding: 12px 26px;
+        border-radius: 12px;
+        font-weight: 600;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all .3s ease;
+        height: 48px;
+    }
 
-.btn-change-password:hover{
-background: linear-gradient(135deg,#f59e0b 0%,#d97706 100%);
-box-shadow:0 6px 20px rgba(251,191,36,.4);
-transform:translateY(-1px);
-color:#fff;
-}
+    .btn-change-password:hover {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        box-shadow: 0 6px 20px rgba(251, 191, 36, .4);
+        transform: translateY(-1px);
+        color: #fff;
+    }
+
+    /* ================= BUTTON RESPONSIVE FIX ================= */
+
+    .profile-action-buttons {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .profile-action-buttons .btn-save,
+    .profile-action-buttons .btn-change-password,
+    .profile-action-buttons .btn-reset {
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+
+        .profile-action-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .profile-action-buttons .btn-save,
+        .profile-action-buttons .btn-change-password,
+        .profile-action-buttons .btn-reset {
+            width: 100%;
+        }
+    }
 </style>
 
 <div class="page-wrapper">
@@ -670,7 +704,10 @@ color:#fff;
         </div> -->
 
         <!-- ================= PROFILE FORM ================= -->
-      <form action="<?= base_url('admin/profile/update_profile') ?>" method="post" enctype="multipart/form-data">
+        <form id="profileForm"
+            action="<?= base_url('admin/profile/update_profile') ?>"
+            method="post"
+            enctype="multipart/form-data">
 
             <div class="container-fluid px-lg-4">
                 <div class="row g-4">
@@ -703,7 +740,7 @@ color:#fff;
                                     <img id="imagePreview"
                                         src="<?= !empty($user->photo)
                                                     ? base_url('uploads/profile/' . $user->photo)
-                                                    : base_url('assets/images/avatars/avatar-2.png'); ?>"
+                                                    : base_url('assets/default.jpg'); ?>"
                                         class="rounded-circle"
                                         width="130"
                                         height="130"
@@ -838,24 +875,24 @@ color:#fff;
                                     </div>
 
                                     <!-- Email -->
-                                  <!-- Email -->
-<div class="col-md-6">
-    <div class="form-group-custom">
-        <label class="form-label-custom">
-            <i class="bx bx-envelope"></i> Email Address
-        </label>
-        <div class="input-icon-wrapper">
-            <i class="bx bx-envelope input-icon"></i>
-            <input type="email"
-                name="email"
-                id="emailInput"
-                class="form-control"
-                value="<?= htmlspecialchars($user->email); ?>"
-                placeholder="Enter your email"
-                required>
-        </div>
-    </div>
-</div>
+                                    <!-- Email -->
+                                    <div class="col-md-6">
+                                        <div class="form-group-custom">
+                                            <label class="form-label-custom">
+                                                <i class="bx bx-envelope"></i> Email Address
+                                            </label>
+                                            <div class="input-icon-wrapper">
+                                                <i class="bx bx-envelope input-icon"></i>
+                                                <input type="email"
+                                                    name="email"
+                                                    id="emailInput"
+                                                    class="form-control"
+                                                    value="<?= htmlspecialchars($user->email); ?>"
+                                                    placeholder="Enter your email"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     <!-- Phone -->
                                     <div class="col-md-6">
@@ -938,82 +975,82 @@ color:#fff;
                                     </div>
 
                                     <!-- Aadhaar Card Number -->
-                                 <!-- Aadhaar Card Number -->
-<div class="col-md-6">
-    <div class="form-group-custom">
-        <label class="form-label-custom">
-            <i class="bx bx-id-card"></i> Aadhaar Card Number
-        </label>
-        <div class="input-icon-wrapper">
-            <i class="bx bx-id-card input-icon"></i>
-            <input type="text"
-                name="aadhar_card"
-                id="aadhaarInput"
-                class="form-control"
-                value="<?= htmlspecialchars($user->aadhar_card ?? ''); ?>"
-                placeholder="XXXX XXXX XXXX"
-                maxlength="14"
-                pattern="\d{4}\s?\d{4}\s?\d{4}">
-        </div>
-        <small class="text-muted mt-1 d-block">
-            <i class="bx bx-lock-alt me-1"></i>
-            Your Aadhaar is encrypted & secure
-        </small>
-    </div>
-</div>
+                                    <!-- Aadhaar Card Number -->
+                                    <div class="col-md-6">
+                                        <div class="form-group-custom">
+                                            <label class="form-label-custom">
+                                                <i class="bx bx-id-card"></i> Aadhaar Card Number
+                                            </label>
+                                            <div class="input-icon-wrapper">
+                                                <i class="bx bx-id-card input-icon"></i>
+                                                <input type="text"
+                                                    name="aadhar_card"
+                                                    id="aadhaarInput"
+                                                    class="form-control"
+                                                    value="<?= htmlspecialchars($user->aadhar_card ?? ''); ?>"
+                                                    placeholder="XXXX XXXX XXXX"
+                                                    maxlength="14"
+                                                    pattern="\d{4}\s?\d{4}\s?\d{4}">
+                                            </div>
+                                            <small class="text-muted mt-1 d-block">
+                                                <i class="bx bx-lock-alt me-1"></i>
+                                                Your Aadhaar is encrypted & secure
+                                            </small>
+                                        </div>
+                                    </div>
 
                                     <!-- Skills -->
                                     <div class="col-12">
-    <div class="form-group-custom">
-        <label class="form-label-custom">
-            <i class="bx bx-star"></i> Skills
-        </label>
+                                        <div class="form-group-custom">
+                                            <label class="form-label-custom">
+                                                <i class="bx bx-star"></i> Skills
+                                            </label>
 
-        <!-- TAG CONTAINER -->
-        <div class="skills-container" id="skillsContainer">
+                                            <!-- TAG CONTAINER -->
+                                            <div class="skills-container" id="skillsContainer">
 
-            <!-- EXISTING SKILLS LOAD -->
-            <?php if(!empty($user->skills)): ?>
-                <?php foreach(explode(',', $user->skills) as $skill): ?>
-                    <span class="skill-tag">
-                        <?= trim($skill) ?>
-                        <span class="remove-skill">&times;</span>
-                    </span>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                                                <!-- EXISTING SKILLS LOAD -->
+                                                <?php if (!empty($user->skills)): ?>
+                                                    <?php foreach (explode(',', $user->skills) as $skill): ?>
+                                                        <span class="skill-tag">
+                                                            <?= trim($skill) ?>
+                                                            <span class="remove-skill">&times;</span>
+                                                        </span>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
 
-            <!-- IMPORTANT INPUT -->
-            <input type="text"
-                class="skills-input"
-                id="skillInput"
-                placeholder="Type a skill & press Enter..."
-                autocomplete="off">
-        </div>
+                                                <!-- IMPORTANT INPUT -->
+                                                <input type="text"
+                                                    class="skills-input"
+                                                    id="skillInput"
+                                                    placeholder="Type a skill & press Enter..."
+                                                    autocomplete="off">
+                                            </div>
 
-        <!-- ONLY ONE HIDDEN INPUT -->
-        <input type="hidden"
-            name="skills"
-            id="skillsHidden"
-            value="<?= htmlspecialchars($user->skills ?? ''); ?>">
+                                            <!-- ONLY ONE HIDDEN INPUT -->
+                                            <input type="hidden"
+                                                name="skills"
+                                                id="skillsHidden"
+                                                value="<?= htmlspecialchars($user->skills ?? ''); ?>">
 
-        <small class="text-muted mt-1 d-block">
-            Press <kbd>Enter</kbd> or <kbd>,</kbd> to add a skill
-        </small>
-    </div>
-</div>
+                                            <small class="text-muted mt-1 d-block">
+                                                Press <kbd>Enter</kbd> or <kbd>,</kbd> to add a skill
+                                            </small>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Action Buttons -->
-                                <div class="d-flex gap-3 mt-4 pt-3"
+                                <div class="profile-action-buttons mt-4 pt-3"
                                     style="border-top: 2px solid #f0f2ff;">
                                     <button type="submit" class="btn btn-save" id="saveBtn">
                                         <i class="bx bx-check-circle me-2"></i> Save Changes
                                     </button>
-                                   <a href="<?= base_url('admin/change_password') ?>" 
-   class="btn btn-change-password">
-   <i class="bx bx-lock-alt me-1"></i>
-   Change Password
-</a>
+                                    <a href="<?= base_url('admin/change_password') ?>"
+                                        class="btn btn-change-password">
+                                        <i class="bx bx-lock-alt me-1"></i>
+                                        Change Password
+                                    </a>
                                     <button type="reset" class="btn btn-reset" id="resetBtn">
                                         <i class="bx bx-reset me-2"></i> Reset
                                     </button>
@@ -1031,15 +1068,17 @@ color:#fff;
 
         <!-- ================= SCRIPTS ================= -->
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
 
                 // ===== Current Date =====
                 const dateEl = document.getElementById('currentDate');
                 if (dateEl) {
                     const now = new Date();
                     dateEl.textContent = now.toLocaleDateString('en-US', {
-                        weekday: 'short', year: 'numeric',
-                        month: 'short', day: 'numeric'
+                        weekday: 'short',
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
                     });
                 }
 
@@ -1047,7 +1086,7 @@ color:#fff;
                 const imageUpload = document.getElementById('imageUpload');
                 const imagePreview = document.getElementById('imagePreview');
 
-                imageUpload.addEventListener('change', function (e) {
+                imageUpload.addEventListener('change', function(e) {
                     const file = e.target.files[0];
                     if (!file) return;
 
@@ -1058,7 +1097,7 @@ color:#fff;
                     }
 
                     const reader = new FileReader();
-                    reader.onload = function (ev) {
+                    reader.onload = function(ev) {
                         imagePreview.style.opacity = '0';
                         setTimeout(() => {
                             imagePreview.src = ev.target.result;
@@ -1071,7 +1110,7 @@ color:#fff;
 
                 // ===== Aadhaar Formatting =====
                 const aadhaarInput = document.getElementById('aadhaarInput');
-                aadhaarInput.addEventListener('input', function (e) {
+                aadhaarInput.addEventListener('input', function(e) {
                     let val = e.target.value.replace(/\D/g, '');
                     if (val.length > 12) val = val.slice(0, 12);
                     let formatted = val.replace(/(\d{4})(?=\d)/g, '$1 ');
@@ -1079,29 +1118,28 @@ color:#fff;
                 });
 
                 // ===== Skills Tag System =====
-             // ===== Skills Tag System =====
-const skillsContainer = document.getElementById('skillsContainer');
-const skillInput = document.getElementById('skillInput');
-const skillsHidden = document.getElementById('skillsHidden');
+                // ===== Skills Tag System =====
+                const skillsContainer = document.getElementById('skillsContainer');
+                const skillInput = document.getElementById('skillInput');
+                const skillsHidden = document.getElementById('skillsHidden');
 
-// 🔥 LOAD EXISTING SKILLS INTO ARRAY
-let skills = skillsHidden.value
-    ? skillsHidden.value.split(',').map(s => s.trim().toLowerCase())
-    : [];
+                // 🔥 LOAD EXISTING SKILLS INTO ARRAY
+                let skills = skillsHidden.value ?
+                    skillsHidden.value.split(',').map(s => s.trim().toLowerCase()) : [];
 
-    // 🔥 EXISTING TAG REMOVE CLICK EVENT
-document.querySelectorAll('.skill-tag .remove-skill').forEach(btn => {
-    btn.addEventListener('click', function () {
-        const tag = this.parentElement;
-        const text = tag.textContent.replace('×','').trim().toLowerCase();
+                // 🔥 EXISTING TAG REMOVE CLICK EVENT
+                document.querySelectorAll('.skill-tag .remove-skill').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const tag = this.parentElement;
+                        const text = tag.textContent.replace('×', '').trim().toLowerCase();
 
-        const idx = skills.indexOf(text);
-        if (idx > -1) skills.splice(idx,1);
+                        const idx = skills.indexOf(text);
+                        if (idx > -1) skills.splice(idx, 1);
 
-        tag.remove();
-        updateHiddenSkills();
-    });
-});
+                        tag.remove();
+                        updateHiddenSkills();
+                    });
+                });
 
                 // Load existing skills
                 const existing = skillsHidden.value;
@@ -1112,7 +1150,7 @@ document.querySelectorAll('.skill-tag .remove-skill').forEach(btn => {
                     });
                 }
 
-                skillInput.addEventListener('keydown', function (e) {
+                skillInput.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' || e.key === ',') {
                         e.preventDefault();
                         const val = skillInput.value.replace(',', '').trim();
@@ -1136,7 +1174,7 @@ document.querySelectorAll('.skill-tag .remove-skill').forEach(btn => {
                     tag.className = 'skill-tag';
                     tag.innerHTML = `${escapeHtml(text)} <span class="remove-skill">&times;</span>`;
 
-                    tag.querySelector('.remove-skill').addEventListener('click', function () {
+                    tag.querySelector('.remove-skill').addEventListener('click', function() {
                         const idx = skills.indexOf(text.toLowerCase());
                         if (idx > -1) skills.splice(idx, 1);
                         tag.style.transform = 'scale(0)';
@@ -1173,38 +1211,42 @@ document.querySelectorAll('.skill-tag .remove-skill').forEach(btn => {
                 const designationInput = document.getElementById('designationInput');
                 const dobInput = document.getElementById('dobInput');
 
-                nameInput.addEventListener('input', function () {
+                nameInput.addEventListener('input', function() {
                     document.getElementById('displayName').textContent = this.value || 'Your Name';
                     calculateCompletion();
                 });
 
-                emailInput.addEventListener('input', function () {
+                emailInput.addEventListener('input', function() {
                     document.getElementById('displayEmail').textContent = this.value || 'Not added';
                     calculateCompletion();
                 });
 
-                phoneInput.addEventListener('input', function () {
+                phoneInput.addEventListener('input', function() {
                     document.getElementById('displayPhone').textContent = this.value || 'Not added';
                     calculateCompletion();
                 });
 
-                addressInput.addEventListener('input', function () {
+                addressInput.addEventListener('input', function() {
                     const addr = this.value || 'No address added';
                     document.getElementById('displayAddress').innerHTML =
                         '<i class="bx bx-map me-1"></i>' + escapeHtml(addr);
                     calculateCompletion();
                 });
 
-                designationInput.addEventListener('input', function () {
+                designationInput.addEventListener('input', function() {
                     document.getElementById('displayDesignation').textContent = this.value || 'Not added';
                     calculateCompletion();
                 });
 
-                dobInput.addEventListener('change', function () {
+                dobInput.addEventListener('change', function() {
                     if (this.value) {
                         const d = new Date(this.value);
                         document.getElementById('displayDob').textContent =
-                            d.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
+                            d.toLocaleDateString('en-US', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric'
+                            });
                     } else {
                         document.getElementById('displayDob').textContent = 'Not added';
                     }
@@ -1277,7 +1319,7 @@ document.querySelectorAll('.skill-tag .remove-skill').forEach(btn => {
                 }
 
                 // ===== Save Button Animation =====
-                document.getElementById('profileForm').addEventListener('submit', function () {
+                document.getElementById('profileForm').addEventListener('submit', function() {
                     const btn = document.getElementById('saveBtn');
                     btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Saving...';
                     btn.disabled = true;
@@ -1292,11 +1334,11 @@ document.querySelectorAll('.skill-tag .remove-skill').forEach(btn => {
 
                 // ===== Input focus animations =====
                 document.querySelectorAll('.form-group-custom .form-control').forEach(input => {
-                    input.addEventListener('focus', function () {
+                    input.addEventListener('focus', function() {
                         this.closest('.form-group-custom').style.transform = 'scale(1.01)';
                         this.closest('.form-group-custom').style.transition = 'transform 0.2s ease';
                     });
-                    input.addEventListener('blur', function () {
+                    input.addEventListener('blur', function() {
                         this.closest('.form-group-custom').style.transform = 'scale(1)';
                     });
                 });

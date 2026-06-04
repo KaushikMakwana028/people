@@ -597,7 +597,6 @@
 
     // Alert function
     function showAlert(message, type) {
-        // You can integrate with your existing alert system
-        alert(message);
+        showSweetAlert(message, type || 'info');
     }
 </script>

@@ -8,14 +8,17 @@ class Announcements extends CI_Controller {
         $this->load->database();
         $this->load->library('session');
 
-      if (!$this->session->userdata('logged_in')) {
-    redirect('sign_in');
-}
+        if (!$this->session->userdata('logged_in')) {
+            redirect('sign_in');
+        }
 
-// if ($this->session->userdata('user_role') !== 'admin') {
-//     show_error('Access Denied', 403);
-// }
-
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
+        }
     }
 
     public function index(){

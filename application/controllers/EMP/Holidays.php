@@ -9,6 +9,16 @@ class Holidays extends CI_Controller {
         if (!$this->session->userdata('logged_in')) {
             redirect('sign_in');
         }
+
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
     }
 
 

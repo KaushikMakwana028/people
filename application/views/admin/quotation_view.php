@@ -322,7 +322,7 @@
                                                 </a>
                                                 <a href="<?= base_url('admin/quotations/delete/' . $row['id']) ?>"
                                                    class="q-btn q-btn-danger q-btn-sm"
-                                                   onclick="return confirm('Are you sure you want to delete this quotation?')"
+                                                   onclick="return confirmSweetAction(this, 'Are you sure you want to delete this quotation?')"
                                                    title="Delete">
                                                     <i class="fas fa-trash"></i> Delete
                                                 </a>

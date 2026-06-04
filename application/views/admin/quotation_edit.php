@@ -695,12 +695,22 @@
         if (resetBtn) {
             resetBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                if (confirm('Are you sure you want to reset all changes?')) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Are you sure?',
+                    text: 'Are you sure you want to reset all changes?',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'Cancel'
+                }).then(result => {
+                    if (!result.isConfirmed) return;
                     form.reset();
                     inputs.forEach(input => {
                         input.classList.remove('is-invalid');
                     });
-                }
+                });
             });
         }
 
@@ -726,6 +736,6 @@
 
     // Alert function
     function showAlert(message, type) {
-        alert(message);
+        showSweetAlert(message, type || 'info');
     }
 </script>

@@ -484,7 +484,7 @@
                                     <button class="btn-icon-action edit" onclick="openEditModal(<?= htmlspecialchars(json_encode($p), ENT_QUOTES) ?>)" title="Edit Product">
                                         <i class="bx bx-pencil"></i>
                                     </button>
-                                    <a class="btn-icon-action delete" href="<?= site_url('admin/products/delete/' . $p->id) ?>" onclick="return confirm('Are you sure you want to delete this product? All connected product leads will also be deleted.')" title="Delete Product">
+                                    <a class="btn-icon-action delete" href="<?= site_url('admin/products/delete/' . $p->id) ?>" onclick="return confirmSweetAction(this, 'Are you sure you want to delete this product? All connected product leads will also be deleted.')" title="Delete Product">
                                         <i class="bx bx-trash"></i>
                                     </a>
                                 </div>
@@ -494,6 +494,10 @@
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
+
+        <?php if (!empty($total_rows) && $total_rows > $per_page): ?>
+            <?= render_custom_pagination($total_rows, $per_page, $current_page) ?>
+        <?php endif; ?>
 
     </div>
 </div>

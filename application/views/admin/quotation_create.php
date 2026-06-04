@@ -731,7 +731,7 @@
 
     // Alert function
     function showAlert(message, type) {
-        alert(message);
+        showSweetAlert(message, type || 'info');
     }
 
     // Save draft function (optional)

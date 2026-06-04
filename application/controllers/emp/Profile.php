@@ -10,6 +10,16 @@ class Profile extends CI_Controller {
             redirect('sign_in');
         }
 
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
+        }
+
         $this->load->model('emp/Dashboard_model');
         $this->load->database();
     }

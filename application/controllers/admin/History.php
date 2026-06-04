@@ -7,45 +7,43 @@ class History extends CI_Controller {
         parent::__construct();
         $this->load->model('Admin_model');
 
-        // if (
-        //     !$this->session->userdata('logged_in') ||
-        //     $this->session->userdata('user_role') !== 'admin'
-        // ) {
-        //     redirect('sign_in');
-        // }
+        if (!$this->session->userdata('logged_in')) {
+            redirect('sign_in');
+        }
+
+        if ($this->session->userdata('user_role') != 1) {
+            if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
+        }
     }
 
     public function index()
-{
-    //  echo "HISTORY CONTROLLER HIT";
-    // exit;
-$data['employees'] = $this->db
-        ->select('id, email')
-        ->from('users')
-        ->where('role', 0)
-        ->where('is_active', 1)
-        ->get()
-        ->result();
+    {
+        $data['employees'] = $this->db
+            ->select('id, email')
+            ->from('users')
+            ->where('role', 0)
+            ->where('is_active', 1)
+            ->get()
+            ->result();
 
-    $this->load->view('admin/header');
-    $this->load->view('admin/history', $data);  
-    $this->load->view('admin/footer');
-}
-
-
-
-  
-  public function view($emp_id)
-{
-    
-    $selected_date = $this->input->get('date');
-    if (empty($selected_date)) {
-        $selected_date = date('Y-m-d');
+        $this->load->view('admin/header');
+        $this->load->view('admin/history', $data);  
+        $this->load->view('admin/footer');
     }
-    $today = $selected_date;
 
-    
-    $this->db->where('ref_id', $emp_id)
+    public function view($emp_id)
+    {
+        $selected_date = $this->input->get('date');
+        if (empty($selected_date)) {
+            $selected_date = date('Y-m-d');
+        }
+        $today = $selected_date;
+
+        $this->db->where('ref_id', $emp_id)
              ->where('type', 'daily_report')
              ->where('ref_date', $today)
              ->update('notifications', ['is_read' => 1]);

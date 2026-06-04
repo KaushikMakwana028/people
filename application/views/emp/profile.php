@@ -1400,7 +1400,7 @@
                                         <div class="pf-avatar-ring">
                                             <img id="imagePreview" class="pf-avatar-img" src="<?= !empty($user->photo)
                                                 ? base_url('uploads/profile/' . $user->photo)
-                                                : base_url('assets/images/avatars/avatar-2.png'); ?>"
+                                                : base_url('assets/default.jpg'); ?>"
                                                 alt="Profile Photo" >
                                         </div>
                                         <div class="pf-avatar-online"></div>
@@ -1789,7 +1789,7 @@
             });
 
             const photoSrc = imagePreview.src;
-            if (!photoSrc.includes('avatar-2.png')) filled++;
+            if (!photoSrc.includes('default.jpg')) filled++;
 
             const total = fields.length + 1;
             const pct = Math.round((filled / total) * 100);

@@ -1019,14 +1019,25 @@ function format_value($val)
       })
       .catch(err => {
         console.error('Error fetching lead details:', err);
-        alert('Failed to load lead details.');
+        showSweetAlert('Failed to load lead details.', 'error');
       });
   }
 
   function confirmDelete(id) {
-    if (confirm('Are you sure you want to delete this lead? This action cannot be undone.')) {
-      window.location.href = BASE + 'admin/leads/delete/' + id;
-    }
+    Swal.fire({
+      icon: 'warning',
+      title: 'Are you sure?',
+      text: 'Are you sure you want to delete this lead? This action cannot be undone.',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel'
+    }).then(result => {
+      if (result.isConfirmed) {
+        window.location.href = BASE + 'admin/leads/delete/' + id;
+      }
+    });
   }
 
   // Auto-hide flash messages

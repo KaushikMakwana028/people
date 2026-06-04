@@ -25,8 +25,14 @@ class Dashboard extends CI_Controller
         $this->load->model('emp/Attendance_model');
         $this->Attendance_model->auto_mark_absents();
 
-        if ($this->session->userdata('user_role') == 1) {
-            redirect('admin/dashboard');
+        if ($this->session->userdata('user_role') != 0) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else if ($this->session->userdata('user_role') == 2) {
+                redirect('sales/dashboard');
+            } else {
+                redirect('sign_in');
+            }
         }
     }
 
@@ -447,6 +453,16 @@ class Dashboard extends CI_Controller
             ]);
 
         echo json_encode(['status' => 'success']);
+    }
+
+    public function get_work_status()
+    {
+        $user_id = $this->session->userdata('user_id');
+        $start = $this->Dashboard_model->get_running_work_start($user_id);
+        echo json_encode([
+            'running' => $start ? true : false,
+            'start_time' => $start
+        ]);
     }
 
 

@@ -174,7 +174,7 @@ style="width: 120px;">Action</th>
 <td>
   <a href="<?= base_url('admin/announcements/delete/'.$a->id) ?>"
      class="btn btn-sm btn-danger rounded-pill px-3"
-     onclick="return confirm('Delete this announcement?')">
+     onclick="return confirmSweetAction(this, 'Delete this announcement?')">
      <i class="bx bx-trash"></i>
   </a>
 </td>

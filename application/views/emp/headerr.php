@@ -136,13 +136,6 @@
 					<div class="mobile-toggle-menu d-flex"><i class='bx bx-menu'></i>
 					</div>
 
-					<div class="search-bar d-lg-block d-none" data-bs-toggle="modal" data-bs-target="#SearchModal">
-						<div class="premium-search-box">
-							<i class='bx bx-search'></i>
-							<input type="text" placeholder="Search anything...">
-						</div>
-					</div>
-
 					<div class="top-menu ms-auto">
 						<ul class="navbar-nav align-items-center gap-1">
 							<li class="nav-item">
@@ -212,7 +205,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="<?= base_url('assets/images/avatars/avatar-2.png') ?>"
+													<img src="<?= base_url('assets/default.jpg') ?>"
 														class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
@@ -591,7 +584,7 @@
 
 					$userPhoto = !empty($user->photo)
 						? base_url('uploads/profile/' . $user->photo)
-						: base_url('assets/images/avatars/avatar-2.png');
+						: base_url('assets/default.jpg');
 					?>
 
 					<div class="user-box dropdown px-3">
@@ -622,7 +615,7 @@
 								<div class="dropdown-divider mb-0"></div>
 							</li>
 							<li><a href="<?= base_url('emp/logout') ?>"
-									onclick="return confirm('Are you sure you want to logout?')" class="dropdown-item">
+									onclick="return confirmSweetAction(this, 'Are you sure you want to logout?')" class="dropdown-item">
 									<i class="bx bx-log-out-circle"></i> Logout
 								</a>
 							</li>

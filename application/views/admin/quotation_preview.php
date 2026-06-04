@@ -647,17 +647,27 @@ function getStatusBadgeClass($status) {
 
     // Download PDF functionality
     function downloadPDF() {
-        alert('PDF download functionality would be implemented here.\nThis requires a PDF generation library like jsPDF or server-side PDF generation.');
+        showSweetAlert('PDF download functionality would be implemented here.\nThis requires a PDF generation library like jsPDF or server-side PDF generation.', 'info');
         // Implementation would go here
         // window.location.href = '<?= base_url('admin/quotations/download-pdf/'.$quotation['id']) ?>';
     }
 
     // Delete functionality
     function deleteQuotation(id) {
-        if (confirm('Are you sure you want to delete this quotation?\nThis action cannot be undone.')) {
-            // Implement delete functionality
-            window.location.href = '<?= base_url('admin/quotations/delete/') ?>' + id;
-        }
+        Swal.fire({
+            icon: 'warning',
+            title: 'Are you sure?',
+            text: 'Are you sure you want to delete this quotation? This action cannot be undone.',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if (result.isConfirmed) {
+                window.location.href = '<?= base_url('admin/quotations/delete/') ?>' + id;
+            }
+        });
     }
 
     // Copy quotation number to clipboard

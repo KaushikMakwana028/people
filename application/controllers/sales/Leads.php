@@ -12,35 +12,109 @@ class Leads extends CI_Controller
         $this->load->helper(['url', 'form']);
 
         // Check if sales user is logged in (role = 2)
-        if (!$this->session->userdata('logged_in') || $this->session->userdata('user_role') != 2) {
+        if (!$this->session->userdata('logged_in')) {
             redirect('sign_in');
+        }
+        if ($this->session->userdata('user_role') != 2) {
+            if ($this->session->userdata('user_role') == 1) {
+                redirect('admin/dashboard');
+            } else {
+                redirect('emp/dashboard');
+            }
         }
     }
 
     /**
-     * View Leads for Sales Representatives
+     * View Leads for Sales Representatives (Only status "New" and unassigned)
      */
     public function index()
     {
         $product_id = $this->input->get('product_id');
-        $status = $this->input->get('status');
         $search = $this->input->get('search') ?? '';
-        $date = $this->input->get('date');
-        $month = $this->input->get('month');
-        $year = $this->input->get('year');
-        $sort_by = $this->input->get('sort_by') ?? 'pl.id';
-        $sort_dir = $this->input->get('sort_dir') ?? 'DESC';
         $page = (int)($this->input->get('page') ?? 1);
         if ($page < 1) $page = 1;
         $limit = (int)($this->input->get('limit') ?? 10);
         if ($limit < 1) $limit = 10;
         $offset = ($page - 1) * $limit;
 
-        $filters = [];
+        // Lead Page only shows "New" and unassigned data
+        $filters = [
+            'status' => 'New',
+            'sales_id' => 'NULL'
+        ];
+
+        $leads = $this->Product_lead_model->get_leads($product_id, $filters, $search, $limit, $offset);
+        $total_records = $this->Product_lead_model->count_leads($product_id, $filters, $search);
+        $kpis = $this->Product_lead_model->get_kpi_counts($product_id, $filters, $search);
+
+        if ($this->input->is_ajax_request() || $this->input->get('ajax') == 1) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'leads' => $leads,
+                'kpis' => $kpis,
+                'total_records' => $total_records,
+                'page' => $page,
+                'limit' => $limit,
+                'total_pages' => ceil($total_records / $limit)
+            ]);
+            return;
+        }
+
+        $data['products'] = $this->Product_model->get_all_products();
+        $data['selected_product_id'] = $product_id;
+        $data['selected_product'] = $product_id ? $this->Product_model->get_product($product_id) : null;
+        $data['leads'] = $leads;
+        $data['kpis'] = $kpis;
+        $data['total_records'] = $total_records;
+        $data['page'] = $page;
+        $data['limit'] = $limit;
+        $data['total_pages'] = ceil($total_records / $limit);
+        $data['status_filter'] = 'New';
+        $data['search'] = $search;
+        $data['filter_date'] = '';
+        $data['filter_month'] = '';
+        $data['filter_year'] = '';
+        $data['sort_by'] = 'pl.id';
+        $data['sort_dir'] = 'DESC';
+
+        $this->load->view('sales/header');
+        $this->load->view('sales/leads', $data);
+        $this->load->view('sales/footer');
+    }
+
+    /**
+     * View Lead History for the Logged-in Sales Representative
+     */
+    public function history()
+    {
+        $sales_id = $this->session->userdata('user_id');
+
+        $product_id = $this->input->get('product_id');
+        $status = $this->input->get('status');
+        $search = $this->input->get('search') ?? '';
+        $date = $this->input->get('date');
+        $month = $this->input->get('month');
+        $year = $this->input->get('year');
+
+        if ($date === null && $month === null && $year === null) {
+            $date = date('Y-m-d');
+        }
+
+        $sort_by = $this->input->get('sort_by') ?? 'status_sequence';
+        $sort_dir = $this->input->get('sort_dir') ?? 'ASC';
+        $page = (int)($this->input->get('page') ?? 1);
+        if ($page < 1) $page = 1;
+        $limit = (int)($this->input->get('limit') ?? 10);
+        if ($limit < 1) $limit = 10;
+        $offset = ($page - 1) * $limit;
+
+        $filters = [
+            'sales_id' => $sales_id
+        ];
         if ($status) {
             $filters['status'] = $status;
         }
-
         if ($date) {
             $filters['date'] = $date;
         }
@@ -87,7 +161,7 @@ class Leads extends CI_Controller
         $data['sort_dir'] = $sort_dir;
 
         $this->load->view('sales/header');
-        $this->load->view('sales/leads', $data);
+        $this->load->view('sales/leads_history', $data);
         $this->load->view('sales/footer');
     }
 
@@ -105,6 +179,7 @@ class Leads extends CI_Controller
         $id = $this->input->post('id');
         $status = $this->input->post('status');
         $notes = $this->input->post('notes');
+        $sales_id = $this->session->userdata('user_id');
 
         $validStatuses = ['New', 'Contacted', 'Follow Up', 'Converted', 'Not Interested'];
 
@@ -113,7 +188,7 @@ class Leads extends CI_Controller
             return;
         }
 
-        $result = $this->Product_lead_model->update_status($id, $status, $notes);
+        $result = $this->Product_lead_model->update_status($id, $status, $notes, $sales_id);
 
         if ($result) {
             echo json_encode(['success' => true, 'message' => 'Lead status updated successfully!']);

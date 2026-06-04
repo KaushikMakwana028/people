@@ -609,7 +609,7 @@ function confirmDelete(id){
 
 // ── Import modal (placeholder) ──────────────────────
 function openImportModal(){
-  alert('CSV Import feature — connect this to your upload controller!');
+  showSweetAlert('CSV Import feature - connect this to your upload controller!', 'info');
 }
 
 // ── Search debounce ─────────────────────────────────
